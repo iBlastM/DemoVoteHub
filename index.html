@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MIRADOR 2027 · Gubernaturas de México (demo)</title>
+  <meta name="description" content="Visualización demostrativa (datos ficticios) del pronóstico de las 17 gubernaturas de México en 2027." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip" href="#app">Saltar al contenido</a>
+  <header class="topbar">
+    <a class="brand" href="#/general">
+      <span class="brand-mark">▚</span>
+      <span class="brand-name">MIRADOR<span class="brand-year">2027</span></span>
+    </a>
+    <nav class="nav" aria-label="Secciones">
+      <a href="#/general" data-top="/general">Vista general</a>
+      <a href="#/predicciones" data-top="/predicciones">Predicciones</a>
+      <a href="#/encuestas" data-top="/encuestas">Encuestas</a>
+      <a href="#/dominio" data-top="/dominio">Mapa de dominio</a>
+    </nav>
+    <span class="demo-badge" title="Todos los datos son inventados">DEMO · datos ficticios</span>
+  </header>
+
+  <main id="app" class="app"><!-- las vistas se montan aquí --></main>
+
+  <footer class="foot">
+    <span>MIRADOR 2027 — visualización demostrativa inspirada en VoteHub.</span>
+    <span class="foot-warn">Cifras, encuestas y proyecciones <b>ficticias</b>, sin valor informativo real.</span>
+  </footer>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

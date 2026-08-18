@@ -1,0 +1,53 @@
+# Dependencias y paquetes generados
+node_modules/
+bower_components/
+
+# Salidas de compilación, cobertura y cachés
+build/
+dist/
+out/
+coverage/
+.cache/
+.tmp/
+temp/
+
+# Registros
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Python (servidor y utilidades de datos)
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+env/
+
+# Variables de entorno y secretos locales
+.env
+.env.*
+!.env.example
+
+# Editor e IDE
+.vscode/
+.idea/
+*.suo
+*.user
+*.sln.docstates
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# Archivos temporales
+*.swp
+*.swo
+*~
+
+# Los archivos en geojsons/ y los datos fuente son parte del visualizador
+# y deben mantenerse versionados.
