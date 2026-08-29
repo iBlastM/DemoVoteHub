@@ -6,6 +6,7 @@
 
 import { store } from './store.js';
 import { PARTIES, SIN_ELECCION } from './config.js';
+import { partyLogo } from './components.js';
 import { slugify, clamp, svgEl, pct, signed } from './utils.js';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -108,10 +109,9 @@ export function renderMap(svg, opts = {}) {
     const g = svgEl('g', { class: 'estado' + (estado ? ' elegible' : ' no-elige') + (estado && estado.flip ? ' flip' : '') });
     g.dataset.slug = slug;
     for (const d of geometryToPaths(feature.geometry)) {
-      const path = svgEl('path', { d, fill });
-      path.setAttribute('stroke', estado && estado.flip ? '#14161A' : '#ffffff');
-      path.setAttribute('stroke-width', estado && estado.flip ? 0.14 : 0.07);
-      g.appendChild(path);
+      // Los bordes que separan estados los controla el CSS (var(--map-border)),
+      // de modo que el temido claro los muestra negros y el oscuro, claros.
+      g.appendChild(svgEl('path', { d, fill }));
     }
     if (estado && opts.interactive !== false) {
       g.style.cursor = 'pointer';
@@ -142,7 +142,6 @@ function hoverCard(svg) {
   return card;
 }
 function showHover(svg, estado, ev) {
-  const p = PARTIES[estado.favorito];
   const card = hoverCard(svg);
   const metricLine = store.mapMetric === 'margen'
     ? `margen <b>${signed(estado.margen)}</b>`
@@ -150,7 +149,7 @@ function showHover(svg, estado, ev) {
   card.innerHTML = `
     <div class="mh-top"><span class="mh-name">${estado.nombre}</span>
       <span class="mh-status">${estado.estatus.label}</span></div>
-    <div class="mh-party"><span class="chip" style="background:${p.color};color:${p.tinta}">${p.nombre}</span>
+    <div class="mh-party">${partyLogo(estado.favorito)}
       ${estado.flip ? '<span class="mh-flip">cambia</span>' : ''}</div>
     <div class="mh-metric">${metricLine}</div>`;
   card.classList.add('on');
@@ -173,15 +172,15 @@ function hideHover(svg) {
   if (card) card.classList.remove('on');
 }
 
-/** Leyenda Gana / Cambia por fuerza. */
+/** Leyenda Gana / Cambia por fuerza (con logotipos). */
 export function renderLegend(container, parties) {
   const list = parties || ['MORENA', 'PAN', 'PRI', 'MC'];
   let html = '';
   for (const id of list) {
     const p = PARTIES[id];
     if (!p) continue;
-    html += `<div class="lg-item">
-      <span class="lg-name">${p.nombre}</span>
+    html += `<div class="lg-item" title="${p.nombre}">
+      ${partyLogo(id)}
       <span class="lg-sw" style="background:${p.color}" title="gana"></span>
       <span class="lg-sw lg-hatch" style="--c:${p.color}" title="cambia"></span>
     </div>`;
@@ -332,10 +331,10 @@ export function renderFineMap(host, opts = {}) {
 function showCPHover(host, feature, ev) {
   let card = host.querySelector('.map-hover');
   if (!card) { card = document.createElement('div'); card.className = 'map-hover'; host.appendChild(card); }
-  const p = PARTIES[feature.properties.w];
+  const favorito = feature.properties.w;
   card.innerHTML = `
     <div class="mh-top"><span class="mh-name">CP ${feature.properties.cp}</span></div>
-    <div class="mh-party"><span class="chip" style="background:${p ? p.color : '#999'};color:${p ? p.tinta : '#fff'}">${p ? p.nombre : feature.properties.w}</span></div>
+    <div class="mh-party">${PARTIES[favorito] ? partyLogo(favorito) : `<span class="chip">${favorito}</span>`}</div>
     <div class="mh-metric">${feature.properties.edo.replace(/-/g, ' ')}</div>`;
   card.classList.add('on');
   const r = host.getBoundingClientRect();
@@ -512,12 +511,11 @@ export function renderMunicipios(svg, estado, geoData, opts = {}) {
 }
 
 function showMunicipioHover(svg, municipio, estado, event) {
-  const party = PARTIES[municipio.favorito];
   const card = hoverCard(svg);
   const probability = pct(municipio.probFav);
   const margin = `+${municipio.margen.toFixed(1)} pp`;
   card.innerHTML = `<div class="mh-top"><span class="mh-name">${municipio.name}</span></div>
-    <div class="mh-party"><span class="chip" style="background:${party.color};color:${party.tinta}">${party.nombre}</span></div>
+    <div class="mh-party">${partyLogo(municipio.favorito)}</div>
     <div class="mh-metric"><b>${probability}</b> probabilidad · <b>${margin}</b> margen</div>
     <div class="mh-sub">${estado.nombre}</div>`;
   card.classList.add('on');
@@ -628,6 +626,97 @@ export function renderMunicipiosCanvas(host, estado, geoData, opts = {}) {
 }
 
 
+/* ============================================================
+   ÁREAS DE OPORTUNIDAD — mapa de calor con el voto real de 2021
+   por municipio para el partido seleccionado.
+   ============================================================ */
+
+/**
+ * Pinta los municipios como mapa de calor según la proporción de
+ * voto 2021 del partido indicado (más intenso = mayor proporción).
+ * @param {SVGElement} svg
+ * @param {Object} geoData GeoJSON municipal
+ * @param {Object} opts { partido, hist, onSelect(entry) }
+ */
+export function renderMunicipiosHist(svg, geoData, opts = {}) {
+  const partido = opts.partido;
+  const hist = opts.hist || {};
+  const p = PARTIES[partido];
+  const features = geoData.features || [];
+
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  for (const feature of features) {
+    const polygons = feature.geometry.type === 'Polygon' ? [feature.geometry.coordinates] : feature.geometry.coordinates;
+    for (const polygon of polygons) for (const [lng, lat] of polygon[0]) {
+      minX = Math.min(minX, lng); maxX = Math.max(maxX, lng);
+      minY = Math.min(minY, -lat); maxY = Math.max(maxY, -lat);
+    }
+  }
+  const width = maxX - minX, height = maxY - minY;
+  const extentArea = width * height;
+  const padding = Math.max(width, height) * 0.05;
+  svg.innerHTML = '';
+  svg.setAttribute('viewBox', `${minX - padding} ${minY - padding} ${width + padding * 2} ${height + padding * 2}`);
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+
+  const entries = [];
+  for (const feature of features) {
+    if (isBackgroundGeometry(feature.geometry, extentArea)) continue;
+    const key = slugify(feature.properties.name || '');
+    const m = hist[key];
+    const votos = m ? (m.partidos[partido] || 0) : 0;
+    const share = m && m.votos > 0 ? votos / m.votos : 0;
+    entries.push({ feature, key, nombre: feature.properties.name || key, m, votos, share, partido });
+  }
+  const shares = entries.map((e) => e.share);
+  const min = Math.min(...shares);
+  const max = Math.max(...shares);
+
+  let selected = null;
+  for (const entry of entries) {
+    const t = max > min ? 0.12 + 0.88 * ((entry.share - min) / (max - min)) : 0.5;
+    const fill = mix(p.colorSoft, p.color, t);
+    const g = svgEl('g', { class: 'municipio' });
+    g.dataset.key = entry.key;
+    const d = geometryToEvenOddPath(entry.feature.geometry);
+    if (d) {
+      const path = svgEl('path', { d, fill, 'fill-rule': 'evenodd', 'clip-rule': 'evenodd' });
+      path.setAttribute('stroke', '#ffffff');
+      path.setAttribute('stroke-width', 0.035);
+      path.setAttribute('vector-effect', 'non-scaling-stroke');
+      g.appendChild(path);
+    }
+    g.style.cursor = 'pointer';
+    g.addEventListener('mouseenter', (ev) => showHistHover(svg, entry, ev));
+    g.addEventListener('mousemove', (ev) => moveHover(svg, ev));
+    g.addEventListener('mouseleave', () => hideHover(svg));
+    const select = () => {
+      if (selected) selected.classList.remove('selected');
+      g.classList.add('selected'); selected = g;
+      if (opts.onSelect) opts.onSelect(entry);
+    };
+    g.addEventListener('click', select);
+    svg.appendChild(g);
+  }
+  return {
+    entries,
+    select(key) {
+      const group = [...svg.querySelectorAll('.municipio')].find((item) => item.dataset.key === key);
+      if (group) group.dispatchEvent(new MouseEvent('click'));
+    },
+  };
+}
+
+function showHistHover(svg, entry, ev) {
+  const card = hoverCard(svg);
+  const pctShare = (entry.share * 100).toFixed(1) + '%';
+  card.innerHTML = `<div class="mh-top"><span class="mh-name">${entry.nombre}</span></div>
+    <div class="mh-party">${partyLogo(entry.partido)}</div>
+    <div class="mh-metric"><b>${pctShare}</b> del voto 2021 · <b>${entry.votos.toLocaleString('es-MX')}</b> votos</div>`;
+  card.classList.add('on');
+  moveHover(svg, ev);
+}
+
 function showCanvasMunicipioHover(host, estado, municipio, event) {
   let card = host.querySelector('.map-hover');
   if (!card) {
@@ -640,7 +729,7 @@ function showCanvasMunicipioHover(host, estado, municipio, event) {
     ? `margen <b>+${municipio.margen.toFixed(1)} pp</b>`
     : `prob. <b>${pct(municipio.probFav)}</b>`;
   card.innerHTML = `<div class="mh-top"><span class="mh-name">${municipio.name}</span></div>
-    <div class="mh-party"><span class="chip" style="background:${party.color};color:${party.tinta}">${party.nombre}</span></div>
+    <div class="mh-party">${party ? partyLogo(municipio.favorito) : `<span class="chip">${municipio.favorito}</span>`}</div>
     <div class="mh-metric">${metricLine}</div>
     <div class="mh-metric">${estado.nombre}</div>`;
   card.classList.add('on');

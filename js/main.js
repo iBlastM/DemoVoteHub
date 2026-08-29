@@ -14,6 +14,32 @@ import * as encuestas from './views/encuestas.js';
 
 const app = document.getElementById('app');
 
+/* ---------- Tema claro / oscuro (persistente en localStorage) ---------- */
+const THEME_KEY = 'mirador-theme';
+
+function applyTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  const icon = document.getElementById('themeIcon');
+  const text = document.getElementById('themeText');
+  const dark = theme === 'dark';
+  if (icon) icon.textContent = dark ? '☀️' : '🌙';
+  if (text) text.textContent = dark ? 'Claro' : 'Oscuro';
+}
+
+function initTheme() {
+  let theme = 'light';
+  try { theme = localStorage.getItem(THEME_KEY) || 'light'; } catch { /* sin persistencia */ }
+  applyTheme(theme);
+  const btn = document.getElementById('themeToggle');
+  btn.addEventListener('click', () => {
+    const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    try { localStorage.setItem(THEME_KEY, next); } catch { /* sin persistencia */ }
+  });
+}
+
+initTheme();
+
 function after() {
   window.scrollTo({ top: 0, behavior: 'auto' });
   syncNav();

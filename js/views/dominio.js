@@ -5,27 +5,33 @@
 
 import { store } from '../store.js';
 import { PARTIES, PARTY_ORDER, UPDATED_LABEL } from '../config.js';
-import { renderMap, renderLegend, renderMunicipios, loadMunicipios, stateCve } from '../map.js';
+import { renderMap, renderLegend, renderMunicipios, renderMunicipiosHist, loadMunicipios, stateCve } from '../map.js';
+import { loadHist2021 } from '../hist2021.js';
 import { createZoom } from '../zoom.js';
 import { navigate } from '../router.js';
+import { partyLogo } from '../components.js';
 import { pct, slugify } from '../utils.js';
 
 export function render(root) {
   root.innerHTML = `
   <section class="dom-fs">
-    <div class="map-stage dom-stage" id="stage"><svg id="map" aria-label="Mapa de dominio electoral"></svg></div>
-    <button class="dom-back" id="backBtn" hidden>← Todos los estados</button>
+    <div class="dom-map">
+      <div class="map-stage dom-stage" id="stage"><svg id="map" aria-label="Mapa de dominio electoral"></svg></div>
+      <button class="dom-back" id="backBtn" hidden>← Todos los estados</button>
 
-    <div class="state-actions" id="stateActions" hidden aria-live="polite"></div>
-    <div class="territory-popup" id="territoryPopup" hidden aria-live="polite"></div>
+      <div class="state-actions" id="stateActions" hidden aria-live="polite"></div>
+      <div class="territory-popup" id="territoryPopup" hidden aria-live="polite"></div>
 
-    <div class="zoom-ctl">
-      <button data-z="in" aria-label="Acercar">+</button>
-      <button data-z="out" aria-label="Alejar">−</button>
-      <button data-z="reset" aria-label="Restablecer vista">⟳</button>
+      <div class="zoom-ctl">
+        <button data-z="in" aria-label="Acercar">+</button>
+        <button data-z="out" aria-label="Alejar">−</button>
+        <button data-z="reset" aria-label="Restablecer vista">⟳</button>
+      </div>
+
+      <div class="map-loading" id="mapLoading" hidden><span class="spinner"></span> cargando municipios…</div>
     </div>
 
-    <div class="dom-panel">
+    <aside class="dom-panel">
       <div class="dp-head">
         <h2 class="dp-title" id="panelTitle">Mapa de dominio</h2>
         <p class="dp-sub" id="panelSub">Selecciona un <b>estado</b> para elegir entre ver su desglose municipal o la contienda estatal. Rueda para acercar; arrastra para desplazar.</p>
@@ -36,12 +42,18 @@ export function render(root) {
           <button data-metric="margen">Margen</button>
         </div>
       </div>
+      <div class="seg" id="viewToggle" role="group" aria-label="Vista municipal" hidden>
+        <button data-view="municipios" class="on">Municipios 2027</button>
+        <button data-view="oportunidad">Oportunidad 2021</button>
+      </div>
+      <div class="op-controls" id="opControls" hidden>
+        <p class="op-kicker">Áreas de oportunidad · voto 2021</p>
+        <div class="op-parties" id="opParties" role="group" aria-label="Partido para el mapa de calor"></div>
+      </div>
       <div class="legend legend-lg" id="legend"></div>
       <div class="dp-list" id="domList"></div>
       <p class="dp-foot">Actualizado ${UPDATED_LABEL} · <span class="ficticio">datos ficticios</span></p>
-    </div>
-
-    <div class="map-loading" id="mapLoading" hidden><span class="spinner"></span> cargando municipios…</div>
+    </aside>
   </section>`;
 
   const stage = root.querySelector('#stage');
@@ -53,9 +65,24 @@ export function render(root) {
   const panelSub = root.querySelector('#panelSub');
   const list = root.querySelector('#domList');
   const stateActions = root.querySelector('#stateActions');
+  const opControls = root.querySelector('#opControls');
+  const metricControls = root.querySelector('.dp-controls');
+  const legendEl = root.querySelector('#legend');
+  const viewToggle = root.querySelector('#viewToggle');
+
+  function syncViewToggle() {
+    const show = selectedState && selectedState.slug === 'queretaro' &&
+      (mode === 'municipios' || mode === 'oportunidad');
+    viewToggle.hidden = !show;
+    viewToggle.querySelectorAll('button').forEach((b) =>
+      b.classList.toggle('on', b.dataset.view === mode));
+  }
   let selectedState = null;
   let pendingState = null;
   let municipalityControl = null;
+  let histControl = null;
+  let mode = 'estados';        // 'estados' | 'municipios' | 'oportunidad'
+  let opParty = 'PAN';         // partido del mapa de calor 2021
 
   store.mapMetric = store.mapMetric || 'prob';
   // Algunos nombres del GeoJSON estatal tienen problemas de codificación; la
@@ -85,12 +112,11 @@ export function render(root) {
     const estado = store.porSlug[slug];
     if (!estado) return;
     pendingState = estado;
-    const party = PARTIES[estado.favorito];
     stateActions.innerHTML = `
       <button class="sa-close" data-state-action="close" aria-label="Cerrar opciones">×</button>
       <p class="sa-kicker">${estado.region}</p>
       <h3>${estado.nombre}</h3>
-      <p><span class="pdot" style="background:${party.color}"></span>${party.nombre} lidera la contienda.</p>
+      <p>${partyLogo(estado.favorito, 'md')} lidera la contienda.</p>
       <div class="sa-kpis">
         <span><b>${pct(estado.probFav)}</b> probabilidad</span>
         <span><b>+${estado.margen.toFixed(1)} pp</b> margen</span>
@@ -99,12 +125,12 @@ export function render(root) {
       <div class="sa-buttons">
         <button class="sa-primary" data-state-action="municipios">Ver municipios</button>
         <button class="sa-secondary" data-state-action="contienda">Ver contienda estatal</button>
+        ${estado.slug === 'queretaro' ? '<button class="sa-secondary" data-state-action="oportunidad">Áreas de oportunidad 2021</button>' : ''}
       </div>`;
     stateActions.hidden = false;
   }
 
   function showMunicipalityPopup(municipio) {
-    const party = PARTIES[municipio.favorito];
     const metric = store.mapMetric === 'margen'
       ? `+${municipio.margen.toFixed(1)} pp de margen`
       : `${pct(municipio.probFav)} de probabilidad`;
@@ -113,7 +139,7 @@ export function render(root) {
       <button class="sa-close" data-state-action="close" aria-label="Cerrar detalle">×</button>
       <p class="sa-kicker">Municipio · ${selectedState?.nombre || ''}</p>
       <h3>${municipio.name}</h3>
-      <p><span class="pdot" style="background:${party.color}"></span><b>${party.nombre}</b> lidera la contienda municipal.</p>
+      <p>${partyLogo(municipio.favorito, 'md')} lidera la contienda municipal.</p>
       <div class="sa-kpis">
         <span><b>${pct(municipio.probFav)}</b> probabilidad</span>
         <span><b>+${municipio.margen.toFixed(1)} pp</b> margen</span>
@@ -128,9 +154,8 @@ export function render(root) {
       .map((id) => ({ id, estados: store.estados.filter((estado) => estado.favorito === id).sort((a, b) => b.probFav - a.probFav) }))
       .filter((grupo) => grupo.estados.length);
     list.innerHTML = grupos.map((grupo) => {
-      const party = PARTIES[grupo.id];
       return `<div class="dl-group">
-        <div class="dl-head"><span class="pdot" style="background:${party.color}"></span>${party.nombre}<span class="dl-count">${grupo.estados.length}</span></div>
+        <div class="dl-head">${partyLogo(grupo.id, 'md')}<span class="dl-count">${grupo.estados.length}</span></div>
         ${grupo.estados.map((estado) => `<button class="dl-row" data-slug="${estado.slug}">
           <span class="dl-name">${estado.nombre}${estado.flip ? ' <span class="flip-tag sm">cambia</span>' : ''}</span>
           <span class="dl-metric">${pct(estado.probFav)}</span>
@@ -160,6 +185,12 @@ export function render(root) {
     svg.style.display = '';
     selectedState = null;
     municipalityControl = null;
+    histControl = null;
+    mode = 'estados';
+    opControls.hidden = true;
+    metricControls.hidden = false;
+    legendEl.hidden = false;
+    syncViewToggle();
     backBtn.hidden = true;
     panelTitle.textContent = 'Mapa de dominio';
     panelSub.innerHTML = 'Selecciona un <b>estado</b> para elegir entre ver su desglose municipal o la contienda estatal. Rueda para acercar; arrastra para desplazar.';
@@ -174,6 +205,12 @@ export function render(root) {
     if (!estado) return;
     closeStateActions();
     selectedState = estado;
+    mode = 'municipios';
+    histControl = null;
+    opControls.hidden = true;
+    metricControls.hidden = false;
+    legendEl.hidden = false;
+    syncViewToggle();
     // Se crea un SVG nuevo: reutilizar el estatal conservaba una capa de
     // composición del hover en algunos navegadores.
     const municipalSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -208,6 +245,81 @@ export function render(root) {
     loading.hidden = true;
   }
 
+  /* ---------- Áreas de oportunidad (mapa de calor, voto 2021) ---------- */
+  async function drawOpportunity(slug) {
+    const estado = store.porSlug[slug];
+    if (!estado) return;
+    closeStateActions();
+    selectedState = estado;
+    mode = 'oportunidad';
+    municipalityControl = null;
+    const histSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    histSvg.id = 'map';
+    histSvg.setAttribute('aria-label', `Áreas de oportunidad 2021 · ${estado.nombre}`);
+    svg = histSvg;
+    stage.replaceChildren(svg);
+    loading.hidden = false;
+    loading.innerHTML = '<span class="spinner"></span> cargando voto 2021…';
+    try {
+      const [geoData, hist] = await Promise.all([loadMunicipios(estado), loadHist2021()]);
+      svg.style.display = '';
+      histControl = renderMunicipiosHist(svg, geoData, {
+        partido: opParty,
+        hist,
+        onSelect: showHistPopup,
+      });
+      opControls.hidden = false;
+      metricControls.hidden = true;
+      legendEl.hidden = true;
+      syncViewToggle();
+      renderOpParties();
+      panelTitle.textContent = 'Áreas de oportunidad';
+      panelSub.innerHTML = `Voto <b>2021</b> por municipio en ${estado.nombre}. Elige un partido: el tono más intenso marca mayor proporción de voto.`;
+      renderOpList(histControl.entries);
+      backBtn.hidden = false;
+      zoom.reset();
+    } catch (error) {
+      panelSub.textContent = 'No se pudieron cargar los datos de 2021 de este estado.';
+      loading.innerHTML = 'No se pudieron cargar los datos de 2021.';
+      return;
+    }
+    loading.hidden = true;
+  }
+
+  function renderOpParties() {
+    root.querySelector('#opParties').innerHTML = PARTY_ORDER.map((id) =>
+      `<button class="op-party${id === opParty ? ' on' : ''}" data-party="${id}"
+        aria-pressed="${id === opParty}" title="${PARTIES[id].nombre}">${partyLogo(id, 'md')}</button>`).join('');
+  }
+
+  function renderOpList(entries) {
+    const sorted = [...entries].sort((a, b) => b.share - a.share);
+    list.innerHTML = `<div class="dl-group">
+      <div class="dl-head">${partyLogo(opParty, 'md')}<span class="dl-count">${sorted.length} municipios</span></div>
+      ${sorted.map((entry) => `
+        <button class="dl-row" data-opkey="${entry.key}">
+          <span class="dl-name">${entry.nombre}</span>
+          <span class="dl-metric">${(entry.share * 100).toFixed(1)}%</span>
+        </button>`).join('')}
+    </div>`;
+  }
+
+  function showHistPopup(entry) {
+    pendingState = null;
+    stateActions.innerHTML = `
+      <button class="sa-close" data-state-action="close" aria-label="Cerrar detalle">×</button>
+      <p class="sa-kicker">Municipio · ${selectedState ? selectedState.nombre : ''} · voto 2021</p>
+      <h3>${entry.nombre}</h3>
+      <p>${partyLogo(entry.partido, 'md')} obtuvo <b>${(entry.share * 100).toFixed(1)}%</b> del voto emitido.</p>
+      <div class="sa-kpis">
+        <span><b>${(entry.share * 100).toFixed(1)}%</b> proporción</span>
+        <span><b>${entry.votos.toLocaleString('es-MX')}</b> votos</span>
+        <span><b>${entry.m ? entry.m.votos.toLocaleString('es-MX') : '—'}</b> emitidos</span>
+      </div>
+      <div class="sa-buttons"><button class="sa-secondary" data-state-action="close">Cerrar</button></div>`;
+    stateActions.hidden = false;
+  }
+
   root.querySelector('.zoom-ctl').addEventListener('click', (event) => {
     const button = event.target.closest('button');
     if (!button) return;
@@ -219,16 +331,33 @@ export function render(root) {
 
   stateActions.addEventListener('click', (event) => {
     const action = event.target.closest('[data-state-action]')?.dataset.stateAction;
-    if (!action || !pendingState) return;
-    if (action === 'close') closeStateActions();
-    else if (action === 'municipios') drawMunicipalities(pendingState.slug);
+    if (!action) return;
+    if (action === 'close') { closeStateActions(); return; }
+    if (!pendingState) return;
+    if (action === 'municipios') drawMunicipalities(pendingState.slug);
     else if (action === 'contienda') navigate('/estado/' + pendingState.slug);
+    else if (action === 'oportunidad') drawOpportunity(pendingState.slug);
+  });
+
+  viewToggle.addEventListener('click', (event) => {
+    const button = event.target.closest('button');
+    if (!button || !selectedState || button.dataset.view === mode) return;
+    if (button.dataset.view === 'oportunidad') drawOpportunity(selectedState.slug);
+    else drawMunicipalities(selectedState.slug);
+  });
+
+  root.querySelector('#opParties').addEventListener('click', (event) => {
+    const btn = event.target.closest('[data-party]');
+    if (!btn || btn.dataset.party === opParty) return;
+    opParty = btn.dataset.party;
+    if (selectedState && mode === 'oportunidad') drawOpportunity(selectedState.slug);
   });
 
   metricToggle.querySelectorAll('button').forEach((button) => button.classList.toggle('on', button.dataset.metric === store.mapMetric));
   metricToggle.addEventListener('click', (event) => {
     const button = event.target.closest('button');
     if (!button || button.dataset.metric === store.mapMetric) return;
+    if (mode === 'oportunidad') return;
     store.mapMetric = button.dataset.metric;
     metricToggle.querySelectorAll('button').forEach((item) => item.classList.toggle('on', item === button));
     if (selectedState) drawMunicipalities(selectedState.slug);
@@ -239,13 +368,18 @@ export function render(root) {
     const stateRow = event.target.closest('[data-slug]');
     if (stateRow) { showStateActions(stateRow.dataset.slug); return; }
     const municipalityRow = event.target.closest('[data-cvegeo]');
-    if (municipalityRow && municipalityControl) municipalityControl.select(municipalityRow.dataset.cvegeo);
+    if (municipalityRow && municipalityControl) { municipalityControl.select(municipalityRow.dataset.cvegeo); return; }
+    const opRow = event.target.closest('[data-opkey]');
+    if (opRow && histControl) histControl.select(opRow.dataset.opkey);
   });
 
   let resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => selectedState ? drawMunicipalities(selectedState.slug) : drawStates(), 200);
+    resizeTimer = setTimeout(() => {
+      if (!selectedState) return drawStates();
+      return mode === 'oportunidad' ? drawOpportunity(selectedState.slug) : drawMunicipalities(selectedState.slug);
+    }, 200);
   });
 
   drawStates();

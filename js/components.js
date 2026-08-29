@@ -20,6 +20,17 @@ export function dot(id) {
 }
 
 /**
+ * Chip de partido con logotipo: fondo claro del color del partido
+ * (se adapta al tema claro/oscuro) y la imagen centrada.
+ */
+export function partyLogo(id, size = 'md') {
+  const p = PARTIES[id];
+  if (!p) return `<span class="chip">${id}</span>`;
+  if (!p.logo) return `<span class="chip" style="background:${p.color};color:${p.tinta}">${p.nombre}</span>`;
+  return `<span class="plogo plogo-${size}" style="--pc:${p.color}" title="${p.nombre}"><img src="${p.logo}" alt="${p.nombre}"></span>`;
+}
+
+/**
  * Barra de probabilidad apilada (fuerzas ordenadas de mayor a menor).
  * Muestra la probabilidad de victoria de cada fuerza en la contienda.
  */
@@ -47,7 +58,7 @@ export function voteBars(estado) {
     html += `<div class="vbar">
       <div class="vbar-col"><span class="vbar-fill" style="height:${(v / max) * 100}%;background:${p ? p.color : '#bbb'}"></span></div>
       <span class="vbar-val">${pct(v)}</span>
-      <span class="vbar-lbl">${p ? p.nombre.split(' ')[0] : id}</span>
+      <span class="vbar-lbl">${partyLogo(id, 'xs')}</span>
     </div>`;
   }
   return html + '</div>';
@@ -65,7 +76,7 @@ export function statusTag(estado) {
 export function trendChart(estado, { w = 640, h = 260 } = {}) {
   const { forces, puntos } = estado.tendencia;
   const svg = svgEl('svg', { class: 'trend', viewBox: `0 0 ${w} ${h}`, preserveAspectRatio: 'none' });
-  const padL = 34, padR = 12, padT = 16, padB = 26;
+  const padL = 34, padR = 30, padT = 16, padB = 26;
   const iw = w - padL - padR, ih = h - padT - padB;
   const vals = puntos.flatMap((p) => forces.map((f) => p[f]));
   const maxV = Math.min(75, Math.ceil((Math.max(...vals) + 5) / 10) * 10);
@@ -88,6 +99,11 @@ export function trendChart(estado, { w = 640, h = 260 } = {}) {
     svg.appendChild(path);
     const last = puntos[puntos.length - 1];
     svg.appendChild(svgEl('circle', { cx: x(puntos.length - 1), cy: y(last[f]), r: 3.2, fill: p ? p.color : '#999' }));
+    if (p && p.logo) {
+      const img = svgEl('image', { x: x(puntos.length - 1) + 7, y: y(last[f]) - 8, width: 16, height: 16, href: p.logo });
+      img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', p.logo);
+      svg.appendChild(img);
+    }
   });
   return svg;
 }
@@ -96,7 +112,7 @@ export function trendChart(estado, { w = 640, h = 260 } = {}) {
 export function surveyTable(estado) {
   const forces = estado.tendencia.forces;
   let head = '<tr><th>Casa</th><th>Fecha</th><th>n</th>';
-  for (const f of forces) head += `<th>${dot(f)}${PARTIES[f] ? PARTIES[f].nombre.split(' ')[0] : f}</th>`;
+  for (const f of forces) head += `<th>${partyLogo(f, 'xs')}</th>`;
   head += '</tr>';
   let rows = '';
   for (const s of estado.encuestas) {

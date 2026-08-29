@@ -17,6 +17,7 @@ export const PARTIES = {
     color: '#A50D4E', // guinda
     colorSoft: '#E9B9CB',
     tinta: '#ffffff',
+    logo: 'images/partidos/morena.png',
   },
   PAN: {
     id: 'PAN',
@@ -26,6 +27,7 @@ export const PARTIES = {
     color: '#0A5CA8', // azul
     colorSoft: '#B4D0EC',
     tinta: '#ffffff',
+    logo: 'images/partidos/pan.png',
   },
   PRI: {
     id: 'PRI',
@@ -35,6 +37,7 @@ export const PARTIES = {
     color: '#1E9E5A', // verde
     colorSoft: '#BEE6CE',
     tinta: '#ffffff',
+    logo: 'images/partidos/pri.png',
   },
   MC: {
     id: 'MC',
@@ -44,6 +47,7 @@ export const PARTIES = {
     color: '#F28C00', // naranja
     colorSoft: '#FBDCAE',
     tinta: '#3a2400',
+    logo: 'images/partidos/mc.png',
   },
 };
 

@@ -5,7 +5,7 @@
 import { store } from '../store.js';
 import { PARTIES, PARTY_ORDER, UPDATED_LABEL } from '../config.js';
 import { navigate } from '../router.js';
-import { chip, probBar, statusTag } from '../components.js';
+import { partyLogo, probBar, statusTag } from '../components.js';
 import { pct, signed, rng, seedFrom, animateCount } from '../utils.js';
 
 /** Simula la distribución de gubernaturas ganadas por una fuerza. */
@@ -35,9 +35,9 @@ export function render(root) {
   const opos = simularEscanos('PAN'); // proxy de oposición (fuerza principal)
 
   const escenarios = [
-    { p: morena.acumGE(12), t: 'Morena gana <b>12 o más</b> de las 17 gubernaturas.', c: PARTIES.MORENA.color },
-    { p: morena.acumGE(14), t: 'Morena arrasa con <b>14 o más</b> gubernaturas.', c: PARTIES.MORENA.color },
-    { p: 1 - morena.acumGE(13), t: 'La oposición contiene a Morena por <b>debajo de 13</b>.', c: PARTIES.PAN.color },
+    { p: morena.acumGE(12), t: 'Morena gana <b>12 o más</b> de las 17 gubernaturas.', c: PARTIES.MORENA.color, partido: 'MORENA' },
+    { p: morena.acumGE(14), t: 'Morena arrasa con <b>14 o más</b> gubernaturas.', c: PARTIES.MORENA.color, partido: 'MORENA' },
+    { p: 1 - morena.acumGE(13), t: 'La oposición contiene a Morena por <b>debajo de 13</b>.', c: PARTIES.PAN.color, partido: 'PAN' },
   ];
 
   root.innerHTML = `
@@ -49,6 +49,7 @@ export function render(root) {
 
   <section class="scen">${escenarios.map((s, i) => `
     <div class="scen-card" style="--c:${s.c}">
+      <div class="scen-logo">${partyLogo(s.partido, 'lg')}</div>
       <span class="scen-p" data-count="${Math.round(s.p * 100)}">0%</span>
       <p class="scen-t">${s.t}</p>
     </div>`).join('')}
@@ -83,7 +84,7 @@ export function render(root) {
     const p = PARTIES[id];
     const rango = id === 'MORENA' ? `${morena.lo}–${morena.hi}` : (id === 'PAN' ? `${opos.lo}–${opos.hi}` : '—');
     return `<div class="proj-row">
-      <span class="proj-name">${p.nombre}</span>
+      <span class="proj-name">${partyLogo(id, 'lg')}</span>
       <div class="proj-track"><span class="proj-fill" style="width:${(v / maxExp) * 100}%;background:${p.color}"></span></div>
       <span class="proj-val">${v.toFixed(1)}</span>
       <span class="proj-range">${rango}</span>
@@ -116,7 +117,7 @@ export function render(root) {
 function row(e) {
   return `<div class="ft-row" data-slug="${e.slug}" tabindex="0">
     <span class="ft-name">${e.nombre}</span>
-    <span class="ft-fav">${chip(e.favorito)}${e.flip ? '<span class="flip-tag sm">cambia</span>' : ''}</span>
+    <span class="ft-fav">${partyLogo(e.favorito)}${e.flip ? '<span class="flip-tag sm">cambia</span>' : ''}</span>
     <span class="ft-bar">${probBar(e)}</span>
     <span class="ft-prob">${pct(e.probFav)}</span>
     <span class="ft-margen">${signed(e.margen)}</span>

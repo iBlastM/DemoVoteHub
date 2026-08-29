@@ -23,7 +23,19 @@
       <a href="#/encuestas" data-top="/encuestas">Encuestas</a>
       <a href="#/dominio" data-top="/dominio">Mapa de dominio</a>
     </nav>
-    <span class="demo-badge" title="Todos los datos son inventados">DEMO · datos ficticios</span>
+    <div class="topbar-right">
+      <span class="live" title="Actualización continua de la simulación">
+        <span class="live-dot" aria-hidden="true"></span>
+        <span class="live-label">EN&nbsp;VIVO</span>
+        <span class="live-since">actualizado hace <b>2&nbsp;min</b></span>
+      </span>
+      <button class="theme-toggle" id="themeToggle" type="button"
+              aria-label="Cambiar entre fondo claro y oscuro" title="Cambiar fondo claro / oscuro">
+        <span class="theme-icon" id="themeIcon" aria-hidden="true">🌙</span>
+        <span class="theme-text" id="themeText">Oscuro</span>
+      </button>
+      <span class="demo-badge" title="Todos los datos son inventados">DEMO · datos ficticios</span>
+    </div>
   </header>
 
   <main id="app" class="app"><!-- las vistas se montan aquí --></main>

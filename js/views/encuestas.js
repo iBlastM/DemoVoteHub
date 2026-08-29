@@ -4,8 +4,10 @@
 // ============================================================
 
 import { store } from '../store.js';
+import { PARTIES } from '../config.js';
 import { construirEncuestas, encuestaPorId } from '../polls.js';
 import { navigate } from '../router.js';
+import { partyLogo } from '../components.js';
 import { svgEl, clamp, pct } from '../utils.js';
 
 const MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
@@ -59,7 +61,7 @@ export function buildPollChart(q, opts = {}) {
       svg.appendChild(svgEl('circle', { cx: X(d.t.getTime()).toFixed(1), cy: Y(d.v[o.id]).toFixed(1), r: 2.4, fill: o.color, opacity: 0.22 }));
   }
 
-  // Promedio (línea) + punto final + etiqueta AHORA.
+  // Promedio (línea) + punto final + etiqueta AHORA (logotipo si es partido).
   for (const o of q.opciones) {
     const dd = q.serie.map((s, i) => `${i === 0 ? 'M' : 'L'}${X(s.t.getTime()).toFixed(1)},${Y(s.v[o.id]).toFixed(1)}`).join(' ');
     svg.appendChild(svgEl('path', { d: dd, fill: 'none', stroke: o.color, 'stroke-width': mini ? 1.8 : 2.6, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }));
@@ -67,9 +69,22 @@ export function buildPollChart(q, opts = {}) {
       const last = q.serie[q.serie.length - 1];
       const y = Y(last.v[o.id]);
       svg.appendChild(svgEl('circle', { cx: X(t1), cy: y, r: 3.6, fill: o.color }));
-      const lbl = svgEl('text', { class: 'pc-now', x: X(t1) + 8, y: y + 4, fill: o.color });
-      lbl.textContent = `${o.label.split(' ')[0]} ${Math.round(last.v[o.id])}%`;
-      svg.appendChild(lbl);
+      const party = PARTIES[o.id];
+      if (party && party.logo) {
+        const img = svgEl('image', {
+          x: X(t1) + 9, y: y - 13.5, width: 27, height: 27,
+          href: party.logo,
+        });
+        img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', party.logo);
+        svg.appendChild(img);
+        const lbl = svgEl('text', { class: 'pc-now', x: X(t1) + 40, y: y + 4, fill: o.color });
+        lbl.textContent = `${Math.round(last.v[o.id])}%`;
+        svg.appendChild(lbl);
+      } else {
+        const lbl = svgEl('text', { class: 'pc-now', x: X(t1) + 9, y: y + 4, fill: o.color });
+        lbl.textContent = `${o.label.split(' ')[0]} ${Math.round(last.v[o.id])}%`;
+        svg.appendChild(lbl);
+      }
     }
   }
   return svg;
@@ -81,7 +96,7 @@ function toplineChips(q) {
   return entries.map(({ o, v }) => `
     <div class="tl-chip" style="--c:${o.color}">
       <span class="tl-v">${Math.round(v)}%</span>
-      <span class="tl-l">${o.label}</span>
+      <span class="tl-l">${PARTIES[o.id] ? partyLogo(o.id, 'xs') : o.label}</span>
     </div>`).join('');
 }
 
@@ -118,7 +133,7 @@ export function render(root) {
   root.querySelector('#encStates').innerHTML = arr.map((e) => `
     <button class="es-row" data-slug="${e.slug}">
       <span class="es-name">${e.nombre}</span>
-      <span class="es-lead">${e.favorito} <b>${pct(Object.values(e.voto).sort((a,b)=>b-a)[0])}</b></span>
+      <span class="es-lead">${partyLogo(e.favorito, 'xs')} <b>${pct(Object.values(e.voto).sort((a,b)=>b-a)[0])}</b></span>
     </button>`).join('');
   root.querySelector('#encStates').addEventListener('click', (e) => {
     const b = e.target.closest('.es-row'); if (b) navigate('/estado/' + b.dataset.slug);
@@ -149,5 +164,5 @@ export function renderDetail(root, id) {
 
   root.querySelector('#edChart').appendChild(buildPollChart(q, { w: 900, h: 460 }));
   root.querySelector('#edLegend').innerHTML = q.opciones.map((o) =>
-    `<span class="edl-item"><span class="pdot" style="background:${o.color}"></span>${o.label}</span>`).join('');
+    `<span class="edl-item">${PARTIES[o.id] ? partyLogo(o.id, 'md') : `<span class="pdot" style="background:${o.color}"></span>${o.label}`}</span>`).join('');
 }

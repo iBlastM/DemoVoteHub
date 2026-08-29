@@ -5,7 +5,7 @@
 import { store } from '../store.js';
 import { PARTIES } from '../config.js';
 import { navigate } from '../router.js';
-import { chip, dot, voteBars, statusTag, trendChart, surveyTable } from '../components.js';
+import { partyLogo, voteBars, statusTag, trendChart, surveyTable } from '../components.js';
 import { pct, signed } from '../utils.js';
 
 export function render(root, slug) {
@@ -30,7 +30,7 @@ export function render(root, slug) {
         <p class="eyebrow">Gubernatura · ${e.region} · <span class="ficticio">datos ficticios</span></p>
         <h1 class="detail-h">${e.nombre}</h1>
         <div class="detail-tags">
-          ${chip(e.favorito)} ${statusTag(e)}
+          ${partyLogo(e.favorito, 'lg')} ${statusTag(e)}
           ${e.flip ? `<span class="flip-tag">cambia de partido</span>` : `<span class="hold-tag">conserva</span>`}
         </div>
       </div>
@@ -39,7 +39,7 @@ export function render(root, slug) {
           <span class="kpi-l">prob. de victoria</span></div>
         <div class="kpi"><span class="kpi-k">${signed(e.margen)}</span>
           <span class="kpi-l">margen proyectado</span></div>
-        <div class="kpi"><span class="kpi-k">${gob ? gob.nombre : e.gob}</span>
+        <div class="kpi"><span class="kpi-k"><span class="kpi-logo">${gob ? partyLogo(gob.id, 'lg') : e.gob}</span></span>
           <span class="kpi-l">gobierna hoy</span></div>
       </div>
     </header>
@@ -62,7 +62,7 @@ export function render(root, slug) {
         <div class="panel-head"><h3>Probabilidad de victoria</h3></div>
         <div class="problist">${probList.map(([id, v]) => {
           const p = PARTIES[id];
-          return `<div class="pl-row"><span class="pl-name">${dot(id)}${p ? p.nombre : id}</span>
+          return `<div class="pl-row"><span class="pl-name">${PARTIES[id] ? partyLogo(id, 'md') : id}</span>
             <div class="pl-bar"><span style="width:${v * 100}%;background:${p ? p.color : '#999'}"></span></div>
             <span class="pl-val">${pct(v)}</span></div>`;
         }).join('')}</div>
@@ -79,7 +79,6 @@ export function render(root, slug) {
   // Gráfica de tendencia.
   root.querySelector('#trend').appendChild(trendChart(e));
   root.querySelector('#trendLegend').innerHTML = e.tendencia.forces.map((f) => {
-    const p = PARTIES[f];
-    return `<span class="tl-item">${dot(f)}${p ? p.nombre : f}</span>`;
+    return `<span class="tl-item">${PARTIES[f] ? partyLogo(f, 'xs') : f}</span>`;
   }).join('');
 }

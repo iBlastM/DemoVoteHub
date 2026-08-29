@@ -6,7 +6,7 @@ import { store } from '../store.js';
 import { PARTIES, PARTY_ORDER, UPDATED_LABEL, ELECTION_DATE } from '../config.js';
 import { renderMap, renderLegend } from '../map.js';
 import { navigate } from '../router.js';
-import { chip, probBar, odds, statusTag } from '../components.js';
+import { partyLogo, probBar, statusTag } from '../components.js';
 import { pct, signed, daysUntil, animateCount } from '../utils.js';
 import { construirEncuestas } from '../polls.js';
 import { buildPollChart } from './encuestas.js';
@@ -101,8 +101,7 @@ export function render(root) {
   }).join('')}</div>
   <div class="bal-legend">${PARTY_ORDER.map((p) => {
     const v = r.esperado[p] || 0;
-    return v <= 0.05 ? '' : `<span class="bal-li"><span class="pdot" style="background:${PARTIES[p].color}"></span>
-      ${PARTIES[p].nombre} <b>${v.toFixed(1)}</b></span>`;
+    return v <= 0.05 ? '' : `<span class="bal-li">${partyLogo(p, 'xs')} <b>${v.toFixed(1)}</b></span>`;
   }).join('')}</div>`;
 
   // Carreras para observar: las más cerradas.
@@ -116,7 +115,7 @@ export function render(root) {
   const hp = root.querySelector('#homePolls');
   hp.innerHTML = destacadas.map((q) => {
     const chips = q.opciones.map((o) => ({ o, v: q.topline[o.id] })).sort((a, b) => b.v - a.v).slice(0, 2)
-      .map(({ o, v }) => `<span class="hp-chip" style="--c:${o.color}"><b>${Math.round(v)}%</b> ${o.label.split(' ')[0]}</span>`).join('');
+      .map(({ o, v }) => `<span class="hp-chip" style="--c:${o.color}"><b>${Math.round(v)}%</b> ${PARTIES[o.id] ? partyLogo(o.id, 'xs') : o.label.split(' ')[0]}</span>`).join('');
     return `<article class="hp-card" data-id="${q.id}" tabindex="0">
       <h3 class="hp-q">${q.titulo}</h3>
       <div class="hp-spark" id="hp-${q.id}"></div>
@@ -129,13 +128,12 @@ export function render(root) {
 }
 
 function raceCard(e) {
-  const fav = PARTIES[e.favorito];
   return `<article class="race-card" data-slug="${e.slug}" tabindex="0">
     <div class="rc-head">
       <span class="rc-name">${e.nombre}</span>
       ${statusTag(e)}
     </div>
-    <div class="rc-fav">${chip(e.favorito)} ${e.flip ? '<span class="flip-tag">cambia</span>' : ''}</div>
+    <div class="rc-fav">${partyLogo(e.favorito)} ${e.flip ? '<span class="flip-tag">cambia</span>' : ''}</div>
     ${probBar(e)}
     <div class="rc-foot">
       <span>prob. <b>${pct(e.probFav)}</b></span>
