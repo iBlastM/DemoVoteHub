@@ -6,7 +6,7 @@ import { store } from '../store.js';
 import { PARTIES } from '../config.js';
 import { navigate } from '../router.js';
 import { partyLogo, voteBars, statusTag, trendChart, surveyTable } from '../components.js';
-import { pct, signed } from '../utils.js';
+import { pct, signed, fmtNum, fechaCorta } from '../utils.js';
 
 export function render(root, slug) {
   const e = store.porSlug[slug];
@@ -22,12 +22,17 @@ export function render(root, slug) {
     .filter(([, v]) => v >= 0.005)
     .sort((a, b) => b[1] - a[1]);
 
+  const puntosTendencia = e.tendencia.puntos;
+  const rangoTendencia = puntosTendencia.length
+    ? `${fechaCorta(puntosTendencia[0].fecha)} – ${fechaCorta(puntosTendencia[puntosTendencia.length - 1].fecha)}`
+    : '';
+
   root.innerHTML = `
   <section class="detail">
     <a class="back" href="#/dominio">← todas las gubernaturas</a>
     <header class="detail-hero">
       <div>
-        <p class="eyebrow">Gubernatura · ${e.region} · <span class="ficticio">datos ficticios</span></p>
+        <p class="eyebrow">Gubernatura · ${e.region} · <span class="fuente-real">basado en encuestas públicas</span></p>
         <h1 class="detail-h">${e.nombre}</h1>
         <div class="detail-tags">
           ${partyLogo(e.favorito, 'lg')} ${statusTag(e)}
@@ -39,6 +44,8 @@ export function render(root, slug) {
           <span class="kpi-l">prob. de victoria</span></div>
         <div class="kpi"><span class="kpi-k">${signed(e.margen)}</span>
           <span class="kpi-l">margen proyectado</span></div>
+        <div class="kpi"><span class="kpi-k">${fmtNum(e.listaNominal)}</span>
+          <span class="kpi-l">lista nominal</span></div>
         <div class="kpi"><span class="kpi-k"><span class="kpi-logo">${gob ? partyLogo(gob.id, 'lg') : e.gob}</span></span>
           <span class="kpi-l">gobierna hoy</span></div>
       </div>
@@ -47,15 +54,16 @@ export function render(root, slug) {
     <div class="detail-grid">
       <section class="panel panel-wide">
         <div class="panel-head"><h3>Tendencia de intención de voto</h3>
-          <span class="panel-sub">estimación quincenal · dic 2026 – jun 2027</span></div>
+          <span class="panel-sub">estimación quincenal · ${rangoTendencia}</span></div>
         <div class="trend-wrap" id="trend"></div>
         <div class="trend-legend" id="trendLegend"></div>
       </section>
 
       <section class="panel">
-        <div class="panel-head"><h3>Proyección de voto</h3>
-          <span class="panel-sub">día de la jornada</span></div>
+        <div class="panel-head"><h3>Apoyo potencial estimado</h3>
+          <span class="panel-sub">personas sobre la lista nominal</span></div>
         ${voteBars(e)}
+        <p class="panel-note">Base: ${fmtNum(e.listaNominal)} personas en la lista nominal territorial del INE. No representa votos emitidos.</p>
       </section>
 
       <section class="panel">
@@ -70,7 +78,7 @@ export function render(root, slug) {
 
       <section class="panel panel-wide">
         <div class="panel-head"><h3>Encuestas del ciclo</h3>
-          <span class="panel-sub">${e.encuestas.length} sondeos · casas ficticias</span></div>
+          <span class="panel-sub">${e.encuestas.length} sondeos ${e.encuestasSonReales ? 'públicos reales (scraping de encuestadoras)' : 'ilustrativos alrededor del promedio real'}</span></div>
         <div class="survey-wrap">${surveyTable(e)}</div>
       </section>
     </div>

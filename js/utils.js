@@ -18,6 +18,11 @@ export function pct(x, dec = 0) {
   return `${(x * 100).toFixed(dec)}%`;
 }
 
+/** Formatea una cantidad de personas o votos con separadores de miles mexicanos. */
+export function fmtNum(x) {
+  return Number(x || 0).toLocaleString('es-MX');
+}
+
 /** Formatea un margen con signo: 6.2 -> "+6.2". */
 export function signed(x, dec = 1) {
   const s = x >= 0 ? '+' : '−';

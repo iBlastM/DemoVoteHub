@@ -4,9 +4,11 @@
 // ============================================================
 
 import { store } from '../store.js';
-import { PARTIES, PARTY_ORDER, UPDATED_LABEL } from '../config.js';
+import { PARTIES, PARTY_ORDER } from '../config.js';
 import { renderMap, renderLegend, renderMunicipios, renderMunicipiosHist, loadMunicipios, stateCve } from '../map.js';
 import { loadHist2021 } from '../hist2021.js';
+import { createTileLayer } from '../tiles.js';
+import { loadPadron, statsEstado, statsMunicipio, fmtNum } from '../padron.js';
 import { createZoom } from '../zoom.js';
 import { navigate } from '../router.js';
 import { partyLogo } from '../components.js';
@@ -16,11 +18,11 @@ export function render(root) {
   root.innerHTML = `
   <section class="dom-fs">
     <div class="dom-map">
+      <canvas class="tile-canvas" id="tiles" aria-hidden="true"></canvas>
       <div class="map-stage dom-stage" id="stage"><svg id="map" aria-label="Mapa de dominio electoral"></svg></div>
       <button class="dom-back" id="backBtn" hidden>← Todos los estados</button>
-
-      <div class="state-actions" id="stateActions" hidden aria-live="polite"></div>
-      <div class="territory-popup" id="territoryPopup" hidden aria-live="polite"></div>
+      <button class="panel-show" id="panelShow" hidden aria-label="Mostrar panel">☰ Panel</button>
+      <span class="map-attr">© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a></span>
 
       <div class="zoom-ctl">
         <button data-z="in" aria-label="Acercar">+</button>
@@ -32,6 +34,7 @@ export function render(root) {
     </div>
 
     <aside class="dom-panel">
+      <button class="panel-hide" id="panelHide" aria-label="Ocultar panel" title="Ocultar panel">–</button>
       <div class="dp-head">
         <h2 class="dp-title" id="panelTitle">Mapa de dominio</h2>
         <p class="dp-sub" id="panelSub">Selecciona un <b>estado</b> para elegir entre ver su desglose municipal o la contienda estatal. Rueda para acercar; arrastra para desplazar.</p>
@@ -50,9 +53,14 @@ export function render(root) {
         <p class="op-kicker">Áreas de oportunidad · voto 2021</p>
         <div class="op-parties" id="opParties" role="group" aria-label="Partido para el mapa de calor"></div>
       </div>
+      <div class="panel-tabs seg" id="panelTabs" role="tablist" aria-label="Contenido del panel">
+        <button data-panel-tab="lista" class="on" role="tab" aria-selected="true">Lista</button>
+        <button data-panel-tab="detalle" role="tab" aria-selected="false" disabled>Detalle</button>
+      </div>
       <div class="legend legend-lg" id="legend"></div>
       <div class="dp-list" id="domList"></div>
-      <p class="dp-foot">Actualizado ${UPDATED_LABEL} · <span class="ficticio">datos ficticios</span></p>
+      <div class="dp-detail" id="domDetail" hidden aria-live="polite"></div>
+      <p class="dp-foot">Actualizado ${store.updatedLabel} · Proyección estatal basada en encuestas públicas · <span class="ficticio">mapa municipal ficticio</span></p>
     </aside>
   </section>`;
 
@@ -64,7 +72,9 @@ export function render(root) {
   const panelTitle = root.querySelector('#panelTitle');
   const panelSub = root.querySelector('#panelSub');
   const list = root.querySelector('#domList');
-  const stateActions = root.querySelector('#stateActions');
+  const detail = root.querySelector('#domDetail');
+  const panelTabs = root.querySelector('#panelTabs');
+  const detailTab = panelTabs.querySelector('[data-panel-tab="detalle"]');
   const opControls = root.querySelector('#opControls');
   const metricControls = root.querySelector('.dp-controls');
   const legendEl = root.querySelector('#legend');
@@ -78,11 +88,45 @@ export function render(root) {
       b.classList.toggle('on', b.dataset.view === mode));
   }
   let selectedState = null;
-  let pendingState = null;
+  let detailState = null;
+  let activePanelTab = 'lista';
   let municipalityControl = null;
   let histControl = null;
   let mode = 'estados';        // 'estados' | 'municipios' | 'oportunidad'
   let opParty = 'PAN';         // partido del mapa de calor 2021
+  let padronData = store.padronData;
+  const ensurePadron = async () => {
+    if (padronData?.estados) return padronData;
+    padronData = await loadPadron();
+    return padronData;
+  };
+  ensurePadron();              // precarga ligera; main.js normalmente ya lo resolvió
+
+  function activatePanelTab(tab) {
+    if (tab === 'detalle' && detailTab.disabled) return;
+    activePanelTab = tab;
+    list.hidden = tab !== 'lista';
+    detail.hidden = tab !== 'detalle';
+    panelTabs.querySelectorAll('button').forEach((button) => {
+      const active = button.dataset.panelTab === tab;
+      button.classList.toggle('on', active);
+      button.setAttribute('aria-selected', String(active));
+    });
+  }
+
+  function openDetail(markup, estado = null) {
+    detailState = estado;
+    detail.innerHTML = markup;
+    detailTab.disabled = false;
+    activatePanelTab('detalle');
+  }
+
+  function clearDetail() {
+    detailState = null;
+    detail.innerHTML = '';
+    detailTab.disabled = true;
+    activatePanelTab('lista');
+  }
 
   store.mapMetric = store.mapMetric || 'prob';
   // Algunos nombres del GeoJSON estatal tienen problemas de codificación; la
@@ -93,60 +137,91 @@ export function render(root) {
     if (feature) store.porSlug[slugify(feature.properties.nom_edo)] = estado;
   }
 
+  const tiles = createTileLayer(root.querySelector('#tiles'));
+  function syncTiles() {
+    const vb = svg.getAttribute('viewBox');
+    if (vb) tiles.setViewBox(vb.trim().split(/\s+/).map(Number));
+  }
+
   let zoom;
   function onApply(state) {
     const layer = stage.querySelector('.municipal-canvas') || svg;
     layer.style.transformOrigin = '0 0';
     layer.style.transform = (state.scale === 1 && state.tx === 0 && state.ty === 0)
       ? '' : `translate(${state.tx}px, ${state.ty}px) scale(${state.scale})`;
+    tiles.update(state);
   }
   zoom = createZoom(stage, { min: 1, max: 18, onApply });
 
-  function closeStateActions() {
-    pendingState = null;
-    stateActions.hidden = true;
-    stateActions.innerHTML = '';
+  function supportByParty(apoyos) {
+    const fuerzas = Object.entries(apoyos || {})
+      .filter(([id, valor]) => PARTIES[id] && Number.isFinite(valor))
+      .sort(([, a], [, b]) => b - a);
+    if (!fuerzas.length) return '';
+    return `<section class="dp-support">
+      <h4>Apoyo potencial por partido</h4>
+      ${fuerzas.map(([id, valor]) => `<div class="dp-support-row">
+        <span>${partyLogo(id, 'xs')} ${PARTIES[id].nombre}</span>
+        <b>${fmtNum(valor)}</b>
+      </div>`).join('')}
+    </section>`;
   }
 
-  function showStateActions(slug) {
+  async function showStateDetail(slug) {
     const estado = store.porSlug[slug];
     if (!estado) return;
-    pendingState = estado;
-    stateActions.innerHTML = `
-      <button class="sa-close" data-state-action="close" aria-label="Cerrar opciones">×</button>
-      <p class="sa-kicker">${estado.region}</p>
-      <h3>${estado.nombre}</h3>
-      <p>${partyLogo(estado.favorito, 'md')} lidera la contienda.</p>
-      <div class="sa-kpis">
+    const st = statsEstado(await ensurePadron(), stateCve(estado));
+    openDetail(`
+      <div class="dp-detail-head">
+        <p class="dp-kicker">${estado.region} · Estado</p>
+        <h3>${estado.nombre}</h3>
+        <p>${partyLogo(estado.favorito, 'md')} lidera la contienda.</p>
+      </div>
+      <div class="dp-kpis">
         <span><b>${pct(estado.probFav)}</b> probabilidad</span>
         <span><b>+${estado.margen.toFixed(1)} pp</b> margen</span>
         <span><b>${estado.estatus.label}</b> estatus</span>
       </div>
-      <div class="sa-buttons">
-        <button class="sa-primary" data-state-action="municipios">Ver municipios</button>
-        <button class="sa-secondary" data-state-action="contienda">Ver contienda estatal</button>
-        ${estado.slug === 'queretaro' ? '<button class="sa-secondary" data-state-action="oportunidad">Áreas de oportunidad 2021</button>' : ''}
-      </div>`;
-    stateActions.hidden = false;
+      ${st ? `<div class="dp-kpis">
+        <span><b>${fmtNum(st[0])}</b> padrón</span>
+        <span><b>${fmtNum(st[1])}</b> lista nominal</span>
+        <span><b>${fmtNum(st[2])}</b> LN extranjero</span>
+      </div>` : ''}
+      ${supportByParty(estado.votantesEstimados)}
+      <div class="dp-detail-actions">
+        <button class="sa-primary" data-detail-action="municipios">Ver municipios</button>
+        <button class="sa-secondary" data-detail-action="contienda">Ver contienda estatal</button>
+        ${estado.slug === 'queretaro' ? '<button class="sa-secondary" data-detail-action="oportunidad">Áreas de oportunidad 2021</button>' : ''}
+        <button class="sa-secondary" data-detail-action="lista">← Volver a la lista</button>
+      </div>`, estado);
   }
 
-  function showMunicipalityPopup(municipio) {
-    const metric = store.mapMetric === 'margen'
-      ? `+${municipio.margen.toFixed(1)} pp de margen`
-      : `${pct(municipio.probFav)} de probabilidad`;
-    pendingState = null;
-    stateActions.innerHTML = `
-      <button class="sa-close" data-state-action="close" aria-label="Cerrar detalle">×</button>
-      <p class="sa-kicker">Municipio · ${selectedState?.nombre || ''}</p>
-      <h3>${municipio.name}</h3>
-      <p>${partyLogo(municipio.favorito, 'md')} lidera la contienda municipal.</p>
-      <div class="sa-kpis">
+  function showMunicipalityDetail(municipio) {
+    const st = statsMunicipio(padronData, municipio.cvegeo);
+    const apoyos = st ? Object.fromEntries(
+      Object.entries(selectedState?.voto || {})
+        .filter(([id]) => PARTIES[id])
+        .map(([id, proporcion]) => [id, Math.round(st[1] * proporcion)]),
+    ) : {};
+    openDetail(`
+      <div class="dp-detail-head">
+        <p class="dp-kicker">Municipio · ${selectedState?.nombre || ''}</p>
+        <h3>${municipio.name}</h3>
+        <p>${partyLogo(municipio.favorito, 'md')} lidera la contienda municipal.</p>
+      </div>
+      <div class="dp-kpis">
         <span><b>${pct(municipio.probFav)}</b> probabilidad</span>
         <span><b>+${municipio.margen.toFixed(1)} pp</b> margen</span>
         <span><b>${selectedState?.estatus.label || 'Local'}</b> referencia estatal</span>
       </div>
-      <div class="sa-buttons"><button class="sa-secondary" data-state-action="close">Cerrar</button></div>`;
-    stateActions.hidden = false;
+      ${st ? `<div class="dp-kpis">
+        <span><b>${fmtNum(st[0])}</b> padrón</span>
+        <span><b>${fmtNum(st[1])}</b> lista nominal</span>
+      </div>
+      ${supportByParty(apoyos)}` : '<p class="dp-note">El archivo fuente del INE no desagrega padrón ni lista nominal para este municipio.</p>'}
+      <div class="dp-detail-actions">
+        <button class="sa-secondary" data-detail-action="lista">← Volver a municipios</button>
+      </div>`);
   }
 
   function renderStateList() {
@@ -157,7 +232,10 @@ export function render(root) {
       return `<div class="dl-group">
         <div class="dl-head">${partyLogo(grupo.id, 'md')}<span class="dl-count">${grupo.estados.length}</span></div>
         ${grupo.estados.map((estado) => `<button class="dl-row" data-slug="${estado.slug}">
-          <span class="dl-name">${estado.nombre}${estado.flip ? ' <span class="flip-tag sm">cambia</span>' : ''}</span>
+          <span class="dl-name">
+            <span>${estado.nombre}${estado.flip ? ' <span class="flip-tag sm">cambia</span>' : ''}</span>
+            <span class="dl-electoral">LN ${fmtNum(estado.listaNominal)} · detalle por partido</span>
+          </span>
           <span class="dl-metric">${pct(estado.probFav)}</span>
         </button>`).join('')}
       </div>`;
@@ -171,8 +249,16 @@ export function render(root) {
       ${sorted.map((municipio) => {
         const party = PARTIES[municipio.favorito];
         const value = store.mapMetric === 'margen' ? `+${municipio.margen.toFixed(1)} pp` : pct(municipio.probFav);
+        const st = statsMunicipio(padronData, municipio.cvegeo);
+        const listaNominal = st ? st[1] : null;
+        const electoral = st
+          ? `LN ${fmtNum(listaNominal)} · detalle por partido`
+          : 'LN no disponible en fuente INE';
         return `<button class="dl-row" data-cvegeo="${municipio.cvegeo}">
-          <span class="dl-name"><span class="pdot" style="background:${party.color}"></span>${municipio.name}</span>
+          <span class="dl-name">
+            <span><span class="pdot" style="background:${party.color}"></span>${municipio.name}</span>
+            <span class="dl-electoral">${electoral}</span>
+          </span>
           <span class="dl-metric">${value}</span>
         </button>`;
       }).join('')}
@@ -180,7 +266,7 @@ export function render(root) {
   }
 
   function drawStates() {
-    closeStateActions();
+    clearDetail();
     stage.querySelectorAll('.municipal-canvas').forEach((canvas) => canvas.remove());
     svg.style.display = '';
     selectedState = null;
@@ -194,16 +280,17 @@ export function render(root) {
     backBtn.hidden = true;
     panelTitle.textContent = 'Mapa de dominio';
     panelSub.innerHTML = 'Selecciona un <b>estado</b> para elegir entre ver su desglose municipal o la contienda estatal. Rueda para acercar; arrastra para desplazar.';
-    renderMap(svg, { metric: store.mapMetric, onSelect: (slug) => { if (!zoom.wasDrag()) showStateActions(slug); } });
+    renderMap(svg, { metric: store.mapMetric, onSelect: (slug) => { if (!zoom.wasDrag()) showStateDetail(slug); } });
     renderLegend(root.querySelector('#legend'), PARTY_ORDER);
     renderStateList();
+    syncTiles();
     zoom.reset();
   }
 
   async function drawMunicipalities(slug) {
     const estado = store.porSlug[slug];
     if (!estado) return;
-    closeStateActions();
+    clearDetail();
     selectedState = estado;
     mode = 'municipios';
     histControl = null;
@@ -226,16 +313,17 @@ export function render(root) {
       municipalityControl = renderMunicipios(svg, estado, geoData, {
         metric: store.mapMetric,
         onSelect: (municipio) => {
-          showMunicipalityPopup(municipio);
+          showMunicipalityDetail(municipio);
           const row = list.querySelector(`[data-cvegeo="${municipio.cvegeo}"]`);
           row?.scrollIntoView({ block: 'nearest' });
         },
       });
       panelTitle.textContent = estado.nombre;
-      panelSub.innerHTML = `<b>${municipalityControl.results.length} municipios.</b> El color muestra la fuerza líder; selecciona un municipio para resaltarlo en el mapa.`;
+      panelSub.innerHTML = `<b>${municipalityControl.results.length} municipios · ${fmtNum(estado.listaNominal)} personas en lista nominal.</b> El color muestra la fuerza líder; cada fila incluye su lista nominal y apoyo potencial estimado.`;
       renderLegend(root.querySelector('#legend'), PARTY_ORDER);
       renderMunicipalityList(municipalityControl.results);
       backBtn.hidden = false;
+      syncTiles();
       zoom.reset();
     } catch (error) {
       panelSub.textContent = 'No se pudieron cargar los municipios de este estado.';
@@ -249,7 +337,7 @@ export function render(root) {
   async function drawOpportunity(slug) {
     const estado = store.porSlug[slug];
     if (!estado) return;
-    closeStateActions();
+    clearDetail();
     selectedState = estado;
     mode = 'oportunidad';
     municipalityControl = null;
@@ -266,7 +354,7 @@ export function render(root) {
       histControl = renderMunicipiosHist(svg, geoData, {
         partido: opParty,
         hist,
-        onSelect: showHistPopup,
+        onSelect: showHistDetail,
       });
       opControls.hidden = false;
       metricControls.hidden = true;
@@ -277,6 +365,7 @@ export function render(root) {
       panelSub.innerHTML = `Voto <b>2021</b> por municipio en ${estado.nombre}. Elige un partido: el tono más intenso marca mayor proporción de voto.`;
       renderOpList(histControl.entries);
       backBtn.hidden = false;
+      syncTiles();
       zoom.reset();
     } catch (error) {
       panelSub.textContent = 'No se pudieron cargar los datos de 2021 de este estado.';
@@ -304,20 +393,19 @@ export function render(root) {
     </div>`;
   }
 
-  function showHistPopup(entry) {
-    pendingState = null;
-    stateActions.innerHTML = `
-      <button class="sa-close" data-state-action="close" aria-label="Cerrar detalle">×</button>
-      <p class="sa-kicker">Municipio · ${selectedState ? selectedState.nombre : ''} · voto 2021</p>
-      <h3>${entry.nombre}</h3>
-      <p>${partyLogo(entry.partido, 'md')} obtuvo <b>${(entry.share * 100).toFixed(1)}%</b> del voto emitido.</p>
-      <div class="sa-kpis">
+  function showHistDetail(entry) {
+    openDetail(`
+      <div class="dp-detail-head">
+        <p class="dp-kicker">Municipio · ${selectedState ? selectedState.nombre : ''} · voto 2021</p>
+        <h3>${entry.nombre}</h3>
+        <p>${partyLogo(entry.partido, 'md')} obtuvo <b>${(entry.share * 100).toFixed(1)}%</b> del voto emitido.</p>
+      </div>
+      <div class="dp-kpis">
         <span><b>${(entry.share * 100).toFixed(1)}%</b> proporción</span>
         <span><b>${entry.votos.toLocaleString('es-MX')}</b> votos</span>
         <span><b>${entry.m ? entry.m.votos.toLocaleString('es-MX') : '—'}</b> emitidos</span>
       </div>
-      <div class="sa-buttons"><button class="sa-secondary" data-state-action="close">Cerrar</button></div>`;
-    stateActions.hidden = false;
+      <div class="dp-detail-actions"><button class="sa-secondary" data-detail-action="lista">← Volver a municipios</button></div>`);
   }
 
   root.querySelector('.zoom-ctl').addEventListener('click', (event) => {
@@ -329,14 +417,20 @@ export function render(root) {
   });
   backBtn.addEventListener('click', drawStates);
 
-  stateActions.addEventListener('click', (event) => {
-    const action = event.target.closest('[data-state-action]')?.dataset.stateAction;
+  panelTabs.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-panel-tab]');
+    if (!button || button.disabled) return;
+    activatePanelTab(button.dataset.panelTab);
+  });
+
+  detail.addEventListener('click', (event) => {
+    const action = event.target.closest('[data-detail-action]')?.dataset.detailAction;
     if (!action) return;
-    if (action === 'close') { closeStateActions(); return; }
-    if (!pendingState) return;
-    if (action === 'municipios') drawMunicipalities(pendingState.slug);
-    else if (action === 'contienda') navigate('/estado/' + pendingState.slug);
-    else if (action === 'oportunidad') drawOpportunity(pendingState.slug);
+    if (action === 'lista') { activatePanelTab('lista'); return; }
+    if (!detailState) return;
+    if (action === 'municipios') drawMunicipalities(detailState.slug);
+    else if (action === 'contienda') navigate('/estado/' + detailState.slug);
+    else if (action === 'oportunidad') drawOpportunity(detailState.slug);
   });
 
   viewToggle.addEventListener('click', (event) => {
@@ -344,6 +438,20 @@ export function render(root) {
     if (!button || !selectedState || button.dataset.view === mode) return;
     if (button.dataset.view === 'oportunidad') drawOpportunity(selectedState.slug);
     else drawMunicipalities(selectedState.slug);
+  });
+
+  // Panel lateral ocultable.
+  const panelEl = root.querySelector('.dom-panel');
+  const panelShow = root.querySelector('#panelShow');
+  root.querySelector('#panelHide').addEventListener('click', () => {
+    panelEl.classList.add('is-hidden');
+    panelShow.hidden = false;
+    tiles.resize();
+  });
+  panelShow.addEventListener('click', () => {
+    panelEl.classList.remove('is-hidden');
+    panelShow.hidden = true;
+    tiles.resize();
   });
 
   root.querySelector('#opParties').addEventListener('click', (event) => {
@@ -366,7 +474,7 @@ export function render(root) {
 
   list.addEventListener('click', (event) => {
     const stateRow = event.target.closest('[data-slug]');
-    if (stateRow) { showStateActions(stateRow.dataset.slug); return; }
+    if (stateRow) { showStateDetail(stateRow.dataset.slug); return; }
     const municipalityRow = event.target.closest('[data-cvegeo]');
     if (municipalityRow && municipalityControl) { municipalityControl.select(municipalityRow.dataset.cvegeo); return; }
     const opRow = event.target.closest('[data-opkey]');

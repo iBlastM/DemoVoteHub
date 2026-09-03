@@ -3,8 +3,9 @@
 // ============================================================
 
 import { store, indexEstados } from './store.js';
-import { construirEstados, resumenNacional } from './data.js';
+import { construirEstados, resumenNacional, fechaAgregado } from './data.js';
 import { loadGeoJSON } from './map.js';
+import { loadPadron } from './padron.js';
 import { route, setNotFound, startRouter, currentTop } from './router.js';
 import * as general from './views/general.js';
 import * as predicciones from './views/predicciones.js';
@@ -59,6 +60,15 @@ function syncNav() {
   document.querySelectorAll('.nav a[data-top]').forEach((a) => a.classList.toggle('on', a.dataset.top === top));
 }
 
+const MESES_LABEL = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
+
+function formatearFechaAgregado(fechaISO) {
+  if (!fechaISO) return '';
+  const [anio, mes, dia] = fechaISO.split('-').map(Number);
+  if (!anio || !mes || !dia) return '';
+  return `${dia} ${MESES_LABEL[mes - 1]} ${anio}`;
+}
+
 function fatal(msg) {
   app.innerHTML = `<section class="empty">
     <h2>No se pudo iniciar el visualizador</h2><p>${msg}</p>
@@ -67,12 +77,19 @@ function fatal(msg) {
 }
 
 async function boot() {
-  try { await loadGeoJSON(); }
-  catch (err) { fatal('No se pudo cargar el mapa (GeoJSON). Ábrelo desde un servidor local, no con file://.'); return; }
+  try {
+    await loadGeoJSON();
+    store.padronData = await loadPadron();
+    if (!store.padronData?.estados) throw new Error('Padrón no disponible');
+    store.estados = await construirEstados(store.padronData);
+  } catch (err) {
+    fatal('No se pudieron cargar el mapa, la lista nominal o las encuestas. Ábrelo desde un servidor local, no con file://.');
+    return;
+  }
 
-  store.estados = construirEstados();
   indexEstados();
   store.resumen = resumenNacional(store.estados);
+  store.updatedLabel = formatearFechaAgregado(fechaAgregado()) || 'sin fecha de corte';
 
   route('/general', view(general.render));
   route('/predicciones', view(predicciones.render));

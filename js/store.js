@@ -9,6 +9,8 @@ export const store = {
   estados: [],         // dataset construido
   porSlug: {},         // índice slug -> estado
   resumen: null,       // resumen nacional
+  padronData: null,    // padrón/lista nominal INE agregados por entidad y municipio
+  updatedLabel: '',    // fecha real del corte de encuestas (data/agregado.csv)
   mapMetric: 'prob',   // 'prob' (probabilidad) | 'margen'
   mapMode: 'estados',  // 'estados' | 'municipios' (CP)
 };

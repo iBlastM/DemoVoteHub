@@ -4,7 +4,6 @@
 // ============================================================
 
 export const ELECTION_DATE = new Date('2027-06-06T08:00:00');
-export const UPDATED_LABEL = '9 JUL 2027 · 11:30';
 
 // Fuerzas políticas consideradas en la demo.
 // Colores pensados para un mapa multipartidista legible.
@@ -13,7 +12,7 @@ export const PARTIES = {
     id: 'MORENA',
     nombre: 'Morena',
     coalicion: 'Sigamos Haciendo Historia',
-    aliados: 'Morena · PT · PVEM',
+    aliados: 'Morena',
     color: '#A50D4E', // guinda
     colorSoft: '#E9B9CB',
     tinta: '#ffffff',
@@ -49,10 +48,30 @@ export const PARTIES = {
     tinta: '#3a2400',
     logo: 'images/partidos/mc.png',
   },
+  PVEM: {
+    id: 'PVEM',
+    nombre: 'PVEM',
+    coalicion: 'Sigamos Haciendo Historia',
+    aliados: 'Morena · PT · PVEM',
+    color: '#7AC142', // verde manzana
+    colorSoft: '#D3ECB9',
+    tinta: '#173a0a',
+    logo: 'images/partidos/pvem.png',
+  },
+  PT: {
+    id: 'PT',
+    nombre: 'PT',
+    coalicion: 'Sigamos Haciendo Historia',
+    aliados: 'Morena · PT · PVEM',
+    color: '#D52B1E', // rojo
+    colorSoft: '#F2BFB9',
+    tinta: '#ffffff',
+    logo: 'images/partidos/pt.png',
+  },
 };
 
 // Orden de despliegue (por peso esperado en la demo).
-export const PARTY_ORDER = ['MORENA', 'PAN', 'PRI', 'MC'];
+export const PARTY_ORDER = ['MORENA', 'PAN', 'PRI', 'MC', 'PVEM', 'PT'];
 
 // Bloques para el "balance de fuerzas": oficialismo vs oposición.
 export const BLOQUES = {

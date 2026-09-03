@@ -3,7 +3,7 @@
 // ============================================================
 
 import { store } from '../store.js';
-import { PARTIES, PARTY_ORDER, UPDATED_LABEL } from '../config.js';
+import { PARTIES, PARTY_ORDER } from '../config.js';
 import { navigate } from '../router.js';
 import { partyLogo, probBar, statusTag } from '../components.js';
 import { pct, signed, rng, seedFrom, animateCount } from '../utils.js';
@@ -42,9 +42,9 @@ export function render(root) {
 
   root.innerHTML = `
   <section class="pred-hero">
-    <p class="eyebrow">Pronóstico nacional · <span class="ficticio">datos ficticios</span></p>
+    <p class="eyebrow">Pronóstico nacional · <span class="fuente-real">basado en encuestas públicas</span></p>
     <h1 class="pred-h">Predicciones 2027</h1>
-    <p class="pred-sub">Simulación de 20&nbsp;000 escenarios sobre las 17 contiendas. Actualizado ${UPDATED_LABEL}.</p>
+    <p class="pred-sub">Simulación de 20&nbsp;000 escenarios sobre las 17 contiendas. Actualizado ${store.updatedLabel}.</p>
   </section>
 
   <section class="scen">${escenarios.map((s, i) => `

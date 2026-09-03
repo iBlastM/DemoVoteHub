@@ -3,7 +3,7 @@
 // ============================================================
 
 import { PARTIES } from './config.js';
-import { pct, signed, fechaCorta, svgEl, clamp } from './utils.js';
+import { pct, signed, fechaCorta, fmtNum, svgEl, clamp } from './utils.js';
 
 /** Chip de partido. */
 export function chip(id, { soft = false } = {}) {
@@ -46,7 +46,7 @@ export function probBar(estado) {
   return `<span class="pb">${segs}</span>`;
 }
 
-/** Barras de proyección de voto (vertical mini). */
+/** Barras de apoyo potencial sobre la lista nominal (vertical mini). */
 export function voteBars(estado) {
   const entries = Object.entries(estado.voto)
     .filter(([k]) => k !== 'Otros')
@@ -55,9 +55,14 @@ export function voteBars(estado) {
   let html = '<div class="vbars">';
   for (const [id, v] of entries) {
     const p = PARTIES[id];
-    html += `<div class="vbar">
+    const estimado = estado.votantesEstimados?.[id];
+    const etiqueta = Number.isFinite(estimado) ? fmtNum(estimado) : pct(v);
+    const titulo = Number.isFinite(estimado)
+      ? `${p ? p.nombre : id}: ${etiqueta} personas estimadas sobre la lista nominal`
+      : `${p ? p.nombre : id}: ${pct(v)}`;
+    html += `<div class="vbar" title="${titulo}">
       <div class="vbar-col"><span class="vbar-fill" style="height:${(v / max) * 100}%;background:${p ? p.color : '#bbb'}"></span></div>
-      <span class="vbar-val">${pct(v)}</span>
+      <span class="vbar-val">${etiqueta}</span>
       <span class="vbar-lbl">${partyLogo(id, 'xs')}</span>
     </div>`;
   }
@@ -116,7 +121,7 @@ export function surveyTable(estado) {
   head += '</tr>';
   let rows = '';
   for (const s of estado.encuestas) {
-    rows += `<tr><td class="st-casa">${s.casa}</td><td>${fechaCorta(s.fecha)}</td><td class="st-n">${s.n}</td>`;
+    rows += `<tr><td class="st-casa">${s.casa}</td><td>${fechaCorta(s.fecha)}</td><td class="st-n">${s.n ?? '—'}</td>`;
     for (const f of forces) rows += `<td class="st-val">${pct((s.shares[f] || 0) / 100)}</td>`;
     rows += '</tr>';
   }

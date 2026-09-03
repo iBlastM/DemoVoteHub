@@ -41,23 +41,31 @@ export function createZoom(host, { min = 1, max = 16, onApply } = {}) {
     zoomAt(e.clientX - r.left, e.clientY - r.top, scale * factor);
   }, { passive: false });
 
-  let dragging = false, lx = 0, ly = 0;
+  // La captura de puntero se activa solo cuando comienza un arrastre real;
+  // así un click simple conserva su objetivo (polígonos del mapa) y abre
+  // los mismos popups que la lista lateral.
+  let dragging = false, captured = false, lx = 0, ly = 0;
   host.addEventListener('pointerdown', (e) => {
     if (e.button !== 0) return;
-    dragging = true; moved = false; lx = e.clientX; ly = e.clientY;
-    try { host.setPointerCapture(e.pointerId); } catch (_) {}
+    dragging = true; captured = false; moved = false; lx = e.clientX; ly = e.clientY;
     host.classList.add('grabbing');
   });
   host.addEventListener('pointermove', (e) => {
     if (!dragging) return;
     const dx = e.clientX - lx, dy = e.clientY - ly;
-    if (Math.abs(dx) + Math.abs(dy) > 3) moved = true;
+    if (Math.abs(dx) + Math.abs(dy) > 3) {
+      moved = true;
+      if (!captured) {
+        captured = true;
+        try { host.setPointerCapture(e.pointerId); } catch (_) {}
+      }
+    }
     lx = e.clientX; ly = e.clientY;
     if (scale > 1) { tx += dx; ty += dy; apply(false); }
   });
   const end = (e) => {
     if (!dragging) return;
-    dragging = false; host.classList.remove('grabbing');
+    dragging = false; captured = false; host.classList.remove('grabbing');
     try { host.releasePointerCapture(e.pointerId); } catch (_) {}
   };
   host.addEventListener('pointerup', end);

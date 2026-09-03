@@ -11,6 +11,11 @@ import { slugify, clamp, svgEl, pct, signed } from './utils.js';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
+/* Proyección Web Mercator (compatible con teselas OSM): coordenadas en radianes. */
+const RAD = Math.PI / 180;
+export function projX(lng) { return lng * RAD; }
+export function projY(lat) { return -Math.log(Math.tan(Math.PI / 4 + (lat * RAD) / 2)); }
+
 /** Carga el GeoJSON de estados una sola vez. */
 export async function loadGeoJSON() {
   if (store.geoData) return;
@@ -48,7 +53,7 @@ export function fillFor(estado, metric) {
 
 /* ---------- conversión de geometría ---------- */
 function ringToPath(ring) {
-  return ring.map(([lng, lat], i) => `${i === 0 ? 'M' : 'L'}${lng},${-lat}`).join(' ') + 'Z';
+  return ring.map(([lng, lat], i) => `${i === 0 ? 'M' : 'L'}${projX(lng).toFixed(5)},${projY(lat).toFixed(5)}`).join(' ') + 'Z';
 }
 function geometryToPaths(geometry) {
   const out = [];
@@ -66,12 +71,12 @@ function computeViewBox() {
     const polys = g.type === 'Polygon' ? [g.coordinates] : g.coordinates;
     for (const poly of polys)
       for (const [lng, lat] of poly[0]) {
-        const x = lng, y = -lat;
+        const x = projX(lng), y = projY(lat);
         if (x < minX) minX = x; if (x > maxX) maxX = x;
         if (y < minY) minY = y; if (y > maxY) maxY = y;
       }
   }
-  const pad = 0.6;
+  const pad = 0.012;
   return `${minX - pad} ${minY - pad} ${maxX - minX + pad * 2} ${maxY - minY + pad * 2}`;
 }
 
@@ -90,11 +95,11 @@ export function renderMap(svg, opts = {}) {
   const defs = svgEl('defs');
   for (const p of Object.values(PARTIES)) {
     const pat = svgEl('pattern', {
-      id: `hatch-${p.id}`, width: 0.9, height: 0.9,
+      id: `hatch-${p.id}`, width: 0.016, height: 0.016,
       patternTransform: 'rotate(45)', patternUnits: 'userSpaceOnUse',
     });
-    pat.appendChild(svgEl('rect', { width: 0.9, height: 0.9, fill: p.color }));
-    pat.appendChild(svgEl('rect', { width: 0.32, height: 0.9, fill: '#ffffff', opacity: 0.6 }));
+    pat.appendChild(svgEl('rect', { width: 0.016, height: 0.016, fill: p.color }));
+    pat.appendChild(svgEl('rect', { width: 0.0056, height: 0.016, fill: '#ffffff', opacity: 0.6 }));
     defs.appendChild(pat);
   }
   svg.appendChild(defs);
@@ -347,13 +352,14 @@ function showCPHover(host, feature, ev) {
 
 /* ============================================================
    DRILL-DOWN MUNICIPAL — polígonos municipales por entidad.
-   Los resultados electorales son una variación determinista de
-   la proyección estatal ficticia, para conservar la naturaleza demo.
+   Los resultados electorales municipales son una variación
+   determinista y FICTICIA alrededor de la proyección estatal real
+   (agregado.csv); no existe fuente de encuestas por municipio.
    ============================================================ */
 
 const STATE_CVE_BY_SLUG = {
   'aguascalientes': '01', 'baja-california': '02', 'baja-california-sur': '03',
-  'campeche': '04', 'colima': '06', 'chihuahua': '08', 'durango': '10',
+  'campeche': '04', 'colima': '06', 'chihuahua': '08', 'quintana-roo': '23',
   'guerrero': '12', 'michoacan-de-ocampo': '16', 'nayarit': '18',
   'nuevo-leon': '19', 'queretaro': '22', 'san-luis-potosi': '24',
   'sinaloa': '25', 'sonora': '26', 'tlaxcala': '29', 'zacatecas': '32',
@@ -414,8 +420,9 @@ function isBackgroundGeometry(geometry, extentArea) {
   const polygons = geometry.type === 'Polygon' ? [geometry.coordinates] : geometry.coordinates;
   return polygons.some((polygon) => {
     const ring = polygon[0];
-    const xs = ring.map(([lng]) => lng);
-    const ys = ring.map(([, lat]) => lat);
+    // Mismas unidades (radianes Mercator) que el extentArea del render.
+    const xs = ring.map(([lng]) => projX(lng));
+    const ys = ring.map(([, lat]) => projY(lat));
     return ((Math.max(...xs) - Math.min(...xs)) * (Math.max(...ys) - Math.min(...ys))) >= extentArea * 0.35;
   });
 }
@@ -452,8 +459,8 @@ export function renderMunicipios(svg, estado, geoData, opts = {}) {
   for (const feature of features) {
     const polygons = feature.geometry.type === 'Polygon' ? [feature.geometry.coordinates] : feature.geometry.coordinates;
     for (const polygon of polygons) for (const [lng, lat] of polygon[0]) {
-      minX = Math.min(minX, lng); maxX = Math.max(maxX, lng);
-      minY = Math.min(minY, -lat); maxY = Math.max(maxY, -lat);
+      minX = Math.min(minX, projX(lng)); maxX = Math.max(maxX, projX(lng));
+      minY = Math.min(minY, projY(lat)); maxY = Math.max(maxY, projY(lat));
     }
   }
   const width = maxX - minX, height = maxY - minY;
@@ -479,7 +486,7 @@ export function renderMunicipios(svg, estado, geoData, opts = {}) {
       const path = svgEl('path', { d, fill, 'fill-rule': 'evenodd', 'clip-rule': 'evenodd' });
       path.style.fill = fill;
       path.setAttribute('stroke', '#ffffff');
-      path.setAttribute('stroke-width', 0.035);
+      path.setAttribute('stroke-width', 0.75);
       path.setAttribute('vector-effect', 'non-scaling-stroke');
       g.appendChild(path);
     }
@@ -648,8 +655,8 @@ export function renderMunicipiosHist(svg, geoData, opts = {}) {
   for (const feature of features) {
     const polygons = feature.geometry.type === 'Polygon' ? [feature.geometry.coordinates] : feature.geometry.coordinates;
     for (const polygon of polygons) for (const [lng, lat] of polygon[0]) {
-      minX = Math.min(minX, lng); maxX = Math.max(maxX, lng);
-      minY = Math.min(minY, -lat); maxY = Math.max(maxY, -lat);
+      minX = Math.min(minX, projX(lng)); maxX = Math.max(maxX, projX(lng));
+      minY = Math.min(minY, projY(lat)); maxY = Math.max(maxY, projY(lat));
     }
   }
   const width = maxX - minX, height = maxY - minY;
@@ -682,7 +689,7 @@ export function renderMunicipiosHist(svg, geoData, opts = {}) {
     if (d) {
       const path = svgEl('path', { d, fill, 'fill-rule': 'evenodd', 'clip-rule': 'evenodd' });
       path.setAttribute('stroke', '#ffffff');
-      path.setAttribute('stroke-width', 0.035);
+      path.setAttribute('stroke-width', 0.75);
       path.setAttribute('vector-effect', 'non-scaling-stroke');
       g.appendChild(path);
     }

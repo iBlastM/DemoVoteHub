@@ -1,0 +1,291 @@
+encuestadora,estado,fecha,candidato_o_partido,partido,porcentaje,muestra,metodologia,url_fuente,notas,tipo_pregunta,tipo_resultado
+Mitofsky,queretaro,2026-09-02,el PAN obtendría,pan,30.9,,,https://www.mitofsky.mx/post/queretaro-tendencias-electorales-rumbo-a-la-eleccion-de-gobernador-2027-junio-2026,,intencion,bruto
+Mitofsky,chihuahua,2026-02-23,Morena aparece en primer lugar con,morena,31.7,,,https://www.mitofsky.mx/post/tendencias-electorales-chihuahua-rumbo-al-2027-febrero-2026,,intencion,bruto
+Mitofsky,chihuahua,2026-02-23,seguido del PAN con,pan,21.0,,,https://www.mitofsky.mx/post/tendencias-electorales-chihuahua-rumbo-al-2027-febrero-2026,,intencion,bruto
+Mitofsky,chihuahua,2026-02-23,mientras que PRI registra,pri,9.4,,,https://www.mitofsky.mx/post/tendencias-electorales-chihuahua-rumbo-al-2027-febrero-2026,,intencion,bruto
+Mitofsky,chihuahua,2026-02-23,y Movimiento Ciudadano,mc,6.4,,,https://www.mitofsky.mx/post/tendencias-electorales-chihuahua-rumbo-al-2027-febrero-2026,,intencion,bruto
+Cripeso,tlaxcala,2026-02-16,MORENA,morena,45.9356,,online,https://cripeso.com/encuesta-a-la-gubernatura-de-tlaxcala-2027-17-febrero-2026/#comment-118,,intencion_corregida,bruto
+Cripeso,tlaxcala,2026-02-16,PRI,pri,7.5075,,online,https://cripeso.com/encuesta-a-la-gubernatura-de-tlaxcala-2027-17-febrero-2026/#comment-118,,intencion_corregida,bruto
+Cripeso,aguascalientes,2026-02-19,PAN,pan,49.56,,online,https://cripeso.com/encuesta-a-la-gubernatura-de-aguascalientes-2027-19-de-febrero/,,intencion_corregida,bruto
+Cripeso,aguascalientes,2026-02-19,MORENA,morena,29.945999999999998,,online,https://cripeso.com/encuesta-a-la-gubernatura-de-aguascalientes-2027-19-de-febrero/,,intencion_corregida,bruto
+Cripeso,aguascalientes,2026-02-19,PRI,pri,7.612500000000001,,online,https://cripeso.com/encuesta-a-la-gubernatura-de-aguascalientes-2027-19-de-febrero/,,intencion_corregida,bruto
+Cripeso,aguascalientes,2026-02-19,MC,mc,6.426,,online,https://cripeso.com/encuesta-a-la-gubernatura-de-aguascalientes-2027-19-de-febrero/,,intencion_corregida,bruto
+Cripeso,colima,2026-01-14,PAN,pan,20.601000000000003,,online,https://cripeso.com/encuesta-a-la-gubernatura-de-colima-2027-15-enero/#comment-117,,intencion_corregida,bruto
+Cripeso,colima,2026-01-14,PRI,pri,19.383000000000003,,online,https://cripeso.com/encuesta-a-la-gubernatura-de-colima-2027-15-enero/#comment-117,,intencion_corregida,bruto
+Cripeso,colima,2026-01-14,Movimiento Ciudadano,mc,12.1485,,online,https://cripeso.com/encuesta-a-la-gubernatura-de-colima-2027-15-enero/#comment-117,,intencion_corregida,bruto
+Factométrica,colima,2026-05-18,Movimiento Ciudadano,mc,9.9,,ivr,https://www.factometrica.com/post/prospectiva-política-colima-2027-18-de-mayo-2026,,intencion,bruto
+Factométrica,zacatecas,2026-09-02,PAN,pan,14.1,,ivr,https://www.factometrica.com/post/prospecitva-política-zacatecas-2027-mayo-2026,,intencion,bruto
+Factométrica,chihuahua,2026-09-02,Movimiento Ciudadano,mc,4.2,,ivr,https://www.factometrica.com/post/prospectiva-política-chihuahua-2027-mayo-2026,,intencion,bruto
+Factométrica,aguascalientes,2026-08-27,PAN,pan,42.2,1000.0,ivr,https://www.factometrica.com/post/prospectiva-política-2027-aguascalientes-al-27-de-agosto-de-2026,,intencion,bruto
+Factométrica,aguascalientes,2026-08-27,Morena,morena,24.3,1000.0,ivr,https://www.factometrica.com/post/prospectiva-política-2027-aguascalientes-al-27-de-agosto-de-2026,,intencion,bruto
+Factométrica,aguascalientes,2026-08-27,Movimiento Ciudadano,mc,12.0,1000.0,ivr,https://www.factometrica.com/post/prospectiva-política-2027-aguascalientes-al-27-de-agosto-de-2026,,intencion,bruto
+Factométrica,aguascalientes,2026-08-27,PRI,pri,5.8,1000.0,ivr,https://www.factometrica.com/post/prospectiva-política-2027-aguascalientes-al-27-de-agosto-de-2026,,intencion,bruto
+Factométrica,aguascalientes,2026-08-27,PVEM,pvem,3.0,1000.0,ivr,https://www.factometrica.com/post/prospectiva-política-2027-aguascalientes-al-27-de-agosto-de-2026,,intencion,bruto
+Factométrica,queretaro,2026-08-27,PAN,pan,47.8,1000.0,ivr,https://www.factometrica.com/post/prospectiva-política-2027-querétaro-2027-al-27-de-agosto-2026,,intencion,bruto
+Factométrica,queretaro,2026-08-27,Morena,morena,25.5,1000.0,ivr,https://www.factometrica.com/post/prospectiva-política-2027-querétaro-2027-al-27-de-agosto-2026,,intencion,bruto
+Factométrica,queretaro,2026-08-27,Movimiento Ciudadano,mc,10.0,1000.0,ivr,https://www.factometrica.com/post/prospectiva-política-2027-querétaro-2027-al-27-de-agosto-2026,,intencion,bruto
+Factométrica,queretaro,2026-08-27,PRI,pri,6.2,1000.0,ivr,https://www.factometrica.com/post/prospectiva-política-2027-querétaro-2027-al-27-de-agosto-2026,,intencion,bruto
+Factométrica,queretaro,2026-08-27,PVEM,pvem,2.3,1000.0,ivr,https://www.factometrica.com/post/prospectiva-política-2027-querétaro-2027-al-27-de-agosto-2026,,intencion,bruto
+Factométrica,queretaro,2026-08-27,PT,pt,1.8,1000.0,ivr,https://www.factometrica.com/post/prospectiva-política-2027-querétaro-2027-al-27-de-agosto-2026,,intencion,bruto
+Factométrica,queretaro,2026-09-02,PAN,pan,48.2,,ivr,https://www.factometrica.com/post/prospectiva-política-querétaro-2027-julio-2026,,intencion,bruto
+Factométrica,queretaro,2026-09-02,Morena,morena,24.7,,ivr,https://www.factometrica.com/post/prospectiva-política-querétaro-2027-julio-2026,,intencion,bruto
+Factométrica,queretaro,2026-09-02,Movimiento Ciudadano,mc,9.6,,ivr,https://www.factometrica.com/post/prospectiva-política-querétaro-2027-julio-2026,,intencion,bruto
+Factométrica,queretaro,2026-09-02,PRI,pri,6.4,,ivr,https://www.factometrica.com/post/prospectiva-política-querétaro-2027-julio-2026,,intencion,bruto
+Factométrica,queretaro,2026-09-02,PVEM,pvem,2.7,,ivr,https://www.factometrica.com/post/prospectiva-política-querétaro-2027-julio-2026,,intencion,bruto
+Factométrica,queretaro,2026-09-02,PT,pt,1.8,,ivr,https://www.factometrica.com/post/prospectiva-política-querétaro-2027-julio-2026,,intencion,bruto
+Factométrica,nayarit,2026-09-02,PRI,pri,6.6,,ivr,https://www.factometrica.com/post/prospectiva-política-nayarit-2027-mayo-2026,,intencion,bruto
+Factométrica,nuevo-leon,2026-09-02,Morena,morena,25.8,1000.0,ivr,https://www.factometrica.com/post/prospectiva-política-nuevo-león-2027-2-de-septiembre-2026,,intencion,bruto
+Factométrica,nuevo-leon,2026-09-02,Movimiento Ciudadano,mc,20.6,1000.0,ivr,https://www.factometrica.com/post/prospectiva-política-nuevo-león-2027-2-de-septiembre-2026,,intencion,bruto
+Factométrica,nuevo-leon,2026-09-02,PRI,pri,14.7,1000.0,ivr,https://www.factometrica.com/post/prospectiva-política-nuevo-león-2027-2-de-septiembre-2026,,intencion,bruto
+Factométrica,nuevo-leon,2026-09-02,PAN,pan,14.5,1000.0,ivr,https://www.factometrica.com/post/prospectiva-política-nuevo-león-2027-2-de-septiembre-2026,,intencion,bruto
+Factométrica,nuevo-leon,2026-09-02,PVEM,pvem,2.8,1000.0,ivr,https://www.factometrica.com/post/prospectiva-política-nuevo-león-2027-2-de-septiembre-2026,,intencion,bruto
+Factométrica,nuevo-leon,2026-09-02,PT,pt,2.2,1000.0,ivr,https://www.factometrica.com/post/prospectiva-política-nuevo-león-2027-2-de-septiembre-2026,,intencion,bruto
+ALIUS,zacatecas,2026-08-25,Morena,morena,35.3,,telefonica,https://aliuspolls.com/2026/08/25/encuesta-agosto-gubernatura-zacatecas-2027/,,intencion,bruto
+ALIUS,zacatecas,2026-08-25,PRI,pri,15.8,,telefonica,https://aliuspolls.com/2026/08/25/encuesta-agosto-gubernatura-zacatecas-2027/,,intencion,bruto
+ALIUS,zacatecas,2026-08-25,Movimiento Ciudadano,mc,6.7,,telefonica,https://aliuspolls.com/2026/08/25/encuesta-agosto-gubernatura-zacatecas-2027/,,intencion,bruto
+ALIUS,zacatecas,2026-08-25,PT,pt,6.4,,telefonica,https://aliuspolls.com/2026/08/25/encuesta-agosto-gubernatura-zacatecas-2027/,,intencion,bruto
+ALIUS,zacatecas,2026-08-25,PAN,pan,5.8,,telefonica,https://aliuspolls.com/2026/08/25/encuesta-agosto-gubernatura-zacatecas-2027/,,intencion,bruto
+ALIUS,zacatecas,2026-08-25,Verde,pvem,3.7,,telefonica,https://aliuspolls.com/2026/08/25/encuesta-agosto-gubernatura-zacatecas-2027/,,intencion,bruto
+ALIUS,zacatecas,2026-08-25,PRD,prd,1.7,,telefonica,https://aliuspolls.com/2026/08/25/encuesta-agosto-gubernatura-zacatecas-2027/,,intencion,bruto
+ALIUS,baja-california,2026-08-11,Morena,morena,51.1,,telefonica,https://aliuspolls.com/2026/08/11/encuesta-gubernatura-agosto-baja-california-2027/,,intencion,bruto
+ALIUS,baja-california,2026-08-11,PAN,pan,11.4,,telefonica,https://aliuspolls.com/2026/08/11/encuesta-gubernatura-agosto-baja-california-2027/,,intencion,bruto
+ALIUS,baja-california,2026-08-11,PRI,pri,6.6,,telefonica,https://aliuspolls.com/2026/08/11/encuesta-gubernatura-agosto-baja-california-2027/,,intencion,bruto
+ALIUS,baja-california-sur,2026-08-07,Morena,morena,47.7,,telefonica,https://aliuspolls.com/2026/08/07/encuesta-baja-california-sur-agosto-2027/,,intencion,bruto
+ALIUS,baja-california-sur,2026-08-07,PAN,pan,11.1,,telefonica,https://aliuspolls.com/2026/08/07/encuesta-baja-california-sur-agosto-2027/,,intencion,bruto
+ALIUS,baja-california-sur,2026-08-07,PT,pt,6.0,,telefonica,https://aliuspolls.com/2026/08/07/encuesta-baja-california-sur-agosto-2027/,,intencion,bruto
+ALIUS,baja-california-sur,2026-08-07,Verde,pvem,2.6,,telefonica,https://aliuspolls.com/2026/08/07/encuesta-baja-california-sur-agosto-2027/,,intencion,bruto
+ALIUS,baja-california-sur,2026-08-07,PRI,pri,2.4,,telefonica,https://aliuspolls.com/2026/08/07/encuesta-baja-california-sur-agosto-2027/,,intencion,bruto
+ALIUS,baja-california-sur,2026-08-07,PRD,prd,1.4,,telefonica,https://aliuspolls.com/2026/08/07/encuesta-baja-california-sur-agosto-2027/,,intencion,bruto
+ALIUS,baja-california-sur,2026-08-07,Movimiento Ciudadano,mc,1.2,,telefonica,https://aliuspolls.com/2026/08/07/encuesta-baja-california-sur-agosto-2027/,,intencion,bruto
+ALIUS,quintana-roo,2026-08-06,Verde,pvem,12.9,,telefonica,https://aliuspolls.com/2026/08/06/encuesta-agosto-quintana-roo-2027/,,intencion,bruto
+ALIUS,quintana-roo,2026-08-06,PAN,pan,10.1,,telefonica,https://aliuspolls.com/2026/08/06/encuesta-agosto-quintana-roo-2027/,,intencion,bruto
+ALIUS,quintana-roo,2026-08-06,Movimiento Ciudadano,mc,9.7,,telefonica,https://aliuspolls.com/2026/08/06/encuesta-agosto-quintana-roo-2027/,,intencion,bruto
+ALIUS,quintana-roo,2026-08-06,PRI,pri,8.3,,telefonica,https://aliuspolls.com/2026/08/06/encuesta-agosto-quintana-roo-2027/,,intencion,bruto
+ALIUS,quintana-roo,2026-08-06,PT,pt,7.0,,telefonica,https://aliuspolls.com/2026/08/06/encuesta-agosto-quintana-roo-2027/,,intencion,bruto
+ALIUS,aguascalientes,2026-08-04,PAN,pan,43.0,,telefonica,https://aliuspolls.com/2026/08/04/encuesta-julio-aguascalientes-2027/,,intencion,bruto
+ALIUS,aguascalientes,2026-08-04,Morena,morena,30.7,,telefonica,https://aliuspolls.com/2026/08/04/encuesta-julio-aguascalientes-2027/,,intencion,bruto
+ALIUS,aguascalientes,2026-08-04,Movimiento Ciudadano,mc,5.8,,telefonica,https://aliuspolls.com/2026/08/04/encuesta-julio-aguascalientes-2027/,,intencion,bruto
+ALIUS,aguascalientes,2026-08-04,PRI,pri,4.9,,telefonica,https://aliuspolls.com/2026/08/04/encuesta-julio-aguascalientes-2027/,,intencion,bruto
+ALIUS,aguascalientes,2026-08-04,Verde,pvem,1.5,,telefonica,https://aliuspolls.com/2026/08/04/encuesta-julio-aguascalientes-2027/,,intencion,bruto
+ALIUS,aguascalientes,2026-08-04,PT,pt,1.1,,telefonica,https://aliuspolls.com/2026/08/04/encuesta-julio-aguascalientes-2027/,,intencion,bruto
+ALIUS,sinaloa,2025-08-15,Morena,morena,52.5,,telefonica,https://aliuspolls.com/2025/08/15/encuesta-sinaloa-2027/,,intencion,bruto
+ALIUS,sinaloa,2025-08-15,Movimiento Ciudadano,mc,10.7,,telefonica,https://aliuspolls.com/2025/08/15/encuesta-sinaloa-2027/,,intencion,bruto
+ALIUS,sinaloa,2025-08-15,PAN,pan,9.6,,telefonica,https://aliuspolls.com/2025/08/15/encuesta-sinaloa-2027/,,intencion,bruto
+ALIUS,sinaloa,2025-08-15,PRI,pri,8.6,,telefonica,https://aliuspolls.com/2025/08/15/encuesta-sinaloa-2027/,,intencion,bruto
+ALIUS,sinaloa,2025-08-15,PT,pt,2.5,,telefonica,https://aliuspolls.com/2025/08/15/encuesta-sinaloa-2027/,,intencion,bruto
+ALIUS,sinaloa,2025-08-15,Verde,pvem,2.3,,telefonica,https://aliuspolls.com/2025/08/15/encuesta-sinaloa-2027/,,intencion,bruto
+ALIUS,guerrero,2025-08-06,Morena,morena,44.8,,telefonica,https://aliuspolls.com/2025/08/06/encuesta-guerrero-2027/,,intencion,bruto
+ALIUS,guerrero,2025-08-06,PRI,pri,11.0,,telefonica,https://aliuspolls.com/2025/08/06/encuesta-guerrero-2027/,,intencion,bruto
+ALIUS,guerrero,2025-08-06,Movimiento Ciudadano,mc,7.2,,telefonica,https://aliuspolls.com/2025/08/06/encuesta-guerrero-2027/,,intencion,bruto
+ALIUS,guerrero,2025-08-06,PT,pt,3.7,,telefonica,https://aliuspolls.com/2025/08/06/encuesta-guerrero-2027/,,intencion,bruto
+ALIUS,guerrero,2025-08-06,PAN,pan,3.0,,telefonica,https://aliuspolls.com/2025/08/06/encuesta-guerrero-2027/,,intencion,bruto
+ALIUS,guerrero,2025-08-06,Verde,pvem,1.6,,telefonica,https://aliuspolls.com/2025/08/06/encuesta-guerrero-2027/,,intencion,bruto
+ALIUS,nuevo-leon,2026-05-19,Morena,morena,28.7,,telefonica,https://aliuspolls.com/2026/05/19/encuesta-mayo-nuevo-leon-2027/,,intencion,bruto
+ALIUS,nuevo-leon,2026-05-19,Movimiento Ciudadano,mc,21.6,,telefonica,https://aliuspolls.com/2026/05/19/encuesta-mayo-nuevo-leon-2027/,,intencion,bruto
+ALIUS,nuevo-leon,2026-05-19,PRI,pri,12.6,,telefonica,https://aliuspolls.com/2026/05/19/encuesta-mayo-nuevo-leon-2027/,,intencion,bruto
+ALIUS,nuevo-leon,2026-05-19,PAN,pan,8.7,,telefonica,https://aliuspolls.com/2026/05/19/encuesta-mayo-nuevo-leon-2027/,,intencion,bruto
+ALIUS,nuevo-leon,2026-05-19,PT,pt,1.9,,telefonica,https://aliuspolls.com/2026/05/19/encuesta-mayo-nuevo-leon-2027/,,intencion,bruto
+ALIUS,nuevo-leon,2026-05-19,Verde,pvem,1.9,,telefonica,https://aliuspolls.com/2026/05/19/encuesta-mayo-nuevo-leon-2027/,,intencion,bruto
+ALIUS,nuevo-leon,2026-02-18,Morena,morena,14.6,,telefonica,https://aliuspolls.com/2026/02/18/nuevo-leon-2027/,,intencion,bruto
+ALIUS,nuevo-leon,2026-02-18,Movimiento Ciudadano,mc,27.2,,telefonica,https://aliuspolls.com/2026/02/18/nuevo-leon-2027/,,intencion,bruto
+ALIUS,nuevo-leon,2025-04-28,Morena,morena,19.6,,telefonica,https://aliuspolls.com/2025/04/28/encuesta-gubernatura-de-nuevo-leon-2027/,,intencion,bruto
+ALIUS,nuevo-leon,2025-04-28,Movimiento Ciudadano,mc,27.5,,telefonica,https://aliuspolls.com/2025/04/28/encuesta-gubernatura-de-nuevo-leon-2027/,,intencion,bruto
+ALIUS,nuevo-leon,2025-04-28,PAN,pan,22.2,,telefonica,https://aliuspolls.com/2025/04/28/encuesta-gubernatura-de-nuevo-leon-2027/,,intencion,bruto
+ALIUS,nuevo-leon,2025-04-28,PRI,pri,18.5,,telefonica,https://aliuspolls.com/2025/04/28/encuesta-gubernatura-de-nuevo-leon-2027/,,intencion,bruto
+ALIUS,queretaro,2026-06-25,PAN,pan,46.7,,telefonica,https://aliuspolls.com/2026/06/25/encuesta-queretaro-junio-2027/,,intencion,bruto
+ALIUS,queretaro,2026-06-25,Morena,morena,25.5,,telefonica,https://aliuspolls.com/2026/06/25/encuesta-queretaro-junio-2027/,,intencion,bruto
+ALIUS,queretaro,2026-06-25,Movimiento Ciudadano,mc,4.5,,telefonica,https://aliuspolls.com/2026/06/25/encuesta-queretaro-junio-2027/,,intencion,bruto
+ALIUS,queretaro,2026-06-25,PRI,pri,2.9,,telefonica,https://aliuspolls.com/2026/06/25/encuesta-queretaro-junio-2027/,,intencion,bruto
+ALIUS,queretaro,2026-06-25,Verde,pvem,2.4,,telefonica,https://aliuspolls.com/2026/06/25/encuesta-queretaro-junio-2027/,,intencion,bruto
+ALIUS,queretaro,2026-05-21,PAN,pan,47.7,,telefonica,https://aliuspolls.com/2026/05/21/encuesta-mayo-queretaro-2027/,,intencion,bruto
+ALIUS,queretaro,2026-05-21,Morena,morena,28.8,,telefonica,https://aliuspolls.com/2026/05/21/encuesta-mayo-queretaro-2027/,,intencion,bruto
+ALIUS,queretaro,2026-05-21,Movimiento Ciudadano,mc,3.4,,telefonica,https://aliuspolls.com/2026/05/21/encuesta-mayo-queretaro-2027/,,intencion,bruto
+ALIUS,queretaro,2026-05-21,PRI,pri,2.5,,telefonica,https://aliuspolls.com/2026/05/21/encuesta-mayo-queretaro-2027/,,intencion,bruto
+ALIUS,queretaro,2026-05-21,Verde,pvem,1.4,,telefonica,https://aliuspolls.com/2026/05/21/encuesta-mayo-queretaro-2027/,,intencion,bruto
+ALIUS,queretaro,2026-03-13,PAN,pan,47.8,,telefonica,https://aliuspolls.com/2026/03/13/queretaro-2027/,,intencion,bruto
+ALIUS,queretaro,2026-03-13,Morena,morena,28.2,,telefonica,https://aliuspolls.com/2026/03/13/queretaro-2027/,,intencion,bruto
+ALIUS,queretaro,2026-03-13,PRI,pri,3.3,,telefonica,https://aliuspolls.com/2026/03/13/queretaro-2027/,,intencion,bruto
+ALIUS,queretaro,2026-03-13,Movimiento Ciudadano,mc,3.2,,telefonica,https://aliuspolls.com/2026/03/13/queretaro-2027/,,intencion,bruto
+ALIUS,queretaro,2026-03-13,Verde,pvem,2.4,,telefonica,https://aliuspolls.com/2026/03/13/queretaro-2027/,,intencion,bruto
+ALIUS,queretaro,2026-01-28,PRI,pri,3.8,,telefonica,https://aliuspolls.com/2026/01/28/encuesta-queretaro-2027/,,intencion,bruto
+ALIUS,queretaro,2026-01-28,Verde,pvem,1.7,,telefonica,https://aliuspolls.com/2026/01/28/encuesta-queretaro-2027/,,intencion,bruto
+ALIUS,queretaro,2026-01-28,PT,pt,1.0,,telefonica,https://aliuspolls.com/2026/01/28/encuesta-queretaro-2027/,,intencion,bruto
+ALIUS,queretaro,2026-01-28,PAN,pan,40.3,,telefonica,https://aliuspolls.com/2026/01/28/encuesta-queretaro-2027/,,intencion,bruto
+ALIUS,queretaro,2026-01-28,Morena,morena,28.7,,telefonica,https://aliuspolls.com/2026/01/28/encuesta-queretaro-2027/,,intencion,bruto
+ALIUS,queretaro,2026-01-28,Movimiento Ciudadano,mc,6.3,,telefonica,https://aliuspolls.com/2026/01/28/encuesta-queretaro-2027/,,intencion,bruto
+ALIUS,queretaro,2025-09-18,PAN,pan,41.3,,telefonica,https://aliuspolls.com/2025/09/18/encuesta-septiembre-queretaro-2027/,,intencion,bruto
+ALIUS,queretaro,2025-09-18,Morena,morena,37.6,,telefonica,https://aliuspolls.com/2025/09/18/encuesta-septiembre-queretaro-2027/,,intencion,bruto
+ALIUS,queretaro,2025-09-18,Movimiento Ciudadano,mc,13.5,,telefonica,https://aliuspolls.com/2025/09/18/encuesta-septiembre-queretaro-2027/,,intencion,bruto
+ALIUS,queretaro,2025-09-18,PRI,pri,14.1,,telefonica,https://aliuspolls.com/2025/09/18/encuesta-septiembre-queretaro-2027/,,intencion,bruto
+ALIUS,queretaro,2025-05-02,Morena,morena,24.4,,telefonica,https://aliuspolls.com/2025/05/02/encuesta-candidatos-gubernatura-queretaro-2027/,,intencion,bruto
+ALIUS,queretaro,2025-05-02,PRI,pri,13.9,,telefonica,https://aliuspolls.com/2025/05/02/encuesta-candidatos-gubernatura-queretaro-2027/,,intencion,bruto
+ALIUS,queretaro,2025-05-02,Movimiento Ciudadano,mc,13.5,,telefonica,https://aliuspolls.com/2025/05/02/encuesta-candidatos-gubernatura-queretaro-2027/,,intencion,bruto
+ALIUS,quintana-roo,2026-03-23,Morena,morena,49.9,,telefonica,https://aliuspolls.com/2026/03/23/encuesta-quintana-roo-2027/,,intencion,bruto
+ALIUS,quintana-roo,2026-03-23,PAN,pan,14.1,,telefonica,https://aliuspolls.com/2026/03/23/encuesta-quintana-roo-2027/,,intencion,bruto
+ALIUS,quintana-roo,2026-03-23,Movimiento Ciudadano,mc,10.0,,telefonica,https://aliuspolls.com/2026/03/23/encuesta-quintana-roo-2027/,,intencion,bruto
+ALIUS,quintana-roo,2026-03-23,PRI,pri,6.9,,telefonica,https://aliuspolls.com/2026/03/23/encuesta-quintana-roo-2027/,,intencion,bruto
+ALIUS,quintana-roo,2026-03-23,Verde,pvem,3.2,,telefonica,https://aliuspolls.com/2026/03/23/encuesta-quintana-roo-2027/,,intencion,bruto
+ALIUS,quintana-roo,2026-03-23,PT,pt,2.5,,telefonica,https://aliuspolls.com/2026/03/23/encuesta-quintana-roo-2027/,,intencion,bruto
+ALIUS,quintana-roo,2025-07-02,PAN,pan,14.3,,telefonica,https://aliuspolls.com/2025/07/02/preferencias-electorales-quintana-roo-2027/,,intencion,bruto
+ALIUS,quintana-roo,2025-07-02,Movimiento Ciudadano,mc,7.0,,telefonica,https://aliuspolls.com/2025/07/02/preferencias-electorales-quintana-roo-2027/,,intencion,bruto
+ALIUS,quintana-roo,2025-07-02,Morena,morena,19.1,,telefonica,https://aliuspolls.com/2025/07/02/preferencias-electorales-quintana-roo-2027/,,intencion,bruto
+ALIUS,quintana-roo,2025-07-02,PRI,pri,10.4,,telefonica,https://aliuspolls.com/2025/07/02/preferencias-electorales-quintana-roo-2027/,,intencion,bruto
+ALIUS,baja-california,2025-10-10,Morena,morena,36.6,,telefonica,https://aliuspolls.com/2025/10/10/encuesta-septiembre-baja-california-2027/,,intencion,bruto
+ALIUS,baja-california,2025-10-10,PAN,pan,12.1,,telefonica,https://aliuspolls.com/2025/10/10/encuesta-septiembre-baja-california-2027/,,intencion,bruto
+ALIUS,baja-california,2025-10-10,Movimiento Ciudadano,mc,6.0,,telefonica,https://aliuspolls.com/2025/10/10/encuesta-septiembre-baja-california-2027/,,intencion,bruto
+ALIUS,baja-california,2025-10-10,PRI,pri,3.5,,telefonica,https://aliuspolls.com/2025/10/10/encuesta-septiembre-baja-california-2027/,,intencion,bruto
+ALIUS,baja-california,2025-10-10,Verde,pvem,2.7,,telefonica,https://aliuspolls.com/2025/10/10/encuesta-septiembre-baja-california-2027/,,intencion,bruto
+ALIUS,baja-california,2025-10-10,PT,pt,1.9,,telefonica,https://aliuspolls.com/2025/10/10/encuesta-septiembre-baja-california-2027/,,intencion,bruto
+ALIUS,baja-california,2025-07-18,Morena,morena,45.6,,telefonica,https://aliuspolls.com/2025/07/18/encuesta-baja-california-2027/,,intencion,bruto
+ALIUS,baja-california,2025-07-18,PAN,pan,10.8,,telefonica,https://aliuspolls.com/2025/07/18/encuesta-baja-california-2027/,,intencion,bruto
+ALIUS,baja-california,2025-07-18,Movimiento Ciudadano,mc,6.2,,telefonica,https://aliuspolls.com/2025/07/18/encuesta-baja-california-2027/,,intencion,bruto
+ALIUS,baja-california,2025-07-18,PRI,pri,4.6,,telefonica,https://aliuspolls.com/2025/07/18/encuesta-baja-california-2027/,,intencion,bruto
+ALIUS,baja-california,2025-07-18,Verde,pvem,23.0,,telefonica,https://aliuspolls.com/2025/07/18/encuesta-baja-california-2027/,,intencion,bruto
+ALIUS,chihuahua,2026-07-03,PAN,pan,22.4,,telefonica,https://aliuspolls.com/2026/07/03/encuesta-junio-chihuahua-2027/,,intencion,bruto
+ALIUS,chihuahua,2026-07-03,PRI,pri,6.3,,telefonica,https://aliuspolls.com/2026/07/03/encuesta-junio-chihuahua-2027/,,intencion,bruto
+ALIUS,chihuahua,2026-07-03,Movimiento Ciudadano,mc,3.3,,telefonica,https://aliuspolls.com/2026/07/03/encuesta-junio-chihuahua-2027/,,intencion,bruto
+ALIUS,chihuahua,2026-07-03,Verde,pvem,1.5,,telefonica,https://aliuspolls.com/2026/07/03/encuesta-junio-chihuahua-2027/,,intencion,bruto
+ALIUS,chihuahua,2026-05-31,Morena,morena,42.5,,telefonica,https://aliuspolls.com/2026/05/31/encuesta-mayo-chihuahua-2027/,,intencion,bruto
+ALIUS,chihuahua,2026-05-31,PAN,pan,25.3,,telefonica,https://aliuspolls.com/2026/05/31/encuesta-mayo-chihuahua-2027/,,intencion,bruto
+ALIUS,chihuahua,2026-05-31,PRI,pri,5.6,,telefonica,https://aliuspolls.com/2026/05/31/encuesta-mayo-chihuahua-2027/,,intencion,bruto
+ALIUS,chihuahua,2026-05-31,Movimiento Ciudadano,mc,2.9,,telefonica,https://aliuspolls.com/2026/05/31/encuesta-mayo-chihuahua-2027/,,intencion,bruto
+ALIUS,chihuahua,2026-05-31,Verde,pvem,1.0,,telefonica,https://aliuspolls.com/2026/05/31/encuesta-mayo-chihuahua-2027/,,intencion,bruto
+ALIUS,chihuahua,2026-05-04,Morena,morena,45.0,,telefonica,https://aliuspolls.com/2026/05/04/morena-lidera-en-chihuahua-rumbo-a-2027-cruz-perez-cuellar-supera-a-andrea-chavez-en-la-interna-y-en-escenarios/,,intencion,bruto
+ALIUS,chihuahua,2026-05-04,PAN,pan,21.5,,telefonica,https://aliuspolls.com/2026/05/04/morena-lidera-en-chihuahua-rumbo-a-2027-cruz-perez-cuellar-supera-a-andrea-chavez-en-la-interna-y-en-escenarios/,,intencion,bruto
+ALIUS,chihuahua,2026-05-04,PRI,pri,4.3,,telefonica,https://aliuspolls.com/2026/05/04/morena-lidera-en-chihuahua-rumbo-a-2027-cruz-perez-cuellar-supera-a-andrea-chavez-en-la-interna-y-en-escenarios/,,intencion,bruto
+ALIUS,chihuahua,2026-05-04,Movimiento Ciudadano,mc,3.7,,telefonica,https://aliuspolls.com/2026/05/04/morena-lidera-en-chihuahua-rumbo-a-2027-cruz-perez-cuellar-supera-a-andrea-chavez-en-la-interna-y-en-escenarios/,,intencion,bruto
+ALIUS,chihuahua,2026-05-04,Verde,pvem,1.3,,telefonica,https://aliuspolls.com/2026/05/04/morena-lidera-en-chihuahua-rumbo-a-2027-cruz-perez-cuellar-supera-a-andrea-chavez-en-la-interna-y-en-escenarios/,,intencion,bruto
+ALIUS,chihuahua,2026-03-31,Morena,morena,44.2,,telefonica,https://aliuspolls.com/2026/03/31/encuesta-chihuahua-2027-2/,,intencion,bruto
+ALIUS,chihuahua,2026-03-31,PAN,pan,23.8,,telefonica,https://aliuspolls.com/2026/03/31/encuesta-chihuahua-2027-2/,,intencion,bruto
+ALIUS,chihuahua,2026-03-31,PRI,pri,4.7,,telefonica,https://aliuspolls.com/2026/03/31/encuesta-chihuahua-2027-2/,,intencion,bruto
+ALIUS,chihuahua,2026-03-31,Movimiento Ciudadano,mc,3.9,,telefonica,https://aliuspolls.com/2026/03/31/encuesta-chihuahua-2027-2/,,intencion,bruto
+ALIUS,chihuahua,2026-03-31,Verde,pvem,2.0,,telefonica,https://aliuspolls.com/2026/03/31/encuesta-chihuahua-2027-2/,,intencion,bruto
+ALIUS,chihuahua,2026-02-24,Morena,morena,43.2,,telefonica,https://aliuspolls.com/2026/02/24/chihuahua-2027/,,intencion,bruto
+ALIUS,chihuahua,2026-02-24,PAN,pan,26.8,,telefonica,https://aliuspolls.com/2026/02/24/chihuahua-2027/,,intencion,bruto
+ALIUS,chihuahua,2026-02-24,PRI,pri,4.7,,telefonica,https://aliuspolls.com/2026/02/24/chihuahua-2027/,,intencion,bruto
+ALIUS,chihuahua,2026-02-24,Movimiento Ciudadano,mc,4.2,,telefonica,https://aliuspolls.com/2026/02/24/chihuahua-2027/,,intencion,bruto
+ALIUS,chihuahua,2026-02-24,Verde,pvem,2.4,,telefonica,https://aliuspolls.com/2026/02/24/chihuahua-2027/,,intencion,bruto
+ALIUS,michoacan,2026-04-28,Morena,morena,34.2,,telefonica,https://aliuspolls.com/2026/04/28/encuesta-michoacan-2027-2/,,intencion,bruto
+ALIUS,michoacan,2026-04-28,PAN,pan,12.8,,telefonica,https://aliuspolls.com/2026/04/28/encuesta-michoacan-2027-2/,,intencion,bruto
+ALIUS,michoacan,2026-04-28,PRI,pri,6.4,,telefonica,https://aliuspolls.com/2026/04/28/encuesta-michoacan-2027-2/,,intencion,bruto
+ALIUS,michoacan,2026-04-28,Movimiento Ciudadano,mc,4.9,,telefonica,https://aliuspolls.com/2026/04/28/encuesta-michoacan-2027-2/,,intencion,bruto
+ALIUS,michoacan,2026-04-28,Verde,pvem,3.9,,telefonica,https://aliuspolls.com/2026/04/28/encuesta-michoacan-2027-2/,,intencion,bruto
+ALIUS,michoacan,2025-07-31,Morena,morena,37.6,,telefonica,https://aliuspolls.com/2025/07/31/encuesta-michoacan-2027/,,intencion,bruto
+ALIUS,michoacan,2025-07-31,PAN,pan,16.8,,telefonica,https://aliuspolls.com/2025/07/31/encuesta-michoacan-2027/,,intencion,bruto
+ALIUS,michoacan,2025-07-31,Movimiento Ciudadano,mc,6.7,,telefonica,https://aliuspolls.com/2025/07/31/encuesta-michoacan-2027/,,intencion,bruto
+ALIUS,michoacan,2025-07-31,PRI,pri,4.4,,telefonica,https://aliuspolls.com/2025/07/31/encuesta-michoacan-2027/,,intencion,bruto
+ALIUS,michoacan,2025-07-31,PT,pt,4.1,,telefonica,https://aliuspolls.com/2025/07/31/encuesta-michoacan-2027/,,intencion,bruto
+ALIUS,michoacan,2025-07-31,Verde,pvem,1.0,,telefonica,https://aliuspolls.com/2025/07/31/encuesta-michoacan-2027/,,intencion,bruto
+ALIUS,zacatecas,2026-07-20,PRI,pri,11.3,,telefonica,https://aliuspolls.com/2026/07/20/morena-domina-zacatecas-julio-2027/,,intencion,bruto
+ALIUS,zacatecas,2026-07-20,Movimiento Ciudadano,mc,9.4,,telefonica,https://aliuspolls.com/2026/07/20/morena-domina-zacatecas-julio-2027/,,intencion,bruto
+ALIUS,zacatecas,2026-07-20,PAN,pan,6.8,,telefonica,https://aliuspolls.com/2026/07/20/morena-domina-zacatecas-julio-2027/,,intencion,bruto
+ALIUS,zacatecas,2026-06-13,Morena,morena,22.9,,telefonica,https://aliuspolls.com/2026/06/13/encuesta-junio-zacatecas-2027/,,intencion,bruto
+ALIUS,zacatecas,2026-06-13,PRI,pri,11.8,,telefonica,https://aliuspolls.com/2026/06/13/encuesta-junio-zacatecas-2027/,,intencion,bruto
+ALIUS,zacatecas,2026-06-13,Movimiento Ciudadano,mc,9.8,,telefonica,https://aliuspolls.com/2026/06/13/encuesta-junio-zacatecas-2027/,,intencion,bruto
+ALIUS,zacatecas,2026-06-13,PAN,pan,7.6,,telefonica,https://aliuspolls.com/2026/06/13/encuesta-junio-zacatecas-2027/,,intencion,bruto
+ALIUS,zacatecas,2025-09-26,Morena,morena,34.8,,telefonica,https://aliuspolls.com/2025/09/26/encuesta-septiembre-zacatecas-2027/,,intencion,bruto
+ALIUS,zacatecas,2025-09-26,PRI,pri,15.6,,telefonica,https://aliuspolls.com/2025/09/26/encuesta-septiembre-zacatecas-2027/,,intencion,bruto
+ALIUS,zacatecas,2025-09-26,Movimiento Ciudadano,mc,12.3,,telefonica,https://aliuspolls.com/2025/09/26/encuesta-septiembre-zacatecas-2027/,,intencion,bruto
+ALIUS,zacatecas,2025-09-26,PAN,pan,10.7,,telefonica,https://aliuspolls.com/2025/09/26/encuesta-septiembre-zacatecas-2027/,,intencion,bruto
+ALIUS,zacatecas,2025-09-26,Verde,pvem,3.3,,telefonica,https://aliuspolls.com/2025/09/26/encuesta-septiembre-zacatecas-2027/,,intencion,bruto
+ALIUS,zacatecas,2025-09-26,PT,pt,1.0,,telefonica,https://aliuspolls.com/2025/09/26/encuesta-septiembre-zacatecas-2027/,,intencion,bruto
+ALIUS,campeche,2025-10-01,Morena,morena,44.4,,telefonica,https://aliuspolls.com/2025/10/01/encuesta-campeche-2027/,,intencion,bruto
+ALIUS,campeche,2025-10-01,Movimiento Ciudadano,mc,24.2,,telefonica,https://aliuspolls.com/2025/10/01/encuesta-campeche-2027/,,intencion,bruto
+ALIUS,campeche,2025-10-01,PRI,pri,7.0,,telefonica,https://aliuspolls.com/2025/10/01/encuesta-campeche-2027/,,intencion,bruto
+ALIUS,campeche,2025-10-01,PAN,pan,5.0,,telefonica,https://aliuspolls.com/2025/10/01/encuesta-campeche-2027/,,intencion,bruto
+ALIUS,nayarit,2026-07-27,Morena,morena,52.4,,telefonica,https://aliuspolls.com/2026/07/27/encuesta-julio-nayarit-2027/,,intencion,bruto
+ALIUS,nayarit,2026-07-27,Verde,pvem,11.7,,telefonica,https://aliuspolls.com/2026/07/27/encuesta-julio-nayarit-2027/,,intencion,bruto
+ALIUS,nayarit,2026-07-27,PAN,pan,4.7,,telefonica,https://aliuspolls.com/2026/07/27/encuesta-julio-nayarit-2027/,,intencion,bruto
+ALIUS,nayarit,2026-07-27,Movimiento Ciudadano,mc,4.2,,telefonica,https://aliuspolls.com/2026/07/27/encuesta-julio-nayarit-2027/,,intencion,bruto
+ALIUS,nayarit,2026-07-27,PRI,pri,1.7,,telefonica,https://aliuspolls.com/2026/07/27/encuesta-julio-nayarit-2027/,,intencion,bruto
+ALIUS,nayarit,2026-07-27,PT,pt,1.4,,telefonica,https://aliuspolls.com/2026/07/27/encuesta-julio-nayarit-2027/,,intencion,bruto
+ALIUS,nayarit,2026-02-17,Morena,morena,23.2,,telefonica,https://aliuspolls.com/2026/02/17/interna-morena-pt-pv-nayarit-2027/,,intencion,bruto
+ALIUS,nayarit,2025-10-22,PAN,pan,10.3,,telefonica,https://aliuspolls.com/2025/10/22/encuesta-nayarit-2027/,,intencion,bruto
+ALIUS,nayarit,2025-10-22,Movimiento Ciudadano,mc,8.2,,telefonica,https://aliuspolls.com/2025/10/22/encuesta-nayarit-2027/,,intencion,bruto
+ALIUS,aguascalientes,2025-10-29,PAN,pan,42.5,,telefonica,https://aliuspolls.com/2025/10/29/encuesta-aguascalientes-2027/,,intencion,bruto
+ALIUS,aguascalientes,2025-10-29,Morena,morena,27.0,,telefonica,https://aliuspolls.com/2025/10/29/encuesta-aguascalientes-2027/,,intencion,bruto
+ALIUS,aguascalientes,2025-10-29,Movimiento Ciudadano,mc,4.5,,telefonica,https://aliuspolls.com/2025/10/29/encuesta-aguascalientes-2027/,,intencion,bruto
+ALIUS,aguascalientes,2025-10-29,PRI,pri,3.8,,telefonica,https://aliuspolls.com/2025/10/29/encuesta-aguascalientes-2027/,,intencion,bruto
+ALIUS,aguascalientes,2025-10-29,Verde,pvem,2.3,,telefonica,https://aliuspolls.com/2025/10/29/encuesta-aguascalientes-2027/,,intencion,bruto
+ALIUS,sonora,2025-12-09,Morena,morena,43.1,,telefonica,https://aliuspolls.com/2025/12/09/encuesta-sonora-2027/,,intencion,bruto
+ALIUS,sonora,2025-12-09,PAN,pan,10.4,,telefonica,https://aliuspolls.com/2025/12/09/encuesta-sonora-2027/,,intencion,bruto
+ALIUS,sonora,2025-12-09,Movimiento Ciudadano,mc,6.8,,telefonica,https://aliuspolls.com/2025/12/09/encuesta-sonora-2027/,,intencion,bruto
+ALIUS,sonora,2025-12-09,PRI,pri,6.1,,telefonica,https://aliuspolls.com/2025/12/09/encuesta-sonora-2027/,,intencion,bruto
+ALIUS,sonora,2025-12-09,Verde,pvem,1.6,,telefonica,https://aliuspolls.com/2025/12/09/encuesta-sonora-2027/,,intencion,bruto
+ALIUS,san-luis-potosi,2026-05-05,Morena,morena,34.2,,telefonica,https://aliuspolls.com/2026/05/05/encuesta-san-luis-potosi-2027/,,intencion,bruto
+ALIUS,san-luis-potosi,2026-05-05,Verde,pvem,16.1,,telefonica,https://aliuspolls.com/2026/05/05/encuesta-san-luis-potosi-2027/,,intencion,bruto
+ALIUS,san-luis-potosi,2026-05-05,PAN,pan,13.6,,telefonica,https://aliuspolls.com/2026/05/05/encuesta-san-luis-potosi-2027/,,intencion,bruto
+ALIUS,san-luis-potosi,2026-05-05,Movimiento Ciudadano,mc,6.8,,telefonica,https://aliuspolls.com/2026/05/05/encuesta-san-luis-potosi-2027/,,intencion,bruto
+ALIUS,san-luis-potosi,2026-05-05,PRI,pri,6.6,,telefonica,https://aliuspolls.com/2026/05/05/encuesta-san-luis-potosi-2027/,,intencion,bruto
+ALIUS,baja-california-sur,2026-07-22,Morena,morena,41.7,,telefonica,https://aliuspolls.com/2026/07/22/encuesta-julio-baja-california-sur-2027/,,intencion,bruto
+ALIUS,baja-california-sur,2026-07-22,PAN,pan,17.6,,telefonica,https://aliuspolls.com/2026/07/22/encuesta-julio-baja-california-sur-2027/,,intencion,bruto
+ALIUS,baja-california-sur,2026-07-22,PT,pt,6.8,,telefonica,https://aliuspolls.com/2026/07/22/encuesta-julio-baja-california-sur-2027/,,intencion,bruto
+ALIUS,baja-california-sur,2026-07-22,Movimiento Ciudadano,mc,5.7,,telefonica,https://aliuspolls.com/2026/07/22/encuesta-julio-baja-california-sur-2027/,,intencion,bruto
+ALIUS,baja-california-sur,2026-07-22,PRI,pri,4.4,,telefonica,https://aliuspolls.com/2026/07/22/encuesta-julio-baja-california-sur-2027/,,intencion,bruto
+ALIUS,baja-california-sur,2026-07-22,Verde,pvem,3.1,,telefonica,https://aliuspolls.com/2026/07/22/encuesta-julio-baja-california-sur-2027/,,intencion,bruto
+ALIUS,tlaxcala,2026-07-25,Morena,morena,41.8,,telefonica,https://aliuspolls.com/2026/07/25/encuesta-julio-tlaxcala-2027/,,intencion,bruto
+ALIUS,tlaxcala,2026-07-25,PRI,pri,10.1,,telefonica,https://aliuspolls.com/2026/07/25/encuesta-julio-tlaxcala-2027/,,intencion,bruto
+ALIUS,tlaxcala,2026-07-25,PAN,pan,8.2,,telefonica,https://aliuspolls.com/2026/07/25/encuesta-julio-tlaxcala-2027/,,intencion,bruto
+ALIUS,tlaxcala,2026-07-25,Movimiento Ciudadano,mc,7.9,,telefonica,https://aliuspolls.com/2026/07/25/encuesta-julio-tlaxcala-2027/,,intencion,bruto
+ALIUS,tlaxcala,2026-07-25,Verde,pvem,5.1,,telefonica,https://aliuspolls.com/2026/07/25/encuesta-julio-tlaxcala-2027/,,intencion,bruto
+ALIUS,tlaxcala,2026-07-25,PT,pt,2.6,,telefonica,https://aliuspolls.com/2026/07/25/encuesta-julio-tlaxcala-2027/,,intencion,bruto
+ALIUS,colima,2026-07-28,Morena,morena,35.6,,telefonica,https://aliuspolls.com/2026/07/28/encuesta-julio-colima-2027/,,intencion,bruto
+ALIUS,colima,2026-07-28,PRI,pri,14.8,,telefonica,https://aliuspolls.com/2026/07/28/encuesta-julio-colima-2027/,,intencion,bruto
+ALIUS,colima,2026-07-28,PAN,pan,14.5,,telefonica,https://aliuspolls.com/2026/07/28/encuesta-julio-colima-2027/,,intencion,bruto
+ALIUS,colima,2026-07-28,Movimiento Ciudadano,mc,9.0,,telefonica,https://aliuspolls.com/2026/07/28/encuesta-julio-colima-2027/,,intencion,bruto
+ALIUS,colima,2026-07-28,Verde,pvem,4.0,,telefonica,https://aliuspolls.com/2026/07/28/encuesta-julio-colima-2027/,,intencion,bruto
+ALIUS,colima,2026-07-28,PT,pt,2.4,,telefonica,https://aliuspolls.com/2026/07/28/encuesta-julio-colima-2027/,,intencion,bruto
+Demoscopia Digital,aguascalientes,2026-08-04,MORENA,morena,28.8,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,aguascalientes,2026-08-04,PRI,pri,4.1,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,aguascalientes,2026-08-04,PVEM,pvem,3.4,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,aguascalientes,2026-08-04,PT,pt,2.7,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,aguascalientes,2026-08-04,MC,mc,5.7,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,aguascalientes,2026-08-04,PAN,pan,38.1,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,baja-california,2026-08-04,MORENA,morena,41.3,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,baja-california,2026-08-04,PRI,pri,4.5,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,baja-california,2026-08-04,PVEM,pvem,3.4,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,baja-california,2026-08-04,PT,pt,2.8,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,baja-california,2026-08-04,MC,mc,7.2,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,baja-california,2026-08-04,PAN,pan,17.3,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,chihuahua,2026-08-04,MORENA,morena,36.4,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,chihuahua,2026-08-04,PRI,pri,5.7,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,chihuahua,2026-08-04,PVEM,pvem,2.6,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,chihuahua,2026-08-04,PT,pt,3.8,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,chihuahua,2026-08-04,MC,mc,7.1,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,chihuahua,2026-08-04,PAN,pan,27.2,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,nuevo-leon,2026-08-04,MORENA,morena,25.3,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,nuevo-leon,2026-08-04,PRI,pri,12.8,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,nuevo-leon,2026-08-04,PVEM,pvem,3.7,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,nuevo-leon,2026-08-04,PT,pt,2.9,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,nuevo-leon,2026-08-04,MC,mc,23.9,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,nuevo-leon,2026-08-04,PAN,pan,14.1,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,queretaro,2026-08-04,MORENA,morena,28.6,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,queretaro,2026-08-04,PRI,pri,3.6,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,queretaro,2026-08-04,PVEM,pvem,5.7,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,queretaro,2026-08-04,PT,pt,3.9,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,queretaro,2026-08-04,MC,mc,4.5,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,queretaro,2026-08-04,PAN,pan,37.2,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,quintana-roo,2026-08-04,MORENA,morena,40.3,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,quintana-roo,2026-08-04,PRI,pri,5.3,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,quintana-roo,2026-08-04,PVEM,pvem,7.5,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,quintana-roo,2026-08-04,PT,pt,4.1,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,quintana-roo,2026-08-04,MC,mc,6.9,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,quintana-roo,2026-08-04,PAN,pan,7.6,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,sonora,2026-08-04,MORENA,morena,36.2,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,sonora,2026-08-04,PRI,pri,5.8,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,sonora,2026-08-04,PVEM,pvem,6.3,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,sonora,2026-08-04,PT,pt,6.1,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,sonora,2026-08-04,MC,mc,8.7,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,sonora,2026-08-04,PAN,pan,20.4,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,guerrero,2026-08-04,MORENA,morena,47.6,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,guerrero,2026-08-04,PRI,pri,11.2,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,guerrero,2026-08-04,MC,mc,6.8,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,guerrero,2026-08-04,PAN,pan,6.2,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,guerrero,2026-08-04,PVEM,pvem,5.7,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,guerrero,2026-08-04,PT,pt,3.1,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,sinaloa,2026-08-04,MORENA,morena,37.3,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,sinaloa,2026-08-04,PRI,pri,7.6,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,sinaloa,2026-08-04,PVEM,pvem,9.1,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,sinaloa,2026-08-04,PT,pt,4.3,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,sinaloa,2026-08-04,MC,mc,5.2,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo
+Demoscopia Digital,sinaloa,2026-08-04,PAN,pan,8.7,,online,https://demoscopiadigital.com/rumbo-al/2027/gobernaturas/aguascalientes,,intencion,efectivo

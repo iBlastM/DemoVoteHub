@@ -3,11 +3,11 @@
 // ============================================================
 
 import { store } from '../store.js';
-import { PARTIES, PARTY_ORDER, UPDATED_LABEL, ELECTION_DATE } from '../config.js';
+import { PARTIES, PARTY_ORDER, ELECTION_DATE } from '../config.js';
 import { renderMap, renderLegend } from '../map.js';
 import { navigate } from '../router.js';
 import { partyLogo, probBar, statusTag } from '../components.js';
-import { pct, signed, daysUntil, animateCount } from '../utils.js';
+import { pct, signed, daysUntil, animateCount, fmtNum } from '../utils.js';
 import { construirEncuestas } from '../polls.js';
 import { buildPollChart } from './encuestas.js';
 
@@ -18,10 +18,10 @@ export function render(root) {
 
   root.innerHTML = `
   <section class="hero">
-    <p class="eyebrow">Pronóstico · Gubernaturas 2027 · <span class="ficticio">datos ficticios</span></p>
+    <p class="eyebrow">Pronóstico · Gubernaturas 2027 · <span class="fuente-real">basado en encuestas públicas</span></p>
     <h1 class="hero-h">Morena parte como favorita en
       <span class="hero-num" data-count="${favMorena}">0</span> de ${r.total} gubernaturas.</h1>
-    <p class="hero-sub">Actualizado ${UPDATED_LABEL} · faltan <b>${dias}</b> días para la jornada del 6 de junio</p>
+    <p class="hero-sub">Actualizado ${store.updatedLabel} · faltan <b>${dias}</b> días para la jornada del 6 de junio · <b>${fmtNum(r.listaNominal)}</b> personas en la lista nominal (INE, corte 20 ago 2026)</p>
   </section>
 
   <section class="board">
@@ -138,6 +138,7 @@ function raceCard(e) {
     <div class="rc-foot">
       <span>prob. <b>${pct(e.probFav)}</b></span>
       <span>margen <b>${signed(e.margen)}</b></span>
+      <span title="Lista nominal territorial INE">LN <b>${fmtNum(e.listaNominal)}</b></span>
     </div>
   </article>`;
 }

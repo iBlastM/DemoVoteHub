@@ -162,6 +162,7 @@ b { font-weight: 700; }
   letter-spacing: .13em; text-transform: uppercase; color: var(--muted);
 }
 .ficticio { color: var(--accent-ink); }
+.fuente-real { color: var(--muted); font-weight: 600; }
 
 .section-head {
   display: flex; align-items: baseline; justify-content: space-between;
@@ -220,15 +221,16 @@ b { font-weight: 700; }
 }
 .map-stage svg { width: 100%; height: auto; display: block; overflow: visible; }
 .map-stage-lg { padding: 1.2rem; }
-/* Líneas oscuras que separan cada estado (claras en el tema oscuro, legibles sobre partido). */
-.estado path { stroke: var(--map-border); stroke-width: .07px; transition: stroke-width .15s; }
-/* El relleno neutro de los estados sin elección sigue el tema activo. */
-.estado.no-elige path { fill: var(--sin-eleccion); }
-.estado.flip path { stroke: var(--map-border); stroke-width: .16px; }
+/* Líneas oscuras que separan cada estado (claras en el tema oscuro, legibles sobre partido).
+   El mapa usa proyección Mercator (radianes), por lo que los grosores van en esa unidad. */
+.estado path { stroke: var(--map-border); stroke-width: .0012px; transition: stroke-width .15s; }
+/* El relleno neutro de los estados sin elección sigue el tema activo y deja ver el basemap. */
+.estado.no-elige path { fill: var(--sin-eleccion); fill-opacity: .55; }
+.estado.flip path { stroke: var(--map-border); stroke-width: .0028px; }
 /* Sin filtros SVG/CSS: al cambiar de estado a municipios algunos motores conservan una capa negra rasterizada. */
-.estado.elegible:hover path:first-child { stroke-width: .22px; }
+.estado.elegible:hover path:first-child { stroke-width: .0038px; }
 .estado:focus { outline: none; }
-.estado.elegible:focus-visible path:first-child { stroke: var(--accent); stroke-width: .3px; }
+.estado.elegible:focus-visible path:first-child { stroke: var(--accent); stroke-width: .0052px; }
 .estado.no-elige path { pointer-events: none; }
 
 .map-hover {
@@ -347,8 +349,9 @@ b { font-weight: 700; }
 .dl-count { margin-left: auto; font-family: var(--font-data); font-size: .78rem; color: var(--muted); background: var(--surface-2); border: 1px solid var(--hair); border-radius: 999px; padding: 0 .5rem; }
 .dl-row { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: .5rem; background: var(--surface); border: 1px solid var(--hair); border-radius: var(--r-sm); padding: .5rem .7rem; margin-bottom: .35rem; cursor: pointer; font-size: .9rem; color: var(--ink); text-align: left; }
 .dl-row:hover { border-color: #cdd4dc; background: var(--surface-2); }
-.dl-name { font-weight: 500; }
-.dl-metric { font-family: var(--font-data); font-weight: 600; color: var(--ink-2); }
+.dl-name { min-width: 0; display: grid; gap: .12rem; font-weight: 500; }
+.dl-electoral { color: var(--muted); font-family: var(--font-data); font-size: .68rem; font-weight: 600; line-height: 1.2; white-space: nowrap; }
+.dl-metric { flex: none; font-family: var(--font-data); font-weight: 600; color: var(--ink-2); }
 .dom-bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
 .dom-foot { color: var(--muted); font-size: .82rem; margin: .9rem 0 0; text-align: right; }
 
@@ -380,8 +383,9 @@ b { font-weight: 700; }
 .vbar { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end; }
 .vbar-col { width: 100%; max-width: 46px; flex: 1; display: flex; align-items: flex-end; }
 .vbar-fill { width: 100%; border-radius: 6px 6px 0 0; min-height: 3px; transition: height .5s ease; }
-.vbar-val { font-family: var(--font-data); font-weight: 700; font-size: .9rem; margin-top: .4rem; }
+.vbar-val { font-family: var(--font-data); font-weight: 700; font-size: clamp(.67rem, 1.5vw, .9rem); margin-top: .4rem; white-space: nowrap; }
 .vbar-lbl { font-size: .74rem; color: var(--muted); }
+.panel-note { margin: .8rem 0 0; color: var(--muted); font-size: .76rem; line-height: 1.35; }
 
 .problist { display: grid; gap: .55rem; }
 .pl-row { display: grid; grid-template-columns: 1fr 90px 44px; align-items: center; gap: .6rem; }
@@ -500,16 +504,41 @@ b { font-weight: 700; }
   overflow: hidden;
 }
 .dom-map { position: relative; flex: 1 1 auto; min-width: 0; overflow: hidden; }
+.tile-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.map-attr {
+  position: absolute; right: .5rem; bottom: .3rem; z-index: 4;
+  font-family: var(--font-data); font-size: .62rem; color: var(--muted);
+  background: color-mix(in srgb, var(--surface) 78%, transparent);
+  padding: .12rem .45rem; border-radius: 4px; pointer-events: auto;
+}
+.map-attr a { color: inherit; text-decoration: underline; }
+.panel-show {
+  position: absolute; top: 1rem; right: 1rem; z-index: 5;
+  border: 1px solid var(--hair); border-radius: 999px; background: var(--surface);
+  color: var(--ink-2); padding: .5rem .85rem; box-shadow: var(--shadow-sm);
+  cursor: pointer; font-family: var(--font-data); font-size: .8rem; font-weight: 700;
+}
+.panel-show:hover { color: var(--ink); background: var(--surface-2); }
+.panel-show[hidden] { display: none; }
 .dom-stage { position: absolute; inset: 0; padding: 0; border: 0; border-radius: 0; box-shadow: none; background: transparent; }
 .dom-stage svg { width: 100%; height: 100%; }
 .fine-canvas { display: block; position: absolute; inset: 0; }
 .dom-panel {
+  position: relative;
   flex: none; width: 340px; max-width: 100vw;
   display: flex; flex-direction: column; gap: .9rem;
   background: var(--surface);
   border-left: 1px solid var(--hair); border-radius: 0;
   padding: 1.2rem; box-shadow: none; z-index: 4; overflow: auto;
 }
+.dom-panel.is-hidden { display: none; }
+.panel-hide {
+  position: absolute; top: .8rem; right: .8rem; width: 26px; height: 26px;
+  border: 1px solid var(--hair); border-radius: 7px; background: var(--surface);
+  color: var(--muted); cursor: pointer; font-family: var(--font-data);
+  font-size: 1rem; font-weight: 700; line-height: 1;
+}
+.panel-hide:hover { color: var(--ink); border-color: var(--ink-2); }
 .dp-title { font-size: 1.35rem; }
 .dp-sub { color: var(--ink-2); font-size: .86rem; margin: .4rem 0 0; }
 .dp-controls { display: flex; flex-direction: column; gap: .5rem; }
@@ -526,7 +555,26 @@ b { font-weight: 700; }
 .op-party { border: 1px solid var(--hair); background: var(--surface); border-radius: 9px; padding: 2px; cursor: pointer; transition: border-color .12s, box-shadow .12s; }
 .op-party:hover { border-color: var(--ink-2); }
 .op-party.on { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
-.dp-list { flex: 1; overflow: auto; display: grid; gap: .8rem; margin: 0 -.3rem; padding: 0 .3rem; }
+.panel-tabs { flex: none; }
+.dp-list, .dp-detail { flex: 1; min-height: 0; overflow: auto; margin: 0 -.3rem; padding: 0 .3rem; }
+.dp-list { display: grid; gap: .8rem; }
+.dp-detail { display: grid; align-content: start; gap: .8rem; }
+.dp-list[hidden], .dp-detail[hidden] { display: none; }
+.dp-detail-head { display: grid; gap: .35rem; }
+.dp-detail-head h3 { margin: 0; font-size: 1.25rem; }
+.dp-detail-head p { margin: 0; color: var(--ink-2); font-size: .88rem; }
+.dp-kicker { color: var(--muted) !important; font-family: var(--font-data); font-size: .68rem !important; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.dp-kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .35rem; }
+.dp-kpis span { display: flex; flex-direction: column; gap: .08rem; border: 1px solid var(--hair); border-radius: 7px; padding: .4rem; color: var(--muted); font-size: .67rem; }
+.dp-kpis b { color: var(--ink); font-family: var(--font-data); font-size: .76rem; overflow-wrap: anywhere; }
+.dp-support { display: grid; gap: .28rem; border-top: 1px solid var(--hair); padding-top: .75rem; }
+.dp-support h4 { margin: 0 0 .15rem; color: var(--ink-2); font-size: .78rem; }
+.dp-support-row { display: flex; align-items: center; justify-content: space-between; gap: .6rem; border: 1px solid var(--hair); border-radius: 7px; padding: .38rem .45rem; }
+.dp-support-row span { display: flex; align-items: center; gap: .35rem; min-width: 0; color: var(--ink-2); font-size: .75rem; }
+.dp-support-row b { flex: none; color: var(--ink); font-family: var(--font-data); font-size: .78rem; }
+.dp-detail-actions { display: grid; gap: .55rem; margin-top: .15rem; }
+.dp-detail-actions button { width: 100%; border-radius: 8px; padding: .65rem .8rem; cursor: pointer; font-family: var(--font-data); font-size: .82rem; font-weight: 700; }
+.dp-note { margin: 0; color: var(--muted); font-size: .8rem; line-height: 1.35; }
 .dp-foot { color: var(--muted); font-size: .78rem; margin: 0; }
 
 .map-loading { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 3; display: flex; align-items: center; gap: .6rem; background: var(--ink); color: var(--surface); padding: .6rem 1rem; border-radius: 999px; font-family: var(--font-data); font-size: .82rem; }
@@ -578,6 +626,7 @@ b { font-weight: 700; }
 .sa-kicker { margin: 0; color: var(--muted); font-family: var(--font-data); font-size: .7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
 .state-actions h3 { margin: .2rem 2rem .45rem 0; font-size: 1.35rem; }
 .state-actions p { margin: 0; color: var(--ink-2); font-size: .9rem; }
+.state-actions .sa-note { margin-top: .8rem; font-size: .78rem; line-height: 1.35; }
 .sa-buttons { display: grid; gap: .55rem; margin-top: 1rem; }
 .sa-buttons button { width: 100%; border-radius: 8px; padding: .65rem .8rem; cursor: pointer; font-family: var(--font-data); font-size: .82rem; font-weight: 700; }
 .sa-primary { border: 1px solid var(--ink); background: var(--ink); color: var(--surface); }
@@ -599,6 +648,8 @@ b { font-weight: 700; }
 #map .municipio.party-PAN path { fill: #0A5CA8 !important; }
 #map .municipio.party-PRI path { fill: #1E9E5A !important; }
 #map .municipio.party-MC path { fill: #F28C00 !important; }
+#map .municipio.party-PVEM path { fill: #7AC142 !important; }
+#map .municipio.party-PT path { fill: #D52B1E !important; }
 
 
 /* El drill-down solo debe contener grupos .municipio; oculta geometrías residuales de la vista estatal. */

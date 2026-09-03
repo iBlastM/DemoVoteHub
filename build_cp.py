@@ -18,7 +18,7 @@ ESTADOS = {
     '04-Camp': ('campeche',              {'MORENA': 52, 'PAN': 24, 'PRI': 18}),
     '06-Col':  ('colima',                {'MORENA': 50, 'PAN': 34, 'MC': 10}),
     '08-Chih': ('chihuahua',             {'MORENA': 46, 'PAN': 42, 'MC': 8}),
-    '10-Dgo':  ('durango',               {'PAN': 47, 'MORENA': 43, 'MC': 6}),
+    '23-Qroo': ('quintana-roo',          {'MORENA': 45, 'PAN': 10, 'MC': 9}),
     '12-Gro':  ('guerrero',              {'MORENA': 58, 'PRI': 20, 'PAN': 16}),
     '16-Mich': ('michoacan-de-ocampo',   {'MORENA': 45, 'PAN': 30, 'MC': 18}),
     '18-Nay':  ('nayarit',               {'MORENA': 53, 'PAN': 30, 'MC': 11}),
