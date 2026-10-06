@@ -13,33 +13,35 @@ import * as dominio from './views/dominio.js';
 import * as estado from './views/estado.js';
 import * as encuestas from './views/encuestas.js';
 
+import { cycleTheme, themePref, themeLabel, THEME_ICONS } from './theme.js';
+
 const app = document.getElementById('app');
 
-/* ---------- Tema claro / oscuro (persistente en localStorage) ---------- */
-const THEME_KEY = 'mirador-theme';
-
-function applyTheme(theme) {
-  document.documentElement.dataset.theme = theme;
+/* ---------- Tema sistema / claro / oscuro (ver theme.js) ---------- */
+function syncThemeButton() {
+  const pref = themePref();
   const icon = document.getElementById('themeIcon');
   const text = document.getElementById('themeText');
-  const dark = theme === 'dark';
-  if (icon) icon.textContent = dark ? '☀️' : '🌙';
-  if (text) text.textContent = dark ? 'Claro' : 'Oscuro';
-}
-
-function initTheme() {
-  let theme = 'light';
-  try { theme = localStorage.getItem(THEME_KEY) || 'light'; } catch { /* sin persistencia */ }
-  applyTheme(theme);
   const btn = document.getElementById('themeToggle');
-  btn.addEventListener('click', () => {
-    const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-    applyTheme(next);
-    try { localStorage.setItem(THEME_KEY, next); } catch { /* sin persistencia */ }
-  });
+  if (icon) icon.innerHTML = THEME_ICONS[pref];
+  if (text) text.textContent = themeLabel(pref);
+  if (btn) btn.setAttribute('aria-label', `Tema: ${themeLabel(pref)}. Cambiar tema`);
 }
+document.getElementById('themeToggle')?.addEventListener('click', cycleTheme);
+window.addEventListener('mirador:theme', syncThemeButton);
+syncThemeButton();
 
-initTheme();
+/* ---------- Montaje de vistas con limpieza ----------
+   Una vista puede devolver una función de limpieza (listeners globales,
+   animaciones, clases en <body>). Se invoca antes de montar la siguiente. */
+let teardown = null;
+function unmount() {
+  if (typeof teardown === 'function') {
+    try { teardown(); } catch { /* una vista rota no bloquea la navegación */ }
+  }
+  teardown = null;
+  app.innerHTML = '';
+}
 
 function after() {
   window.scrollTo({ top: 0, behavior: 'auto' });
@@ -48,11 +50,11 @@ function after() {
 
 /** Monta una vista simple (sin parámetros). */
 function view(fn) {
-  return () => { app.innerHTML = ''; fn(app); after(); };
+  return () => { unmount(); teardown = fn(app); after(); };
 }
 /** Monta una vista con un parámetro nombrado. */
 function viewP(fn, key) {
-  return (params) => { app.innerHTML = ''; fn(app, params[key]); after(); };
+  return (params) => { unmount(); teardown = fn(app, params[key]); after(); };
 }
 
 function syncNav() {

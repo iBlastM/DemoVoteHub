@@ -26,12 +26,25 @@ CLAVE = {
     'ZACATECAS': 32,
 }
 
-# Equivalencias entre la clave municipal del XLSX y la clave INEGI vigente
-# usada por los GeoJSON. En BCS el archivo fuente mantiene la numeración
-# secuencial previa para Los Cabos (4) y Loreto (5).
-MUNI_INEGI = {
-    3: {4: 8, 5: 9},
-}
+# Equivalencias entre la clave municipal del XLSX (numeración del INE, en
+# general alfabética) y la clave INEGI vigente usada por los GeoJSON. Sin esta
+# tabla, por ejemplo, Monterrey (INE 40) caería sobre Parás (INEGI 40).
+# Fuente: Eric Magar, elecRetrns/ancillary/mun.yrs.csv (MIT); solo se guardan
+# las claves que difieren. Incluye el caso de BCS (Los Cabos 4→8, Loreto 5→9).
+CROSSWALK = r'data/mun-ine-inegi.csv'
+
+
+def load_crosswalk():
+    import csv
+    out = {}
+    with open(CROSSWALK, encoding='utf-8') as f:
+        for r in csv.DictReader(f):
+            ine, inegi = int(r['clave_ine']), int(r['clave_inegi'])
+            out.setdefault(ine // 1000, {})[ine % 1000] = inegi % 1000
+    return out
+
+
+MUNI_INEGI = load_crosswalk()
 
 NS = '{http://schemas.openxmlformats.org/spreadsheetml/2006/main}'
 

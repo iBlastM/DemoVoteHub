@@ -5,7 +5,7 @@
 
 import { slugify } from './utils.js';
 
-export const PARTIDOS_2021 = ['MORENA', 'PAN', 'PRI', 'MC'];
+export const PARTIDOS_2021 = ['MORENA', 'PAN', 'PRI', 'MC', 'PVEM', 'PT'];
 
 let _cache = null;
 
