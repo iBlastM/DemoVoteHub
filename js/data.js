@@ -10,7 +10,7 @@
 // ============================================================
 
 import { slugify, rng, seedFrom, clamp } from './utils.js';
-import { estatusPorMargen, PARTY_ORDER, PARTIES, ELECTION_DATE } from './config.js';
+import { estatusPorMargen, PARTY_ORDER, PARTIES, ELECTION_DATE, API_BASE } from './config.js';
 
 // Metadatos editoriales por entidad: geo (nom_edo exacto del GeoJSON),
 // display, región y partido gobernante de referencia (para la etiqueta
@@ -45,6 +45,23 @@ const PARTIDO_CSV_A_ID = {
 const AGREGADO_CSV_URL = 'data/agregado.csv';
 let _agregadoCache = null;
 
+/**
+ * Descarga un CSV del pipeline: primero desde la API de mirador-backend (datos
+ * que regenera su programa periódico) y, si no responde, la copia local en data/.
+ */
+async function fetchCSV(apiPath, localUrl) {
+  try {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 4000);
+    const res = await fetch(API_BASE + apiPath, { signal: ctrl.signal });
+    clearTimeout(t);
+    if (res.ok) return await res.text();
+  } catch { /* API apagada: se usa el CSV local */ }
+  const res = await fetch(localUrl);
+  if (!res.ok) throw new Error(`No se pudo cargar ${localUrl}`);
+  return res.text();
+}
+
 /** Parser CSV mínimo (sin comillas/escapes: el archivo es tabular simple). */
 function parseCSV(texto) {
   const lineas = texto.trim().split(/\r?\n/);
@@ -61,9 +78,7 @@ function parseCSV(texto) {
  */
 export async function cargarAgregado() {
   if (_agregadoCache) return _agregadoCache;
-  const res = await fetch(AGREGADO_CSV_URL);
-  if (!res.ok) throw new Error('No se pudo cargar data/agregado.csv');
-  const filas = parseCSV(await res.text());
+  const filas = parseCSV(await fetchCSV('/api/v1/agregado.csv', AGREGADO_CSV_URL));
   const porEstado = {};
   let fechaCalculo = null;
   for (const fila of filas) {
@@ -131,9 +146,7 @@ function parseCSVConComillas(texto) {
 export async function cargarEncuestasDetalle() {
   if (_encuestasCache) return _encuestasCache;
   try {
-    const res = await fetch(ENCUESTAS_CSV_URL);
-    if (!res.ok) throw new Error('No se pudo cargar data/encuestas_clean.csv');
-    const filas = parseCSVConComillas(await res.text());
+    const filas = parseCSVConComillas(await fetchCSV('/api/v1/encuestas_clean.csv', ENCUESTAS_CSV_URL));
     const porEstado = {};
     const sondeoPorClave = new Map();
     for (const fila of filas) {

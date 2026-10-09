@@ -101,3 +101,13 @@ export const SIN_ELECCION = '#D7DDE4';
 export const UI = {
   accent: '#C6007E',
 };
+
+// Servicio de datos (mirador-backend).
+//  · Producción (VPS): mismo dominio; nginx reenvía /api/ y /health al backend → API_BASE = ''.
+//  · Desarrollo local (python serve.py en :8000): backend en http://127.0.0.1:8001.
+//  · Se puede forzar con ?api=https://otro-host en la URL o con window.MIRADOR_API
+//    definido en un <script> antes de js/main.js.
+const _esDesarrollo = ['localhost', '127.0.0.1'].includes(location.hostname) && location.port === '8000';
+export const API_BASE = (new URLSearchParams(location.search).get('api')
+  ?? window.MIRADOR_API
+  ?? (_esDesarrollo ? 'http://127.0.0.1:8001' : '')).replace(/\/$/, '');

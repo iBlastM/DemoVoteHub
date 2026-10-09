@@ -43,8 +43,21 @@ reales, sin valor informativo oficial.
     ponderada por lista nominal reproduzca exactamente la proyección estatal.
 - **Detalle de estado** (`#/estado/:slug`): tendencia de intención de voto,
   proyección del día, probabilidad de victoria y encuestas del ciclo.
+- **Preferencia estatal** (`#/estatal`): solo polígonos de estados, coloreados con
+  el promedio ponderado de encuestas reales de gubernatura (sin desglose
+  municipal). Indica qué casas encuestadoras y qué corte se usan.
+- **Alcaldías 2027** (`#/alcaldias`): encuestas reales de Rubrum por municipio
+  (preferencia por partido para presidencia municipal). Los municipios sin
+  encuesta quedan en gris.
+- Las dos vistas anteriores leen la API de `G:\Metrix\mirador-backend`
+  (`deploy\run_api.bat`, puerto 8001). La gubernatura anterior (capas Cambio y
+  Oportunidad del Mapa de dominio) cubre los 17 estados; en Sonora, Colima y
+  Baja California Sur se muestra el voto de coalición donde el instituto no
+  publicó el desglose por partido, con un aviso.
 
 ## Cómo ejecutar
+
+> **Publicar en un servidor (VPS Linux con nginx):** ver [`DEPLOY_VPS.md`](DEPLOY_VPS.md).
 
 La app usa módulos ES (`type="module"`) y carga los GeoJSON vía `fetch`, por lo
 que **no** funciona con `file://`. Sirve la carpeta con un servidor local:

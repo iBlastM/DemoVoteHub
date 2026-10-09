@@ -6,20 +6,22 @@
 //   · panel de resultados con buscador y tabla por fuerza que se
 //     recalcula con la selección (clic, ⇧ + clic, recuadro ⇧ / Ctrl);
 //   · herramientas de perspectiva, contornos, picos 3D y tema.
-// La proyección estatal viene del agregado de encuestas reales; el
-// desglose municipal es ILUSTRATIVO (ajustado para que su suma
-// ponderada por lista nominal reproduzca la proyección estatal).
+// La proyección estatal viene del agregado de encuestas reales; cada
+// municipio se estima con sus resultados electorales oficiales ajustados
+// a esa proyección (servicio de datos: /api/v1/municipios/estimacion).
 // ============================================================
 
 import { store } from '../store.js';
 import { PARTIES, PARTY_ORDER } from '../config.js';
 import { loadMunicipios } from '../map.js';
-import { loadHist2021 } from '../hist2021.js';
+import { loadManifest, loadHistGub, avisosGub, unidadesGub } from '../hist_gub.js';
+import { apiGet } from '../api.js';
+import { fuenteBox } from './atlas_comun.js';
 import { statsMunicipio } from '../padron.js';
 import { navigate } from '../router.js';
 import { createAtlas, toWorldGeometry, unionBBox } from '../atlas.js';
 import { resolvedTheme, cycleTheme, themePref, themeLabel, THEME_ICONS } from '../theme.js';
-import { slugify, clamp, fmtNum, rng, seedFrom } from '../utils.js';
+import { slugify, clamp, fmtNum } from '../utils.js';
 
 /* ---------- Catálogo de entidades ---------- */
 const ENTIDADES = {
@@ -33,7 +35,8 @@ const ENTIDADES = {
   25: ['Sinaloa', 'Sin.'], 26: ['Sonora', 'Son.'], 27: ['Tabasco', 'Tab.'], 28: ['Tamaulipas', 'Tamps.'],
   29: ['Tlaxcala', 'Tlax.'], 30: ['Veracruz', 'Ver.'], 31: ['Yucatán', 'Yuc.'], 32: ['Zacatecas', 'Zac.'],
 };
-const QRO = 22;                       // única entidad con base municipal 2021 real
+// Resultados reales de la gubernatura anterior (2021; 2022 en Ags. y Q. Roo)
+// para las 17 entidades: ver js/hist_gub.js y data/gubernaturas_manifest.json.
 
 /* ---------- Iconos (trazo 1.6, 20×20) ---------- */
 const I = {
@@ -72,76 +75,64 @@ const NEUTRAL = {
   dark: { none: 'rgba(150,160,178,.10)', nodata: 'rgba(120,128,144,.38)', keep: [86, 92, 106] },
 };
 
-/* ---------- Modelo municipal ilustrativo ---------- */
-const FIELD = Object.fromEntries(PARTY_ORDER.map((p) => {
-  const u = rng(seedFrom('campo-municipal:' + p));
-  return [p, Array.from({ length: 3 }, () => [0.18 + u() * 0.5, 0.18 + u() * 0.5, u() * 6.283, u() * 6.283])];
-}));
-function field(party, x, y) {
-  const f = FIELD[party];
-  if (!f) return 0;
-  let v = 0;
-  for (const [fx, fy, a, b] of f) v += Math.sin(x * fx + a) * Math.cos(y * fy + b);
-  return v / 3;
-}
-function unit(key, salt) {
-  let h = 2166136261;
-  const s = `${key}:${salt}`;
-  for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
-  return ((h >>> 0) % 100000) / 100000;
-}
+/* ---------- Estimación municipal (datos reales) ---------- */
 function rankShares(shares) {
   return Object.entries(shares).filter(([p]) => PARTIES[p]).sort((a, b) => b[1] - a[1]);
 }
 
+/** Estimación por municipio del servicio de datos: Map cvegeo → registro. Se pide una sola vez. */
+let _estimacion = null;
+function cargarEstimacion() {
+  if (!_estimacion) {
+    _estimacion = apiGet('/api/v1/municipios/estimacion', { timeoutMs: 20000 })
+      .then((lista) => new Map(lista.map((m) => [m.cvegeo, m])))
+      .catch((e) => { _estimacion = null; throw e; });
+  }
+  return _estimacion;
+}
+
+/** Texto de la fuente de un municipio para el usuario. */
+export function fuenteMunicipio(rec) {
+  if (!rec) return 'promedio estatal';
+  const b = rec.bases || [];
+  const bases = b.length > 1 ? `${b.slice(0, -1).join(', ')} y ${b[b.length - 1]}` : (b[0] || '');
+  if (rec.fuente === 'encuesta_municipal+historial') return `encuesta de alcaldía y resultados de ${bases}`;
+  if (rec.fuente === 'historial') return `resultados de ${bases}`;
+  if (rec.fuente === 'encuesta_municipal+proyeccion_estatal') return 'encuesta de alcaldía + promedio estatal';
+  return 'promedio estatal (municipio sin elecciones previas)';
+}
+
 /**
- * Municipios de una entidad con una proyección ilustrativa: campo espacial
- * suave + variación local, ajustado por proporciones iterativas para que el
- * promedio ponderado por lista nominal coincida con la proyección estatal.
+ * Municipios de una entidad con la estimación del modelo: historial electoral
+ * real del municipio, ajustado a las encuestas estatales actuales (ver Metodología).
  */
-function buildMunicipios(estado, geo) {
-  const parties = Object.keys(estado.voto).filter((p) => PARTIES[p]);
-  const otros = estado.voto.Otros || 0;
+function buildMunicipios(estado, geo, est) {
   const list = [];
   for (const f of geo.features || []) {
     const geom = toWorldGeometry(f.geometry);
     if (!geom.polys.length) continue;
-    const cv = String(f.properties.cvegeo);
+    const cv = String(f.properties.cvegeo).padStart(5, '0');
     const st = statsMunicipio(store.padronData, cv);
-    const lx = geom.label[0] * 360, ly = geom.label[1] * 360;
-    const raw = {};
-    parties.forEach((p, i) => {
-      const base = estado.voto[p] * 100;
-      const noise = field(p, lx, ly) * 7 + (unit(cv, i) - 0.5) * 6;
-      raw[p] = Math.max(0.3, base + noise * Math.sqrt(Math.max(base, 2) / 30));
-    });
+    const rec = est.get(cv) || null;
+    let shares;
+    if (rec) {
+      shares = {};
+      for (const [p, v] of Object.entries(rec.estimacion)) {
+        if (p === 'OTROS') shares.Otros = v / 100;
+        else if (PARTIES[p]) shares[p] = v / 100;
+      }
+    } else {
+      shares = { ...estado.voto };
+    }
+    const r = rankShares(shares);
     list.push({
       id: 'm:' + cv, kind: 'mun', group: estado.cve, border: true, cvegeo: cv, name: f.properties.name || `Municipio ${cv}`,
-      estado, cve: estado.cve, geom, ln: st ? Number(st[1]) || 0 : 0, padron: st ? Number(st[0]) || 0 : 0, lnKnown: !!st, raw,
+      estado, cve: estado.cve, geom, ln: st ? Number(st[1]) || 0 : 0, padron: st ? Number(st[0]) || 0 : 0, lnKnown: !!st,
+      shares, rec,
+      leader: rec ? rec.ganador : r[0][0],
+      margin: rec ? rec.margen : (r[0][1] - (r[1] ? r[1][1] : 0)) * 100,
+      prob: rec && Number.isFinite(rec.prob_ganador) ? rec.prob_ganador : null,
     });
-  }
-  const weight = (m) => m.ln || 1;
-  const W = list.reduce((s, m) => s + weight(m), 0) || 1;
-  for (let it = 0; it < 6; it++) {
-    for (const p of parties) {
-      const mean = list.reduce((s, m) => s + m.raw[p] * weight(m), 0) / W;
-      const k = mean > 0 ? (estado.voto[p] * 100) / mean : 1;
-      for (const m of list) m.raw[p] *= k;
-    }
-    for (const m of list) {
-      const sum = parties.reduce((s, p) => s + m.raw[p], 0) || 1;
-      const k = ((1 - otros) * 100) / sum;
-      for (const p of parties) m.raw[p] *= k;
-    }
-  }
-  for (const m of list) {
-    m.shares = Object.fromEntries(parties.map((p) => [p, m.raw[p] / 100]));
-    m.shares.Otros = otros;
-    delete m.raw;
-    const r = rankShares(m.shares);
-    m.leader = r[0][0];
-    m.margin = (r[0][1] - (r[1] ? r[1][1] : 0)) * 100;
-    m.prob = clamp(0.5 + m.margin / 34, 0.5, 0.97);
   }
   return list;
 }
@@ -161,6 +152,7 @@ export function render(root) {
 
     <div class="ax-status" id="axStatus" role="status" hidden></div>
     <div class="ax-tip" id="axTip" hidden></div>
+    <svg class="ax-tip-lead" id="axLead" aria-hidden="true" hidden><path class="ax-lead-halo"/><path class="ax-lead-line"/></svg>
 
     <div class="ax-tools" id="axTools">
       <div class="ax-tools-head">
@@ -202,15 +194,15 @@ export function render(root) {
         <p class="ax-sub-h">Comparar contra</p>
         <div class="ax-chips" role="radiogroup" aria-label="Base de comparación">
           <button type="button" role="radio" data-base="gob">Partido gobernante</button>
-          <button type="button" role="radio" data-base="2021">Voto 2021 · Qro.</button>
+          <button type="button" role="radio" data-base="2021">Gubernatura anterior</button>
         </div>
       </div>
       <div class="ax-sub" data-for="oportunidad">
-        <p class="ax-sub-h">Voto 2021 por partido</p>
+        <p class="ax-sub-h">Voto en la gubernatura anterior</p>
         <div class="ax-chips ax-chips-party" role="radiogroup" aria-label="Partido">
           ${PARTY_ORDER.map((p) => `<button type="button" role="radio" data-party="${p}"><span class="ax-dot" style="--c:${PARTIES[p].color}"></span>${p === 'MORENA' ? 'Morena' : p}</button>`).join('')}
         </div>
-        <p class="ax-note">Resultados reales de la gubernatura 2021, solo para los municipios de Querétaro. Los otros 16 estados no tienen base municipal 2021 en esta demo.</p>
+        ${fuenteBox('<p>Resultados oficiales de la gubernatura anterior por municipio en las 17 entidades (2021; 2022 en Aguascalientes y Quintana Roo), publicados por cada instituto electoral local.</p><p>En Sonora, Colima y Baja California Sur el instituto no publicó todos los partidos por separado: ahí se muestra el voto de la coalición que los incluye.</p>', { clave: 'capas-gub' })}
       </div>
       <button class="ax-toggle" type="button" data-act="spikes" aria-pressed="false">
         <span class="ax-toggle-box" aria-hidden="true"></span>Picos 3D · lista nominal
@@ -243,7 +235,7 @@ export function render(root) {
   </section>`;
 
   const $ = (s) => root.querySelector(s);
-  const mapEl = $('#axMap'), tipEl = $('#axTip'), statusEl = $('#axStatus');
+  const mapEl = $('#axMap'), tipEl = $('#axTip'), leadEl = $('#axLead'), statusEl = $('#axStatus');
   const panel = $('#axPanel'), scopeEl = $('#axScope'), clearBtn = $('#axClear');
   const introEl = $('#axIntro'), searchWrap = $('#axSearchWrap'), searchEl = $('#axSearch'), resultsEl = $('#axResults');
   const tableEl = $('#axTable'), footEl = $('#axFoot'), legendEl = $('#axLegend');
@@ -322,22 +314,56 @@ export function render(root) {
     atlas.setItems(items);
   }
 
-  function histOf(it) {
-    if (!hist || it.kind !== 'mun' || it.cve !== QRO) return null;
-    return hist[slugify(it.name)] || null;
+  // hist: Map cve → { muni, meta } (null hasta cargar). Cada entidad tiene sus
+  // "unidades": la columna del partido o, si no se publicó, la de su coalición.
+  const unitsCache = new Map();
+  function unitsOf(cve) {
+    if (!unitsCache.has(cve)) unitsCache.set(cve, unidadesGub(hist?.get(cve)?.meta));
+    return unitsCache.get(cve);
   }
+  /** Unidades distintas (una por columna) de una entidad. */
+  function unitList(cve) {
+    const seen = new Map();
+    for (const u of Object.values(unitsOf(cve))) if (!seen.has(u.key)) seen.set(u.key, u);
+    return [...seen.values()];
+  }
+  const metaOf = (cve) => hist?.get(cve)?.meta || null;
+  const anioOf = (cve) => metaOf(cve)?.anio || 2021;
+
+  function histOf(it) {
+    if (!hist || it.kind !== 'mun') return null;
+    return hist.get(it.cve)?.muni[slugify(it.name)] || null;
+  }
+  /** Proporción 2027 (municipal) de los partidos base de una unidad. */
+  const share27 = (it, u) => u.members.reduce((a, p) => a + (it.shares[p] || 0), 0);
+  /** Partido de una unidad usado para el color (el primero en el orden de despliegue). */
+  const unitParty = (u) => PARTY_ORDER.find((p) => u.members.includes(p)) || u.members[0];
   function gainOf(it, h) {
     let best = null;
-    for (const p of PARTY_ORDER) {
-      if (!(p in h.partidos) || !(p in it.shares) || !h.votos) continue;
-      const g = it.shares[p] - h.partidos[p] / h.votos;
-      if (!best || g > best.gain) best = { party: p, gain: g };
+    if (!h.votos) return null;
+    for (const u of unitList(it.cve)) {
+      if (!(u.key in h.partidos)) continue;
+      const members = u.members.filter((p) => p in it.shares);
+      if (!members.length) continue;
+      const g = share27(it, u) - h.partidos[u.key] / h.votos;
+      if (!best || g > best.gain) best = { party: [...members].sort((a, b) => it.shares[b] - it.shares[a])[0], gain: g, unit: u };
     }
     return best;
   }
+  /** Proporción del voto anterior de `party` (o de su coalición) en el municipio. */
+  function opShare(it, h) {
+    const u = unitsOf(it.cve)[opParty];
+    if (!u || !h.votos) return null;
+    return (h.partidos[u.key] || 0) / h.votos;
+  }
   let opRange = [0, 1];
   function computeOpRange() {
-    const vals = (munisByCve.get(QRO) || []).map(histOf).filter(Boolean).map((h) => (h.votos ? (h.partidos[opParty] || 0) / h.votos : 0));
+    const vals = [];
+    for (const munis of munisByCve.values()) for (const m of munis) {
+      const h = histOf(m);
+      const s = h ? opShare(m, h) : null;
+      if (s != null) vals.push(s);
+    }
     opRange = vals.length ? [Math.min(...vals), Math.max(...vals)] : [0, 1];
   }
 
@@ -345,7 +371,7 @@ export function render(root) {
     const N = NEUTRAL[themeName];
     if (it.kind === 'none') return N.none;
     if (mode === 'margen') {
-      const t = metric === 'prob' ? (it.prob - 0.5) / 0.47 : it.margin / MARGIN_CAP;
+      const t = metric === 'prob' && it.prob != null ? (it.prob - 0.5) / 0.47 : it.margin / MARGIN_CAP;
       return ramp(it.leader, 0.1 + 0.9 * clamp(t, 0, 1));
     }
     if (mode === 'ganador') return css(PAL[it.leader].base);
@@ -358,7 +384,8 @@ export function render(root) {
       const g = gainOf(it, h);
       return g ? ramp(g.party, 0.12 + 0.88 * clamp(g.gain / 0.25, 0, 1)) : N.nodata;
     }
-    const s = h.votos ? (h.partidos[opParty] || 0) / h.votos : 0;
+    const s = opShare(it, h);
+    if (s == null) return N.nodata;
     const t = opRange[1] > opRange[0] ? (s - opRange[0]) / (opRange[1] - opRange[0]) : 0.5;
     return ramp(opParty, 0.06 + 0.9 * t);
   }
@@ -378,7 +405,7 @@ export function render(root) {
   }
 
   /* ---------- Carga progresiva de municipios ---------- */
-  const pending = [...store.estados].sort((a, b) => (a.cve === QRO ? -1 : b.cve === QRO ? 1 : 0));
+  const pending = [...store.estados];
   const total = pending.length;
   let loaded = 0, failed = 0;
   const waiters = new Map();
@@ -395,13 +422,15 @@ export function render(root) {
   function loadingText() { return `Cargando municipios · ${loaded} de ${total}`; }
   setStatus(loadingText());
 
+  let sinEstimacion = false;
   async function worker() {
     while (alive && pending.length) {
       const estado = pending.shift();
       try {
-        const geo = await loadMunicipios(estado);
+        const [geo, est] = await Promise.all([loadMunicipios(estado), cargarEstimacion().catch(() => null)]);
         if (!alive) return;
-        const munis = buildMunicipios(estado, geo);
+        if (!est) { sinEstimacion = true; throw new Error('sin estimación'); }
+        const munis = buildMunicipios(estado, geo, est);
         if (!munis.length) throw new Error('sin geometría');
         munisByCve.set(estado.cve, munis);
         const sid = 's:' + estado.cve;
@@ -417,6 +446,7 @@ export function render(root) {
       renderLegend();
       renderPanel();
       if (loaded < total) setStatus(loadingText());
+      else if (sinEstimacion) setStatus('No se pudo cargar la estimación por municipio; se muestran solo los estados. Intenta recargar la página.', 'warn');
       else if (failed) setStatus(`No se cargaron los municipios de ${failed} ${failed === 1 ? 'estado' : 'estados'}; se muestran a nivel estatal.`, 'warn');
       else { setStatus(''); }
     }
@@ -484,16 +514,42 @@ export function render(root) {
     }
     return { sums, ln, known: true };
   }
+  /** Suma por unidad (columna de partido o coalición) del resultado anterior y
+   *  del apoyo 2027 de los mismos partidos, ponderado por lista nominal. */
   function hist2021Of(list) {
-    const sums = {};
-    let votos = 0, ln = 0, n = 0;
+    const sums = {}, est27 = {}, units = new Map();
+    let votos = 0, ln = 0, n = 0, w27 = 0;
+    const cves = new Set(), anios = new Set();
     for (const m of list) {
       const h = histOf(m);
       if (!h) continue;
       n++; votos += h.votos; ln += h.nominal;
-      for (const [p, v] of Object.entries(h.partidos)) sums[p] = (sums[p] || 0) + v;
+      cves.add(m.cve); anios.add(anioOf(m.cve));
+      const w = m.ln || 1;
+      w27 += w;
+      for (const u of unitList(m.cve)) {
+        if (!(u.key in h.partidos)) continue;
+        if (!units.has(u.key)) units.set(u.key, u);
+        sums[u.key] = (sums[u.key] || 0) + h.partidos[u.key];
+        est27[u.key] = (est27[u.key] || 0) + share27(m, u) * w;
+      }
     }
-    return { sums, votos, ln, n };
+    return { sums, est27, w27, units, votos, ln, n, cves, anios };
+  }
+  const coalTxt = (key) => key.replace(/_/g, '·<wbr>');
+  const unitLabel = (u) => (u.coalicion
+    ? `<span class="ax-coal-n">${coalTxt(u.key)}</span><span class="ax-coal">coalición</span>` : partyName(u.key));
+  const anioTxt = (anios) => (anios.size === 1 ? String([...anios][0]) : 'anterior');
+  /** Avisos (coaliciones, año, municipios estimados…) de las entidades de la selección. */
+  function avisosHTML(cves, soloClave = false) {
+    const out = [];
+    for (const cve of [...cves].sort((a, b) => a - b)) {
+      const av = avisosGub(metaOf(cve)).filter((a) => !soloClave || a.tipo === 'coalicion');
+      if (!av.length) continue;
+      const nombre = ENTIDADES[cve][0];
+      out.push(`<p class="ax-note ax-note-${av[0].tipo}"><b>${nombre}:</b> ${av.map((a) => a.texto).join(' ')}</p>`);
+    }
+    return out.join('');
   }
 
   /* ---------- Panel ---------- */
@@ -529,29 +585,27 @@ export function render(root) {
 
   function tableShift2021(list) {
     const h = hist2021Of(list);
-    if (!h.n) return emptyNote('Sin base municipal 2021 para esta selección. Solo Querétaro tiene resultados 2021 en la demo.');
-    const agg = aggregate(list.filter(histOf));
-    const tot27 = Object.values(agg.sums).reduce((a, b) => a + b, 0) || 1;
-    const rows = PARTY_ORDER.filter((p) => p in h.sums).map((p) => {
-      const s21 = h.sums[p] / h.votos, s27 = (agg.sums[p] || 0) / tot27;
-      return { p, s21, s27, d: s27 - s21 };
+    if (!h.n) return emptyNote('Sin resultado de la gubernatura anterior para esta selección (municipios creados después de esa elección).');
+    const rows = [...h.units.values()].map((u) => {
+      const s21 = h.sums[u.key] / h.votos, s27 = h.est27[u.key] / h.w27;
+      return { u, p: unitParty(u), s21, s27, d: s27 - s21 };
     }).sort((a, b) => b.s27 - a.s27);
     const best = [...rows].sort((a, b) => b.d - a.d)[0];
     return `<table class="ax-t ax-t4">
-      <thead><tr><th scope="col">Fuerza</th><th scope="col">2021</th><th scope="col">2027</th><th scope="col">Cambio</th></tr></thead>
-      <tbody>${rows.map((r) => `<tr><th scope="row">${dot(r.p)}<span class="ax-pn"><span>${partyName(r.p)}</span></span></th>
+      <thead><tr><th scope="col">Fuerza</th><th scope="col">${anioTxt(h.anios)}</th><th scope="col">2027</th><th scope="col">Cambio</th></tr></thead>
+      <tbody>${rows.map((r) => `<tr><th scope="row">${dot(r.p)}<span class="ax-pn"><span>${unitLabel(r.u)}</span></span></th>
         <td>${pct1(r.s21)}</td><td>${pct1(r.s27)}</td><td class="${r.d >= 0 ? 'is-up' : 'is-down'}">${pp(r.d)}</td></tr>`).join('')}</tbody>
     </table>
-    <p class="ax-shift">Mayor avance <b style="--c:${PARTIES[best.p].color}">${partyName(best.p)} ${pp(best.d)}</b></p>`;
+    <p class="ax-shift">Mayor avance <b style="--c:${PARTIES[best.p].color}">${best.u.coalicion ? best.u.key.replace(/_/g, '·') : partyName(best.p)} ${pp(best.d)}</b></p>`;
   }
 
   function tableOportunidad(list) {
     const h = hist2021Of(list);
-    if (!h.n) return emptyNote('Sin resultados 2021 para esta selección. Solo Querétaro tiene base municipal 2021 en la demo.');
-    const rows = PARTY_ORDER.filter((p) => p in h.sums).map((p) => [p, h.sums[p]]).sort((a, b) => b[1] - a[1]);
+    if (!h.n) return emptyNote('Sin resultado de la gubernatura anterior para esta selección (municipios creados después de esa elección).');
+    const rows = [...h.units.values()].map((u) => [u, h.sums[u.key]]).sort((a, b) => b[1] - a[1]);
     return `<table class="ax-t">
-      <thead><tr><th scope="col">Partido</th><th scope="col">Votos 2021</th><th scope="col">%</th></tr></thead>
-      <tbody>${rows.map(([p, v]) => `<tr class="${p === opParty ? 'is-on' : ''}"><th scope="row">${dot(p)}<span class="ax-pn"><span>${partyName(p)}</span></span></th>
+      <thead><tr><th scope="col">Partido</th><th scope="col">Votos ${anioTxt(h.anios)}</th><th scope="col">%</th></tr></thead>
+      <tbody>${rows.map(([u, v]) => `<tr class="${u.members.includes(opParty) ? 'is-on' : ''}"><th scope="row">${dot(unitParty(u))}<span class="ax-pn"><span>${unitLabel(u)}</span></span></th>
         <td>${fmtNum(v)}</td><td>${pct1(v / h.votos)}</td></tr>`).join('')}</tbody>
     </table>`;
   }
@@ -575,18 +629,19 @@ export function render(root) {
     if (has) closeResults();
 
     if (has) scopeEl.textContent = scopeLabel(list);
-    else scopeEl.textContent = qro2021 ? 'Querétaro · voto 2021' : 'Gubernaturas 2027 · México';
+    else scopeEl.textContent = qro2021 ? 'Gubernatura anterior · 17 estados' : 'Gubernaturas 2027 · México';
 
     if (!has && !introEl.dataset.built) {
       introEl.innerHTML = `<h1 class="ax-title">Las 17 gubernaturas de 2027, municipio por municipio</h1>
-        <p class="ax-by">Proyección estatal con encuestas públicas agregadas (corte ${updated}). El desglose municipal es ilustrativo.</p>
-        ${seatsBar()}`;
+        <p class="ax-by">Proyección con encuestas públicas (corte ${updated}). Encuestas de alcaldía por municipio: <a href="#/alcaldias">Alcaldías 2027</a>.</p>
+        ${seatsBar()}
+        ${fuenteBox(textoFuenteGeneral(), { clave: 'dominio-general' })}`;
       introEl.dataset.built = '1';
     }
 
     // Tabla
-    const scopeQro = has ? list : (munisByCve.get(QRO) || []);
-    if (qro2021 && !hist) tableEl.innerHTML = emptyNote('Cargando resultados 2021…');
+    const scopeQro = has ? list : items.filter((i) => i.kind === 'mun');
+    if (qro2021 && !hist) tableEl.innerHTML = emptyNote('Cargando resultados de la gubernatura anterior…');
     else if (mode === 'oportunidad') tableEl.innerHTML = tableOportunidad(scopeQro);
     else if (qro2021) tableEl.innerHTML = tableShift2021(scopeQro);
     else tableEl.innerHTML = tableProjection(has ? aggregate(list) : nationalAggregate());
@@ -598,32 +653,84 @@ export function render(root) {
     let foot = '';
     if (qro2021) {
       const h = hist2021Of(scopeQro);
-      foot = h.n ? `<p>Votos emitidos 2021: <b>${fmtNum(h.votos)}</b> · lista nominal 2021: <b>${fmtNum(h.ln)}</b></p>` : '';
-      foot += '<p class="ax-src">2021: resultados de la gubernatura de Querétaro por casilla, agregados por municipio. 2027: desglose municipal ilustrativo.</p>';
+      const cves = has ? new Set(list.map((i) => i.cve)) : new Set(store.estados.map((e) => e.cve));
+      foot = h.n ? `<p>Votos emitidos (${anioTxt(h.anios)}): <b>${fmtNum(h.votos)}</b> · lista nominal: <b>${fmtNum(h.ln)}</b></p>` : '';
+      if (hist) foot += avisosHTML(cves, !has);
+      foot += fuenteBox('<p><b>Gubernatura anterior:</b> resultados oficiales de cada instituto electoral local, sumados por municipio (2021; 2022 en Aguascalientes y Quintana Roo).</p><p><b>2027:</b> estimación por municipio a partir de las encuestas estatales y del historial electoral del municipio. <a href="#/metodologia">Metodología</a>.</p>', { clave: 'dominio-gub' });
     } else if (!has) {
       const agg = nationalAggregate();
-      foot = `<p>Lista nominal en juego: <b>${fmtNum(agg.ln)}</b></p>
-        <p class="ax-src">Encuestas públicas agregadas (promedio ponderado + Kalman) · Lista nominal INE, corte 20 AGO 2026 · Municipios: ilustrativo.</p>`;
+      foot = `<p>Lista nominal en juego: <b>${fmtNum(agg.ln)}</b></p>`;
     } else if (est) {
       const prob = est.prob?.[est.favorito] ?? est.probFav;
       foot = `<p>Probabilidad de victoria: <b>${partyName(est.favorito)} ${Math.round(prob * 100)}%</b> · margen <b>+${est.margen.toFixed(1)} pp</b> · ${est.estatus.label.toLowerCase()}</p>
         ${mode === 'cambio' ? `<p>Gobierna ${partyName(est.gob)} · ${est.flip ? `<b>cambiaría a ${partyName(est.favorito)}</b>` : 'retendría'}</p>` : ''}
-        <p>Lista nominal: <b>${fmtNum(est.listaNominal)}</b></p>${link(est)}`;
+        <p>Lista nominal: <b>${fmtNum(est.listaNominal)}</b></p>
+        ${fuenteBox(`<p>Promedio de las encuestas públicas de gubernatura en ${est.nombre}. La probabilidad sale de simular miles de veces la elección con el margen de error de esas encuestas.</p><p>La suma de sus municipios reproduce exactamente este promedio.</p>`, { clave: 'dominio-estado' })}
+        ${link(est)}`;
     } else {
       const agg = aggregate(list);
       const unknown = list.filter((i) => i.kind === 'mun' && !i.lnKnown).length;
+      const uno = list.length === 1 && list[0].kind === 'mun' ? list[0] : null;
       foot = `<p>Lista nominal: <b>${agg.ln ? fmtNum(agg.ln) : '—'}</b>${unknown ? ` · ${unknown} sin dato INE` : ''}</p>
+        ${uno && uno.rec ? `<p>Ventaja estimada: <b>${partyName(uno.leader)} +${uno.margin.toFixed(1)} pp</b>${Number.isFinite(uno.prob) ? ` · confianza <b>${Math.round(uno.prob * 100)}%</b>` : ''}</p>` : ''}
         ${list.length === 1 && mode === 'cambio' ? `<p>Gobierna el estado ${partyName(list[0].estado.gob)} · ${list[0].leader !== list[0].estado.gob ? `aquí lidera <b>${partyName(list[0].leader)}</b>` : 'aquí retiene'}</p>` : ''}
-        <p class="ax-src">Desglose municipal ilustrativo, ajustado a la proyección estatal.</p>
+        ${fuenteBox(uno ? textoFuenteMunicipio(uno) : '<p>Suma de las estimaciones de los municipios seleccionados, ponderada por su lista nominal.</p><p>Cada municipio se estima con sus resultados electorales oficiales, ajustados a las encuestas actuales de su estado. <a href="#/metodologia">Metodología</a>.</p>', { clave: 'dominio-municipio' })}
         ${oneState ? link(oneState) : ''}`;
     }
     footEl.innerHTML = foot;
   }
 
-  /* ---------- Tooltip ---------- */
-  function rowsHTML(entries, fmt) {
-    return entries.map(([p, a, b]) => `<div class="ax-tip-row">${dot(p)}<span>${partyName(p)}</span><b>${a}</b><i>${b}</i></div>`).join('');
+  /* ---------- Textos de fuente ---------- */
+  let metodo = null;   // /api/v1/metodologia (error del modelo, pesos)
+  apiGet('/api/v1/metodologia').then((m) => { metodo = m; if (!alive) return; introEl.dataset.built = ''; renderPanel(); }).catch(() => {});
+  const NOMBRE_BASE = { misma_eleccion: 'la gubernatura anterior', federal: 'las diputaciones federales de 2024', otra_local: 'el ayuntamiento de 2024' };
+  function basesUsadas() {
+    const p = metodo?.modelo_municipal?.pesos;
+    if (!p) return 'sus resultados electorales oficiales anteriores';
+    const n = Object.keys(NOMBRE_BASE).filter((k) => p[k] > 0).map((k) => NOMBRE_BASE[k]);
+    return n.length ? `sus resultados oficiales reales (${n.join(' y ')})` : 'sus resultados electorales oficiales anteriores';
   }
+  function errorModelo() {
+    return metodo?.modelo_municipal?.prueba_gubernatura?.modelos?.combinado?.mae_pp;
+  }
+  function textoFuenteGeneral() {
+    const e = errorModelo();
+    return `<p><b>Por estado:</b> promedio de las encuestas públicas de gubernatura 2027. Pesan más las más recientes, las de muestra más grande y las de casas con mejor metodología.</p>
+      <p><b>Por municipio:</b> no existen encuestas de gubernatura por municipio. Cada municipio se estima con ${basesUsadas()}, ajustados a lo que hoy dicen las encuestas de su estado. Donde hay encuesta de alcaldía (Rubrum) también se toma en cuenta. Los municipios suman exactamente el promedio estatal.</p>
+      ${e ? `<p><b>Margen de error:</b> probado con la gubernatura anterior, el reparto entre municipios se desvió en promedio <b>±${e.toFixed(1)} puntos</b> por partido.</p>` : ''}
+      <p>Lista nominal: INE, corte 20 ago 2026. <a href="#/metodologia">Metodología completa</a>.</p>`;
+  }
+  function textoFuenteMunicipio(m) {
+    const r = m.rec;
+    if (!r) return '<p>Este municipio usa el promedio estatal.</p>';
+    const err = r.error_tipico_pp?.[m.leader];
+    return `<p><b>Estimado con:</b> ${fuenteMunicipio(r)}, ajustado a las encuestas estatales actuales.</p>
+      ${r.n_encuestas_municipales ? `<p>Incluye ${r.n_encuestas_municipales} ${r.n_encuestas_municipales === 1 ? 'sondeo' : 'sondeos'} de alcaldía de Rubrum (último: ${r.fecha_ultima_encuesta}). Detalle en <a href="#/alcaldias">Alcaldías 2027</a>.</p>` : ''}
+      ${err ? `<p><b>Error típico:</b> ±${err.toFixed(1)} puntos para ${partyName(m.leader)}. La confianza indica qué tan probable es que el líder estimado vaya realmente adelante, suponiendo que el promedio estatal es correcto.</p>` : ''}
+      <p>Es una estimación, no una encuesta del municipio. <a href="#/metodologia">Metodología</a>.</p>`;
+  }
+
+  /* ---------- Tooltip ----------
+     Tarjeta con pleca negra (municipio + ESTADO), tabla con logotipo y
+     nombre de cada fuerza, y una flecha curva que la une con el punto
+     señalado. La tarjeta se separa del cursor para no tapar el municipio. */
+  const TIP_GAP_X = 84, TIP_GAP_Y = 40;          // separación tarjeta ↔ cursor (px)
+  const tipLogo = (p) => (PARTIES[p]?.logo
+    ? `<span class="ax-tip-logo${p === 'MORENA' ? ' is-wordmark' : ''}"><img src="${PARTIES[p].logo}" alt="" width="${p === 'MORENA' ? 40 : 24}" height="24" decoding="async"></span>`
+    : dot(p));
+  // Precarga: el primer hover ya tiene los logotipos decodificados.
+  for (const p of PARTY_ORDER) if (PARTIES[p].logo) { const im = new Image(); im.src = PARTIES[p].logo; }
+
+  /** Tabla del tooltip. rows: [[party, valor, valor2, clase, etiqueta?]]; cols: encabezados. */
+  function tipTable(cols, rows, cls = '') {
+    return `<table class="ax-tip-t ${cls}">
+      <thead><tr>${cols.map((c) => `<th scope="col">${c}</th>`).join('')}</tr></thead>
+      <tbody>${rows.map(([p, a, b, k, label]) => `<tr><th scope="row">${tipLogo(p)}<span>${label || partyName(p)}</span></th>
+        <td>${a}</td><td class="${k || ''}">${b}</td></tr>`).join('')}</tbody>
+    </table>`;
+  }
+  const num1 = (x) => (x * 100).toFixed(1);
+
   // El HTML del tooltip solo se reconstruye si cambia el contenido (otro
   // municipio, capa o carga de datos 2021); mientras el cursor se mueve sobre
   // el mismo municipio solo se reposiciona, sin volver a medir el DOM.
@@ -638,42 +745,76 @@ export function render(root) {
       tipKey = key;
     }
     const { w, h } = atlas.size;
-    let x = p.x + 18, y = p.y + 18;
-    if (x + tipW > w - 8) x = p.x - tipW - 14;
-    if (y + tipH > h - 8) y = p.y - tipH - 14;
-    tipEl.style.transform = `translate(${Math.max(8, x)}px, ${Math.max(8, y)}px)`;
+    // Preferencia: arriba a la derecha del cursor; se voltea en cada eje si
+    // no cabe. El ancla es la esquina de la tarjeta más cercana al cursor.
+    const right = p.x + TIP_GAP_X + tipW <= w - 8 || p.x - TIP_GAP_X - tipW < 8;
+    const above = p.y - TIP_GAP_Y - tipH >= 8 || p.y + TIP_GAP_Y + tipH > h - 8;
+    let x = right ? p.x + TIP_GAP_X : p.x - TIP_GAP_X - tipW;
+    let y = above ? p.y - TIP_GAP_Y - tipH : p.y + TIP_GAP_Y;
+    x = Math.max(8, Math.min(w - tipW - 8, x));
+    y = Math.max(8, Math.min(h - tipH - 8, y));
+    tipEl.style.transform = `translate(${x}px, ${y}px)`;
+    drawLead(p, x, y, right, above);
   }
+
+  /** Flecha curva: sale del costado de la tarjeta y baja (o sube) hasta el
+   *  punto, dejando un pequeño respiro para no tapar el municipio. */
+  function drawLead(p, x, y, right, above) {
+    const sx = right ? x : x + tipW;
+    const sy = above ? y + tipH - 22 : y + 22;
+    const ex = p.x + (right ? 3 : -3);
+    const ey = p.y + (above ? -7 : 7);
+    const cxp = ex, cyp = sy;                     // control: codo horizontal → vertical
+    const d = `M${sx},${sy} Q${cxp},${cyp} ${ex},${ey}`;
+    // Punta: tangente final = (end - control).
+    const tx = ex - cxp, ty = ey - cyp, L = Math.hypot(tx, ty) || 1;
+    const ux = tx / L, uy = ty / L, s = 7;
+    const head = `M${ex - ux * s - uy * s * 0.6},${ey - uy * s + ux * s * 0.6} L${ex},${ey} L${ex - ux * s + uy * s * 0.6},${ey - uy * s - ux * s * 0.6}`;
+    leadEl.querySelectorAll('path').forEach((el) => el.setAttribute('d', `${d} ${head}`));
+    // En <svg> la propiedad `hidden` no existe (solo en elementos HTML): se usa el atributo.
+    leadEl.removeAttribute('hidden');
+  }
+
   function tipHTML(it) {
-    let html = '';
-    const where = it.kind === 'mun' ? `<span>${ENTIDADES[it.cve][0]}</span>` : '';
+    const state = it.kind === 'mun' ? ENTIDADES[it.cve][0] : it.kind === 'estado' ? 'Gubernatura 2027' : '';
+    let html = `<div class="ax-tip-h"><b>${it.name}</b>${state ? `<span>${state}</span>` : ''}</div><div class="ax-tip-b">`;
     if (it.kind === 'none') {
-      html = `<div class="ax-tip-h"><b>${it.name}</b></div><p class="ax-tip-f">Sin elección de gubernatura en 2027</p>`;
+      html += '<p class="ax-tip-f">Sin elección de gubernatura en 2027</p>';
     } else if (mode === 'oportunidad' || (mode === 'cambio' && baseline === '2021')) {
       const h = histOf(it);
-      html = `<div class="ax-tip-h"><b>${it.name}</b>${where}</div>`;
-      if (!h) html += `<p class="ax-tip-f">${hist || it.cve !== QRO ? 'Sin base municipal 2021' : 'Cargando resultados 2021…'}</p>`;
+      const meta = metaOf(it.cve);
+      const anio = anioOf(it.cve);
+      if (!h) html += `<p class="ax-tip-f">${!hist ? 'Cargando resultados anteriores…' : it.kind === 'mun' ? `Sin resultado ${anio}: municipio creado después de esa elección` : 'Cargando municipios…'}</p>`;
       else if (mode === 'oportunidad') {
-        const rows = PARTY_ORDER.filter((q) => q in h.partidos).map((q) => [q, h.partidos[q]]).sort((a, b) => b[1] - a[1]).slice(0, 4)
-          .map(([q, v]) => [q, fmtNum(v), pct1(v / h.votos)]);
-        html += rowsHTML(rows) + `<p class="ax-tip-f">Votos emitidos 2021: ${fmtNum(h.votos)}</p>`;
+        const rows = unitList(it.cve).filter((u) => u.key in h.partidos).map((u) => [u, h.partidos[u.key]])
+          .sort((a, b) => b[1] - a[1]).slice(0, 4)
+          .map(([u, v]) => [unitParty(u), fmtNum(v), num1(v / h.votos), '', u.coalicion ? u.key.replace(/_/g, '·') : null]);
+        html += tipTable(['Partido', `Votos ${anio}`, '%'], rows) + `<p class="ax-tip-f">Votos emitidos ${anio}: ${fmtNum(h.votos)}</p>`;
       } else {
-        const rows = PARTY_ORDER.filter((q) => q in h.partidos && q in it.shares)
-          .map((q) => [q, it.shares[q] - h.partidos[q] / h.votos]).sort((a, b) => b[1] - a[1]).slice(0, 4)
-          .map(([q, d]) => [q, pct1(it.shares[q]), pp(d)]);
-        html += rowsHTML(rows) + '<p class="ax-tip-f">2027 ilustrativo vs. 2021 real</p>';
+        const rows = unitList(it.cve).filter((u) => u.key in h.partidos && u.members.some((p) => p in it.shares))
+          .map((u) => [u, share27(it, u) - h.partidos[u.key] / h.votos]).sort((a, b) => b[1] - a[1]).slice(0, 4)
+          .map(([u, d]) => [unitParty(u), num1(share27(it, u)), pp(d), d >= 0 ? 'is-up' : 'is-down', u.coalicion ? u.key.replace(/_/g, '·') : null]);
+        html += tipTable(['Partido', '2027 %', 'Cambio'], rows) + `<p class="ax-tip-f">2027 estimado vs. ${anio} real</p>`;
+      }
+      if (meta && meta.desglose_partidos !== 'COMPLETO') {
+        html += `<p class="ax-tip-w">${meta.desglose_partidos === 'SOLO_COALICIONES' ? 'Solo hay voto por coalición' : 'Algunos partidos solo como coalición'}: el instituto no publicó el desglose por partido.</p>`;
       }
     } else {
-      const rows = rankShares(it.shares).slice(0, 4).map(([q, s]) => [q, it.ln ? fmtNum(Math.round(s * it.ln)) : '—', pct1(s)]);
-      html = `<div class="ax-tip-h"><b>${it.name}</b>${where}</div>${rowsHTML(rows)}`;
+      const rows = rankShares(it.shares).slice(0, 4).map(([q, s]) => [q, it.ln ? fmtNum(Math.round(s * it.ln)) : '—', num1(s)]);
+      html += tipTable(['Partido', 'Votos est.', '%'], rows);
       if (mode === 'cambio') {
         const g = it.estado.gob;
         html += `<p class="ax-tip-g">Gobierna ${partyName(g)} · ${it.leader !== g ? `<b>lidera ${partyName(it.leader)}</b>` : 'retiene'}</p>`;
       }
-      html += `<p class="ax-tip-f">Lista nominal: ${it.ln ? fmtNum(it.ln) : 'sin dato INE'}${it.kind === 'mun' ? ' · ilustrativo' : ' · encuestas'}</p>`;
+      html += `<p class="ax-tip-f">Lista nominal ${it.ln ? fmtNum(it.ln) : 'sin dato INE'}${it.kind === 'mun' ? (Number.isFinite(it.prob) ? ` · confianza ${Math.round(it.prob * 100)}%` : '') : ' · encuestas estatales'}</p>`;
+      if (it.kind === 'mun') html += `<p class="ax-tip-s">Estimación con ${fuenteMunicipio(it.rec)}</p>`;
     }
-    return html;
+    return html + '</div>';
   }
-  function hideTip() { if (!tipEl.hidden) tipEl.hidden = true; }
+  function hideTip() {
+    if (!tipEl.hidden) tipEl.hidden = true;
+    if (!leadEl.hasAttribute('hidden')) leadEl.setAttribute('hidden', '');
+  }
 
   /* ---------- Leyenda ---------- */
   function leadingParties() {
@@ -693,11 +834,12 @@ export function render(root) {
       html = `<div class="ax-lg-grid">${lead.map((p) => `<span class="ax-lg-n">${p === 'MORENA' ? 'Morena' : p}</span><span class="ax-lg-ramp ax-lg-2"><i style="background:${ramp(p, 0.72)}"></i><i style="background:${keepColor(p)}"></i></span>`).join('')}</div>
         <div class="ax-lg-scale"><span></span><span>cambia · retiene</span></div>`;
     } else if (mode === 'cambio') {
-      html = `<p class="ax-lg-h">Mayor avance 2021 → 2027</p><div class="ax-lg-grid">${PARTY_ORDER.slice(0, 4).map((p) => `<span class="ax-lg-n">${p === 'MORENA' ? 'Morena' : p}</span><span class="ax-lg-ramp">${steps(p, [0.12, 0.4, 0.7, 1])}</span>`).join('')}</div>
+      html = `<p class="ax-lg-h">Mayor avance: gubernatura anterior → 2027</p><div class="ax-lg-grid">${PARTY_ORDER.slice(0, 4).map((p) => `<span class="ax-lg-n">${p === 'MORENA' ? 'Morena' : p}</span><span class="ax-lg-ramp">${steps(p, [0.12, 0.4, 0.7, 1])}</span>`).join('')}</div>
         <div class="ax-lg-scale"><span>0</span><span>+25 pp</span></div>`;
     } else {
-      html = `<p class="ax-lg-h">${partyName(opParty)} · voto 2021</p><span class="ax-lg-ramp ax-lg-wide">${steps(opParty, [0.06, 0.3, 0.52, 0.74, 0.96])}</span>
-        <div class="ax-lg-scale"><span>${pct1(opRange[0])}</span><span>${pct1(opRange[1])}</span></div>`;
+      html = `<p class="ax-lg-h">${partyName(opParty)} · voto anterior</p><span class="ax-lg-ramp ax-lg-wide">${steps(opParty, [0.06, 0.3, 0.52, 0.74, 0.96])}</span>
+        <div class="ax-lg-scale"><span>${pct1(opRange[0])}</span><span>${pct1(opRange[1])}</span></div>
+        <p class="ax-lg-note">Son., Col. y B.C.S.: voto de coalición donde no hay desglose</p>`;
     }
     if (spikesOn) html += '<p class="ax-lg-spike"><svg viewBox="0 0 12 14" aria-hidden="true"><path d="M2 13 6 1l4 12Z"/></svg>Altura: lista nominal</p>';
     legendEl.innerHTML = html;
@@ -717,9 +859,25 @@ export function render(root) {
   function ensureHist() {
     if (hist) return Promise.resolve(hist);
     if (!histPromise) {
-      setStatus('Cargando resultados 2021…');
-      histPromise = loadHist2021().then((h) => { hist = h; setStatus(loaded < total ? loadingText() : ''); return h; })
-        .catch(() => { histPromise = null; setStatus('No se pudieron cargar los resultados 2021.', 'warn'); return null; });
+      setStatus('Cargando resultados de la gubernatura anterior…');
+      histPromise = (async () => {
+        const man = await loadManifest();
+        const cves = store.estados.map((e) => e.cve).filter((c) => man[String(c)]);
+        let n = 0;
+        const res = await Promise.all(cves.map(async (c) => {
+          const r = await loadHistGub(c).catch(() => null);
+          n++;
+          if (alive) setStatus(`Cargando resultados de la gubernatura anterior · ${n} de ${cves.length}`);
+          return [c, r];
+        }));
+        const map = new Map(res.filter(([, r]) => r));
+        unitsCache.clear();
+        hist = map;
+        const faltan = cves.length - map.size;
+        setStatus(faltan ? `No se cargaron los resultados anteriores de ${faltan} ${faltan === 1 ? 'estado' : 'estados'}.`
+          : loaded < total ? loadingText() : '', faltan ? 'warn' : 'info');
+        return map;
+      })().catch(() => { histPromise = null; setStatus('No se pudieron cargar los resultados de la gubernatura anterior.', 'warn'); return null; });
     }
     return histPromise;
   }
@@ -733,14 +891,9 @@ export function render(root) {
     restyle();
     const needs2021 = mode === 'oportunidad' || (mode === 'cambio' && baseline === '2021');
     if (!needs2021) return;
-    const wasLoaded = !!hist;
-    await Promise.all([ensureHist(), ready(QRO)]);
+    await ensureHist();
     if (!alive) return;
     restyle();
-    if (!wasLoaded || sub.focus) {
-      const sel = selectedItems();
-      if (!sel.length || sel.some((i) => i.cve !== QRO)) atlas.fit(stateBBox(QRO), { maxZoom: 9.5 });
-    }
   }
 
   layersEl.addEventListener('click', (e) => {

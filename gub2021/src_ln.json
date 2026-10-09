@@ -1,0 +1,2162 @@
+{
+ "_estatal": {
+  "nayarit": {
+   "2026": 988647,
+   "2025": 971075,
+   "2024": 953692,
+   "2023": 939234,
+   "2022": 914232,
+   "2021": 883965
+  },
+  "baja-california-sur": {
+   "2026": 656052,
+   "2025": 639010,
+   "2024": 621810,
+   "2023": 606189,
+   "2022": 582615,
+   "2021": 556816
+  },
+  "aguascalientes": {
+   "2026": 1150208,
+   "2025": 1127175,
+   "2024": 1106951,
+   "2023": 1083603,
+   "2022": 1045602,
+   "2021": 1022571
+  },
+  "sinaloa": {
+   "2026": 2407739,
+   "2025": 2380310,
+   "2024": 2364103,
+   "2023": 2337227,
+   "2022": 2279998,
+   "2021": 2232963
+  },
+  "chihuahua": {
+   "2026": 3198583,
+   "2025": 3148551,
+   "2024": 3103967,
+   "2023": 3050250,
+   "2022": 2952789,
+   "2021": 2870653
+  },
+  "nuevo-leon": {
+   "2026": 4697031,
+   "2025": 4589482,
+   "2024": 4499750,
+   "2023": 4416050,
+   "2022": 4287974,
+   "2021": 4150256
+  },
+  "san-luis-potosi": {
+   "2026": 2260390,
+   "2025": 2222331,
+   "2024": 2192016,
+   "2023": 2162452,
+   "2022": 2101791,
+   "2021": 2047270
+  }
+ },
+ "nayarit": {
+  "acaponeta": {
+   "titulo": "Lista Nominal  Acaponeta   Septiembre de 2026",
+   "2026": 28119,
+   "2025": 27906,
+   "2024": 27632,
+   "2023": 27657,
+   "2022": 27086,
+   "2021": 26930
+  },
+  "ahuacatlan": {
+   "titulo": "Lista Nominal  Ahuacatlan   Septiembre de 2026",
+   "2026": 13283,
+   "2025": 13031,
+   "2024": 12940,
+   "2023": 12726,
+   "2022": 12439,
+   "2021": 12308
+  },
+  "amatlan-de-ca-as": {
+   "titulo": "Lista Nominal  Amatlan de Caðas   Septiembre de 2026",
+   "2026": 10449,
+   "2025": 10222,
+   "2024": 10044,
+   "2023": 9868,
+   "2022": 9616,
+   "2021": 9194
+  },
+  "bahia-de-banderas": {
+   "titulo": "Lista Nominal  Bahia de Banderas   Septiembre de 2026",
+   "2026": 156668,
+   "2025": 150708,
+   "2024": 143143,
+   "2023": 137021,
+   "2022": 128728,
+   "2021": 119930
+  },
+  "compostela": {
+   "titulo": "Lista Nominal  Compostela   Septiembre de 2026",
+   "2026": 66711,
+   "2025": 65312,
+   "2024": 64144,
+   "2023": 63096,
+   "2022": 61022,
+   "2021": 58020
+  },
+  "del-nayar": {
+   "titulo": "Lista Nominal  Del Nayar   Septiembre de 2026",
+   "2026": 32538,
+   "2025": 31589,
+   "2024": 30844,
+   "2023": 30209,
+   "2022": 28557,
+   "2021": 26822
+  },
+  "huajicori": {
+   "titulo": "Lista Nominal  Huajicori   Septiembre de 2026",
+   "2026": 8142,
+   "2025": 8401,
+   "2024": 8578,
+   "2023": 8589,
+   "2022": 8352,
+   "2021": 8040
+  },
+  "ixtlan-del-rio": {
+   "titulo": "Lista Nominal  Ixtlan del Rio   Septiembre de 2026",
+   "2026": 24493,
+   "2025": 23971,
+   "2024": 23541,
+   "2023": 23161,
+   "2022": 22399,
+   "2021": 21643
+  },
+  "jala": {
+   "titulo": "Lista Nominal  Jala   Septiembre de 2026",
+   "2026": 15282,
+   "2025": 14946,
+   "2024": 14794,
+   "2023": 14635,
+   "2022": 14102,
+   "2021": 13605
+  },
+  "la-yesca": {
+   "titulo": "Lista Nominal  La Yesca   Septiembre de 2026",
+   "2026": 8573,
+   "2025": 8496,
+   "2024": 8457,
+   "2023": 8531,
+   "2022": 8378,
+   "2021": 8195
+  },
+  "rosamorada": {
+   "titulo": "Lista Nominal  Rosamorada   Septiembre de 2026",
+   "2026": 27017,
+   "2025": 26891,
+   "2024": 26842,
+   "2023": 26703,
+   "2022": 26422,
+   "2021": 25702
+  },
+  "ruiz": {
+   "titulo": "Lista Nominal  Ruiz   Septiembre de 2026",
+   "2026": 19271,
+   "2025": 19099,
+   "2024": 18942,
+   "2023": 18687,
+   "2022": 18389,
+   "2021": 18000
+  },
+  "san-blas": {
+   "titulo": "Lista Nominal  San Blas   Septiembre de 2026",
+   "2026": 33078,
+   "2025": 32579,
+   "2024": 32064,
+   "2023": 31742,
+   "2022": 31118,
+   "2021": 29809
+  },
+  "san-pedro-lagunillas": {
+   "titulo": "Lista Nominal  San Pedro Lagunillas   Septiembre de 2026",
+   "2026": 7394,
+   "2025": 7269,
+   "2024": 7141,
+   "2023": 7112,
+   "2022": 6821,
+   "2021": 6596
+  },
+  "santa-maria-del-oro": {
+   "titulo": "Lista Nominal  Santa Maria del Oro   Septiembre de 2026",
+   "2026": 20718,
+   "2025": 20437,
+   "2024": 20065,
+   "2023": 19810,
+   "2022": 19345,
+   "2021": 18470
+  },
+  "santiago-ixcuintla": {
+   "titulo": "Lista Nominal  Santiago Ixcuintla   Septiembre de 2026",
+   "2026": 75344,
+   "2025": 74577,
+   "2024": 74181,
+   "2023": 73828,
+   "2022": 73097,
+   "2021": 71565
+  },
+  "tecuala": {
+   "titulo": "Lista Nominal  Tecuala   Septiembre de 2026",
+   "2026": 29554,
+   "2025": 29265,
+   "2024": 29124,
+   "2023": 29200,
+   "2022": 28917,
+   "2021": 28516
+  },
+  "tepic": {
+   "titulo": "Lista Nominal  Tepic   Septiembre de 2026",
+   "2026": 337888,
+   "2025": 333250,
+   "2024": 329175,
+   "2023": 325711,
+   "2022": 319865,
+   "2021": 312870
+  },
+  "tuxpan": {
+   "titulo": "Lista Nominal  Tuxpan   Septiembre de 2026",
+   "2026": 23621,
+   "2025": 23607,
+   "2024": 23565,
+   "2023": 23582,
+   "2022": 23567,
+   "2021": 23265
+  },
+  "xalisco": {
+   "titulo": "Lista Nominal  Xalisco   Septiembre de 2026",
+   "2026": 50504,
+   "2025": 49519,
+   "2024": 48476,
+   "2023": 47366,
+   "2022": 46012,
+   "2021": 44485
+  }
+ },
+ "baja-california-sur": {
+  "comondu": {
+   "titulo": "Lista Nominal  Comondu   Septiembre de 2026",
+   "2026": 59217,
+   "2025": 58606,
+   "2024": 58271,
+   "2023": 57882,
+   "2022": 56892,
+   "2021": 55279
+  },
+  "la-paz": {
+   "titulo": "Lista Nominal  La Paz   Septiembre de 2026",
+   "2026": 239004,
+   "2025": 234886,
+   "2024": 230432,
+   "2023": 226190,
+   "2022": 220447,
+   "2021": 214263
+  },
+  "loreto": {
+   "titulo": "Lista Nominal  Loreto   Septiembre de 2026",
+   "2026": 13961,
+   "2025": 13643,
+   "2024": 13623,
+   "2023": 13362,
+   "2022": 12882,
+   "2021": 12264
+  },
+  "los-cabos": {
+   "titulo": "Lista Nominal  Los Cabos   Septiembre de 2026",
+   "2026": 298465,
+   "2025": 286913,
+   "2024": 274851,
+   "2023": 264566,
+   "2022": 248898,
+   "2021": 233441
+  },
+  "mulege": {
+   "titulo": "Lista Nominal  Mulege   Septiembre de 2026",
+   "2026": 45405,
+   "2025": 44962,
+   "2024": 44633,
+   "2023": 44189,
+   "2022": 43496,
+   "2021": 41569
+  }
+ },
+ "aguascalientes": {
+  "aguascalientes": {
+   "titulo": "Lista Nominal  Aguascalientes   Septiembre de 2026",
+   "2026": 764822,
+   "2025": 750202,
+   "2024": 738273,
+   "2023": 724365,
+   "2022": 700690,
+   "2021": 686048
+  },
+  "asientos": {
+   "titulo": "Lista Nominal  Asientos   Septiembre de 2026",
+   "2026": 40749,
+   "2025": 39910,
+   "2024": 39197,
+   "2023": 38263,
+   "2022": 36881,
+   "2021": 36258
+  },
+  "calvillo": {
+   "titulo": "Lista Nominal  Calvillo   Septiembre de 2026",
+   "2026": 52828,
+   "2025": 52019,
+   "2024": 51186,
+   "2023": 50048,
+   "2022": 48468,
+   "2021": 47978
+  },
+  "cosio": {
+   "titulo": "Lista Nominal  Cosio   Septiembre de 2026",
+   "2026": 13302,
+   "2025": 13158,
+   "2024": 12915,
+   "2023": 12674,
+   "2022": 12323,
+   "2021": 12244
+  },
+  "el-llano": {
+   "titulo": "Lista Nominal  El Llano   Septiembre de 2026",
+   "2026": 18210,
+   "2025": 17761,
+   "2024": 17195,
+   "2023": 16859,
+   "2022": 16209,
+   "2021": 16016
+  },
+  "jesus-maria": {
+   "titulo": "Lista Nominal  Jesus Maria   Septiembre de 2026",
+   "2026": 105283,
+   "2025": 102410,
+   "2024": 99856,
+   "2023": 97187,
+   "2022": 92591,
+   "2021": 89451
+  },
+  "pabellon-de-arteaga": {
+   "titulo": "Lista Nominal  Pabellon de Arteaga   Septiembre de 2026",
+   "2026": 35960,
+   "2025": 35224,
+   "2024": 34737,
+   "2023": 34093,
+   "2022": 33076,
+   "2021": 32550
+  },
+  "rincon-de-romos": {
+   "titulo": "Lista Nominal  Rincon de Romos   Septiembre de 2026",
+   "2026": 43250,
+   "2025": 42505,
+   "2024": 41813,
+   "2023": 41044,
+   "2022": 39815,
+   "2021": 39160
+  },
+  "san-francisco-de-los-romo": {
+   "titulo": "Lista Nominal  San Francisco de los Romo   Septiembre de 2026",
+   "2026": 49658,
+   "2025": 48176,
+   "2024": 46384,
+   "2023": 44233,
+   "2022": 41646,
+   "2021": 39256
+  },
+  "san-jose-de-gracia": {
+   "titulo": "Lista Nominal  San Jose de Gracia   Septiembre de 2026",
+   "2026": 8002,
+   "2025": 7912,
+   "2024": 7796,
+   "2023": 7644,
+   "2022": 7391,
+   "2021": 7296
+  },
+  "tepezala": {
+   "titulo": "Lista Nominal  Tepezala   Septiembre de 2026",
+   "2026": 18144,
+   "2025": 17898,
+   "2024": 17599,
+   "2023": 17193,
+   "2022": 16512,
+   "2021": 16314
+  }
+ },
+ "sinaloa": {
+  "ahome": {
+   "titulo": "Lista Nominal  Ahome   Septiembre de 2026",
+   "2026": 362991,
+   "2025": 357054,
+   "2024": 353431,
+   "2023": 349154,
+   "2022": 344602,
+   "2021": 337392
+  },
+  "angostura": {
+   "titulo": "Lista Nominal  Angostura   Septiembre de 2026",
+   "2026": 37055,
+   "2025": 36786,
+   "2024": 37073,
+   "2023": 37066,
+   "2022": 36656,
+   "2021": 36403
+  },
+  "badiraguato": {
+   "titulo": "Lista Nominal  Badiraguato   Septiembre de 2026",
+   "2026": 21711,
+   "2025": 22241,
+   "2024": 22591,
+   "2023": 22808,
+   "2022": 22894,
+   "2021": 22726
+  },
+  "choix": {
+   "titulo": "Lista Nominal  Choix   Septiembre de 2026",
+   "2026": 23792,
+   "2025": 23699,
+   "2024": 23984,
+   "2023": 23803,
+   "2022": 23554,
+   "2021": 23245
+  },
+  "concordia": {
+   "titulo": "Lista Nominal  Concordia   Septiembre de 2026",
+   "2026": 19361,
+   "2025": 19561,
+   "2024": 19758,
+   "2023": 19705,
+   "2022": 19458,
+   "2021": 19440
+  },
+  "cosala": {
+   "titulo": "Lista Nominal  Cosala   Septiembre de 2026",
+   "2026": 13486,
+   "2025": 13365,
+   "2024": 13313,
+   "2023": 13186,
+   "2022": 12968,
+   "2021": 12654
+  },
+  "culiacan": {
+   "titulo": "Lista Nominal  Culiacan   Septiembre de 2026",
+   "2026": 755523,
+   "2025": 746730,
+   "2024": 742338,
+   "2023": 732493,
+   "2022": 740050,
+   "2021": 720477
+  },
+  "el-fuerte": {
+   "titulo": "Lista Nominal  El Fuerte   Septiembre de 2026",
+   "2026": 75351,
+   "2025": 74710,
+   "2024": 74396,
+   "2023": 73647,
+   "2022": 73601,
+   "2021": 72402
+  },
+  "eldorado": {
+   "titulo": "Lista Nominal  Eldorado   Septiembre de 2026",
+   "2026": 29836,
+   "2025": 29543,
+   "2024": 29485,
+   "2023": 29498,
+   "2022": 0,
+   "2021": 0
+  },
+  "elota": {
+   "titulo": "Lista Nominal  Elota   Septiembre de 2026",
+   "2026": 35409,
+   "2025": 35224,
+   "2024": 35156,
+   "2023": 34484,
+   "2022": 33727,
+   "2021": 32485
+  },
+  "escuinapa": {
+   "titulo": "Lista Nominal  Escuinapa   Septiembre de 2026",
+   "2026": 44106,
+   "2025": 43807,
+   "2024": 43494,
+   "2023": 43066,
+   "2022": 42123,
+   "2021": 41786
+  },
+  "guasave": {
+   "titulo": "Lista Nominal  Guasave   Septiembre de 2026",
+   "2026": 203228,
+   "2025": 200808,
+   "2024": 199309,
+   "2023": 197908,
+   "2022": 217658,
+   "2021": 215129
+  },
+  "juan-jose-rios": {
+   "titulo": "Lista Nominal  Juan Jose Rios   Septiembre de 2026",
+   "2026": 30726,
+   "2025": 30476,
+   "2024": 29892,
+   "2023": 30233,
+   "2022": 0,
+   "2021": 0
+  },
+  "mazatlan": {
+   "titulo": "Lista Nominal  Mazatlan   Septiembre de 2026",
+   "2026": 417465,
+   "2025": 409939,
+   "2024": 404191,
+   "2023": 396415,
+   "2022": 383728,
+   "2021": 373612
+  },
+  "mocorito": {
+   "titulo": "Lista Nominal  Mocorito   Septiembre de 2026",
+   "2026": 35927,
+   "2025": 35935,
+   "2024": 36073,
+   "2023": 35985,
+   "2022": 35685,
+   "2021": 35621
+  },
+  "navolato": {
+   "titulo": "Lista Nominal  Navolato   Septiembre de 2026",
+   "2026": 113166,
+   "2025": 112773,
+   "2024": 112435,
+   "2023": 111430,
+   "2022": 109731,
+   "2021": 107799
+  },
+  "rosario": {
+   "titulo": "Lista Nominal  Rosario   Septiembre de 2026",
+   "2026": 39699,
+   "2025": 39600,
+   "2024": 39497,
+   "2023": 39202,
+   "2022": 38394,
+   "2021": 37996
+  },
+  "salvador-alvarado": {
+   "titulo": "Lista Nominal  Salvador Alvarado   Septiembre de 2026",
+   "2026": 68021,
+   "2025": 67053,
+   "2024": 66752,
+   "2023": 66242,
+   "2022": 64924,
+   "2021": 63901
+  },
+  "san-ignacio": {
+   "titulo": "Lista Nominal  San Ignacio   Septiembre de 2026",
+   "2026": 16031,
+   "2025": 16199,
+   "2024": 16255,
+   "2023": 16283,
+   "2022": 16131,
+   "2021": 15898
+  },
+  "sinaloa": {
+   "titulo": "Lista Nominal  Sinaloa   Septiembre de 2026",
+   "2026": 64855,
+   "2025": 64807,
+   "2024": 64680,
+   "2023": 64619,
+   "2022": 64114,
+   "2021": 63997
+  }
+ },
+ "chihuahua": {
+  "ahumada": {
+   "titulo": "Lista Nominal  Ahumada   Septiembre de 2026",
+   "2026": 10460,
+   "2025": 10323,
+   "2024": 10247,
+   "2023": 10084,
+   "2022": 9751,
+   "2021": 9483
+  },
+  "aldama": {
+   "titulo": "Lista Nominal  Aldama   Septiembre de 2026",
+   "2026": 24798,
+   "2025": 24240,
+   "2024": 23619,
+   "2023": 23079,
+   "2022": 22128,
+   "2021": 21275
+  },
+  "allende": {
+   "titulo": "Lista Nominal  Allende   Septiembre de 2026",
+   "2026": 7180,
+   "2025": 7271,
+   "2024": 7274,
+   "2023": 7256,
+   "2022": 7213,
+   "2021": 7186
+  },
+  "aquiles-serdan": {
+   "titulo": "Lista Nominal  Aquiles Serdan   Septiembre de 2026",
+   "2026": 17476,
+   "2025": 16731,
+   "2024": 16064,
+   "2023": 15511,
+   "2022": 14784,
+   "2021": 13792
+  },
+  "ascension": {
+   "titulo": "Lista Nominal  Ascension   Septiembre de 2026",
+   "2026": 22537,
+   "2025": 21966,
+   "2024": 21301,
+   "2023": 20523,
+   "2022": 19517,
+   "2021": 18685
+  },
+  "bachiniva": {
+   "titulo": "Lista Nominal  Bachiniva   Septiembre de 2026",
+   "2026": 5998,
+   "2025": 5918,
+   "2024": 5913,
+   "2023": 5840,
+   "2022": 5707,
+   "2021": 5606
+  },
+  "balleza": {
+   "titulo": "Lista Nominal  Balleza   Septiembre de 2026",
+   "2026": 13996,
+   "2025": 13788,
+   "2024": 13496,
+   "2023": 13550,
+   "2022": 13499,
+   "2021": 13236
+  },
+  "batopilas-de-manuel-gomez-morin": {
+   "titulo": "Lista Nominal  Batopilas de Manuel Gomez Morin   Septiembre de 2026",
+   "2026": 7752,
+   "2025": 7760,
+   "2024": 7925,
+   "2023": 7969,
+   "2022": 7679,
+   "2021": 7804
+  },
+  "bocoyna": {
+   "titulo": "Lista Nominal  Bocoyna   Septiembre de 2026",
+   "2026": 21173,
+   "2025": 21040,
+   "2024": 21410,
+   "2023": 21241,
+   "2022": 21038,
+   "2021": 20712
+  },
+  "buenaventura": {
+   "titulo": "Lista Nominal  Buenaventura   Septiembre de 2026",
+   "2026": 20422,
+   "2025": 20304,
+   "2024": 20236,
+   "2023": 20095,
+   "2022": 19656,
+   "2021": 19203
+  },
+  "camargo": {
+   "titulo": "Lista Nominal  Camargo   Septiembre de 2026",
+   "2026": 41999,
+   "2025": 41454,
+   "2024": 41308,
+   "2023": 40607,
+   "2022": 39521,
+   "2021": 39182
+  },
+  "carichi": {
+   "titulo": "Lista Nominal  Carichi   Septiembre de 2026",
+   "2026": 8242,
+   "2025": 7982,
+   "2024": 7998,
+   "2023": 7792,
+   "2022": 7609,
+   "2021": 7496
+  },
+  "casas-grandes": {
+   "titulo": "Lista Nominal  Casas Grandes   Septiembre de 2026",
+   "2026": 12615,
+   "2025": 12367,
+   "2024": 12249,
+   "2023": 12017,
+   "2022": 11585,
+   "2021": 11087
+  },
+  "chihuahua": {
+   "titulo": "Lista Nominal  Chihuahua   Septiembre de 2026",
+   "2026": 782789,
+   "2025": 769295,
+   "2024": 759428,
+   "2023": 748822,
+   "2022": 730793,
+   "2021": 713713
+  },
+  "chinipas": {
+   "titulo": "Lista Nominal  Chinipas   Septiembre de 2026",
+   "2026": 4950,
+   "2025": 4933,
+   "2024": 4995,
+   "2023": 4949,
+   "2022": 4921,
+   "2021": 4864
+  },
+  "coronado": {
+   "titulo": "Lista Nominal  Coronado   Septiembre de 2026",
+   "2026": 1888,
+   "2025": 1890,
+   "2024": 1945,
+   "2023": 1849,
+   "2022": 1857,
+   "2021": 1888
+  },
+  "coyame-del-sotol": {
+   "titulo": "Lista Nominal  Coyame del Sotol   Septiembre de 2026",
+   "2026": 1976,
+   "2025": 2087,
+   "2024": 2213,
+   "2023": 2212,
+   "2022": 2184,
+   "2021": 2171
+  },
+  "cuauhtemoc": {
+   "titulo": "Lista Nominal  Cuauhtemoc   Septiembre de 2026",
+   "2026": 152725,
+   "2025": 149282,
+   "2024": 146280,
+   "2023": 143485,
+   "2022": 138184,
+   "2021": 133646
+  },
+  "cusihuiriachi": {
+   "titulo": "Lista Nominal  Cusihuiriachi   Septiembre de 2026",
+   "2026": 5583,
+   "2025": 5525,
+   "2024": 5562,
+   "2023": 5486,
+   "2022": 5322,
+   "2021": 5162
+  },
+  "delicias": {
+   "titulo": "Lista Nominal  Delicias   Septiembre de 2026",
+   "2026": 126970,
+   "2025": 125181,
+   "2024": 123696,
+   "2023": 122410,
+   "2022": 119488,
+   "2021": 117110
+  },
+  "dr-belisario-dominguez": {
+   "titulo": "Lista Nominal  Dr. Belisario Dominguez   Septiembre de 2026",
+   "2026": 3414,
+   "2025": 3396,
+   "2024": 3312,
+   "2023": 3197,
+   "2022": 3085,
+   "2021": 2978
+  },
+  "el-tule": {
+   "titulo": "Lista Nominal  El Tule   Septiembre de 2026",
+   "2026": 2396,
+   "2025": 2513,
+   "2024": 2595,
+   "2023": 2563,
+   "2022": 2198,
+   "2021": 2176
+  },
+  "galeana": {
+   "titulo": "Lista Nominal  Galeana   Septiembre de 2026",
+   "2026": 5911,
+   "2025": 5767,
+   "2024": 5644,
+   "2023": 5494,
+   "2022": 5165,
+   "2021": 4906
+  },
+  "gomez-farias": {
+   "titulo": "Lista Nominal  Gomez Farias   Septiembre de 2026",
+   "2026": 6837,
+   "2025": 6749,
+   "2024": 6785,
+   "2023": 6727,
+   "2022": 6656,
+   "2021": 6752
+  },
+  "gran-morelos": {
+   "titulo": "Lista Nominal  Gran Morelos   Septiembre de 2026",
+   "2026": 3429,
+   "2025": 3420,
+   "2024": 3389,
+   "2023": 3257,
+   "2022": 3156,
+   "2021": 3071
+  },
+  "guachochi": {
+   "titulo": "Lista Nominal  Guachochi   Septiembre de 2026",
+   "2026": 37841,
+   "2025": 37304,
+   "2024": 37171,
+   "2023": 36988,
+   "2022": 36277,
+   "2021": 35955
+  },
+  "guadalupe": {
+   "titulo": "Lista Nominal  Guadalupe   Septiembre de 2026",
+   "2026": 5365,
+   "2025": 5253,
+   "2024": 5053,
+   "2023": 4797,
+   "2022": 4547,
+   "2021": 4374
+  },
+  "guadalupe-y-calvo": {
+   "titulo": "Lista Nominal  Guadalupe y Calvo   Septiembre de 2026",
+   "2026": 31558,
+   "2025": 31673,
+   "2024": 32328,
+   "2023": 32769,
+   "2022": 31801,
+   "2021": 31208
+  },
+  "guazapares": {
+   "titulo": "Lista Nominal  Guazapares   Septiembre de 2026",
+   "2026": 6787,
+   "2025": 6704,
+   "2024": 6738,
+   "2023": 6793,
+   "2022": 6813,
+   "2021": 6758
+  },
+  "guerrero": {
+   "titulo": "Lista Nominal  Guerrero   Septiembre de 2026",
+   "2026": 30648,
+   "2025": 30734,
+   "2024": 30785,
+   "2023": 30510,
+   "2022": 29816,
+   "2021": 29292
+  },
+  "hidalgo-del-parral": {
+   "titulo": "Lista Nominal  Hidalgo del Parral   Septiembre de 2026",
+   "2026": 93627,
+   "2025": 92141,
+   "2024": 91291,
+   "2023": 90657,
+   "2022": 88905,
+   "2021": 87501
+  },
+  "huejotitan": {
+   "titulo": "Lista Nominal  Huejotitan   Septiembre de 2026",
+   "2026": 1502,
+   "2025": 1513,
+   "2024": 1547,
+   "2023": 1496,
+   "2022": 1474,
+   "2021": 1478
+  },
+  "ignacio-zaragoza": {
+   "titulo": "Lista Nominal  Ignacio Zaragoza   Septiembre de 2026",
+   "2026": 5152,
+   "2025": 5166,
+   "2024": 5256,
+   "2023": 5309,
+   "2022": 5281,
+   "2021": 5344
+  },
+  "janos": {
+   "titulo": "Lista Nominal  Janos   Septiembre de 2026",
+   "2026": 9552,
+   "2025": 9271,
+   "2024": 9072,
+   "2023": 8739,
+   "2022": 8389,
+   "2021": 8013
+  },
+  "jimenez": {
+   "titulo": "Lista Nominal  Jimenez   Septiembre de 2026",
+   "2026": 31635,
+   "2025": 31406,
+   "2024": 30849,
+   "2023": 30933,
+   "2022": 30462,
+   "2021": 29295
+  },
+  "juarez": {
+   "titulo": "Lista Nominal  Juarez   Septiembre de 2026",
+   "2026": 1314324,
+   "2025": 1291927,
+   "2024": 1266342,
+   "2023": 1236294,
+   "2022": 1185198,
+   "2021": 1141974
+  },
+  "julimes": {
+   "titulo": "Lista Nominal  Julimes   Septiembre de 2026",
+   "2026": 5053,
+   "2025": 5040,
+   "2024": 5018,
+   "2023": 4920,
+   "2022": 4845,
+   "2021": 4767
+  },
+  "la-cruz": {
+   "titulo": "Lista Nominal  La Cruz   Septiembre de 2026",
+   "2026": 3739,
+   "2025": 3717,
+   "2024": 3708,
+   "2023": 3679,
+   "2022": 3621,
+   "2021": 3546
+  },
+  "lopez": {
+   "titulo": "Lista Nominal  Lopez   Septiembre de 2026",
+   "2026": 3737,
+   "2025": 3701,
+   "2024": 3679,
+   "2023": 3548,
+   "2022": 3503,
+   "2021": 3419
+  },
+  "madera": {
+   "titulo": "Lista Nominal  Madera   Septiembre de 2026",
+   "2026": 19861,
+   "2025": 20013,
+   "2024": 20266,
+   "2023": 20311,
+   "2022": 19908,
+   "2021": 20068
+  },
+  "maguarichi": {
+   "titulo": "Lista Nominal  Maguarichi   Septiembre de 2026",
+   "2026": 1136,
+   "2025": 1133,
+   "2024": 1136,
+   "2023": 1159,
+   "2022": 1176,
+   "2021": 1171
+  },
+  "manuel-benavides": {
+   "titulo": "Lista Nominal  Manuel Benavides   Septiembre de 2026",
+   "2026": 2173,
+   "2025": 2227,
+   "2024": 2238,
+   "2023": 2187,
+   "2022": 2134,
+   "2021": 2080
+  },
+  "matachi": {
+   "titulo": "Lista Nominal  Matachi   Septiembre de 2026",
+   "2026": 2614,
+   "2025": 2610,
+   "2024": 2617,
+   "2023": 2601,
+   "2022": 2574,
+   "2021": 2534
+  },
+  "matamoros": {
+   "titulo": "Lista Nominal  Matamoros   Septiembre de 2026",
+   "2026": 4160,
+   "2025": 4048,
+   "2024": 4095,
+   "2023": 4058,
+   "2022": 3992,
+   "2021": 3938
+  },
+  "meoqui": {
+   "titulo": "Lista Nominal  Meoqui   Septiembre de 2026",
+   "2026": 38677,
+   "2025": 38315,
+   "2024": 37852,
+   "2023": 37440,
+   "2022": 36331,
+   "2021": 35810
+  },
+  "morelos": {
+   "titulo": "Lista Nominal  Morelos   Septiembre de 2026",
+   "2026": 4869,
+   "2025": 4907,
+   "2024": 5184,
+   "2023": 5279,
+   "2022": 5337,
+   "2021": 5440
+  },
+  "moris": {
+   "titulo": "Lista Nominal  Moris   Septiembre de 2026",
+   "2026": 3056,
+   "2025": 3220,
+   "2024": 3539,
+   "2023": 3669,
+   "2022": 3685,
+   "2021": 3773
+  },
+  "namiquipa": {
+   "titulo": "Lista Nominal  Namiquipa   Septiembre de 2026",
+   "2026": 21051,
+   "2025": 20937,
+   "2024": 20704,
+   "2023": 20405,
+   "2022": 19723,
+   "2021": 19302
+  },
+  "nonoava": {
+   "titulo": "Lista Nominal  Nonoava   Septiembre de 2026",
+   "2026": 2891,
+   "2025": 2875,
+   "2024": 2898,
+   "2023": 2894,
+   "2022": 2807,
+   "2021": 2795
+  },
+  "nuevo-casas-grandes": {
+   "titulo": "Lista Nominal  Nuevo Casas Grandes   Septiembre de 2026",
+   "2026": 55853,
+   "2025": 55036,
+   "2024": 54132,
+   "2023": 53388,
+   "2022": 51636,
+   "2021": 50230
+  },
+  "ocampo": {
+   "titulo": "Lista Nominal  Ocampo   Septiembre de 2026",
+   "2026": 6428,
+   "2025": 6414,
+   "2024": 6498,
+   "2023": 6460,
+   "2022": 6399,
+   "2021": 6155
+  },
+  "ojinaga": {
+   "titulo": "Lista Nominal  Ojinaga   Septiembre de 2026",
+   "2026": 29223,
+   "2025": 28697,
+   "2024": 27834,
+   "2023": 26943,
+   "2022": 25595,
+   "2021": 24900
+  },
+  "praxedis-g-guerrero": {
+   "titulo": "Lista Nominal  Praxedis g. Guerrero   Septiembre de 2026",
+   "2026": 6193,
+   "2025": 6039,
+   "2024": 5827,
+   "2023": 5618,
+   "2022": 5352,
+   "2021": 5321
+  },
+  "riva-palacio": {
+   "titulo": "Lista Nominal  Riva Palacio   Septiembre de 2026",
+   "2026": 7912,
+   "2025": 7776,
+   "2024": 7791,
+   "2023": 7660,
+   "2022": 7507,
+   "2021": 7376
+  },
+  "rosales": {
+   "titulo": "Lista Nominal  Rosales   Septiembre de 2026",
+   "2026": 14656,
+   "2025": 14503,
+   "2024": 14440,
+   "2023": 14265,
+   "2022": 13871,
+   "2021": 13482
+  },
+  "san-francisco-de-borja": {
+   "titulo": "Lista Nominal  San Francisco de Borja   Septiembre de 2026",
+   "2026": 2304,
+   "2025": 2302,
+   "2024": 2347,
+   "2023": 2326,
+   "2022": 2313,
+   "2021": 2307
+  },
+  "san-francisco-de-conchos": {
+   "titulo": "Lista Nominal  San Francisco de Conchos   Septiembre de 2026",
+   "2026": 2769,
+   "2025": 2761,
+   "2024": 2762,
+   "2023": 2682,
+   "2022": 2615,
+   "2021": 2546
+  },
+  "san-francisco-del-oro": {
+   "titulo": "Lista Nominal  San Francisco del Oro   Septiembre de 2026",
+   "2026": 4091,
+   "2025": 4076,
+   "2024": 4150,
+   "2023": 4135,
+   "2022": 4144,
+   "2021": 4134
+  },
+  "santa-barbara": {
+   "titulo": "Lista Nominal  Santa Barbara   Septiembre de 2026",
+   "2026": 9169,
+   "2025": 9036,
+   "2024": 9035,
+   "2023": 8852,
+   "2022": 8731,
+   "2021": 8629
+  },
+  "santa-isabel": {
+   "titulo": "Lista Nominal  Santa Isabel   Septiembre de 2026",
+   "2026": 4929,
+   "2025": 4828,
+   "2024": 4764,
+   "2023": 4611,
+   "2022": 4391,
+   "2021": 4233
+  },
+  "satevo": {
+   "titulo": "Lista Nominal  Satevo   Septiembre de 2026",
+   "2026": 4259,
+   "2025": 4241,
+   "2024": 4204,
+   "2023": 4161,
+   "2022": 4071,
+   "2021": 3964
+  },
+  "saucillo": {
+   "titulo": "Lista Nominal  Saucillo   Septiembre de 2026",
+   "2026": 26121,
+   "2025": 25823,
+   "2024": 25699,
+   "2023": 25417,
+   "2022": 24897,
+   "2021": 24464
+  },
+  "temosachic": {
+   "titulo": "Lista Nominal  Temosachic   Septiembre de 2026",
+   "2026": 5141,
+   "2025": 5159,
+   "2024": 5208,
+   "2023": 5191,
+   "2022": 5163,
+   "2021": 5177
+  },
+  "urique": {
+   "titulo": "Lista Nominal  Urique   Septiembre de 2026",
+   "2026": 13917,
+   "2025": 13738,
+   "2024": 13747,
+   "2023": 13783,
+   "2022": 13529,
+   "2021": 13418
+  },
+  "uruachi": {
+   "titulo": "Lista Nominal  Uruachi   Septiembre de 2026",
+   "2026": 4850,
+   "2025": 4804,
+   "2024": 4923,
+   "2023": 4960,
+   "2022": 4907,
+   "2021": 4949
+  },
+  "valle-de-zaragoza": {
+   "titulo": "Lista Nominal  Valle de Zaragoza   Septiembre de 2026",
+   "2026": 4176,
+   "2025": 4202,
+   "2024": 4239,
+   "2023": 4234,
+   "2022": 4261,
+   "2021": 4257
+  },
+  "valle-del-rosario": {
+   "titulo": "Lista Nominal  Valle del Rosario   Septiembre de 2026",
+   "2026": 2068,
+   "2025": 2099,
+   "2024": 2117,
+   "2023": 2114,
+   "2022": 2112,
+   "2021": 2092
+  }
+ },
+ "nuevo-leon": {
+  "abasolo": {
+   "titulo": "Lista Nominal  Abasolo   Septiembre de 2026",
+   "2026": 2641,
+   "2025": 2603,
+   "2024": 2575,
+   "2023": 2552,
+   "2022": 2452,
+   "2021": 2407
+  },
+  "agualeguas": {
+   "titulo": "Lista Nominal  Agualeguas   Septiembre de 2026",
+   "2026": 4827,
+   "2025": 4755,
+   "2024": 4577,
+   "2023": 4440,
+   "2022": 4210,
+   "2021": 4099
+  },
+  "allende": {
+   "titulo": "Lista Nominal  Allende   Septiembre de 2026",
+   "2026": 33505,
+   "2025": 32509,
+   "2024": 31519,
+   "2023": 30847,
+   "2022": 29983,
+   "2021": 28578
+  },
+  "anahuac": {
+   "titulo": "Lista Nominal  Anahuac   Septiembre de 2026",
+   "2026": 15543,
+   "2025": 15239,
+   "2024": 14892,
+   "2023": 14568,
+   "2022": 14654,
+   "2021": 14212
+  },
+  "apodaca": {
+   "titulo": "Lista Nominal  Apodaca   Septiembre de 2026",
+   "2026": 517370,
+   "2025": 502945,
+   "2024": 489883,
+   "2023": 477986,
+   "2022": 461082,
+   "2021": 441015
+  },
+  "aramberri": {
+   "titulo": "Lista Nominal  Aramberri   Septiembre de 2026",
+   "2026": 12621,
+   "2025": 12371,
+   "2024": 12491,
+   "2023": 12320,
+   "2022": 12317,
+   "2021": 12468
+  },
+  "bustamante": {
+   "titulo": "Lista Nominal  Bustamante   Septiembre de 2026",
+   "2026": 3560,
+   "2025": 3534,
+   "2024": 3517,
+   "2023": 3441,
+   "2022": 3250,
+   "2021": 3222
+  },
+  "cadereyta-jimenez": {
+   "titulo": "Lista Nominal  Cadereyta Jimenez   Septiembre de 2026",
+   "2026": 100352,
+   "2025": 97100,
+   "2024": 94457,
+   "2023": 92532,
+   "2022": 89014,
+   "2021": 85195
+  },
+  "carmen": {
+   "titulo": "Lista Nominal  Carmen   Septiembre de 2026",
+   "2026": 62698,
+   "2025": 57656,
+   "2024": 52176,
+   "2023": 47392,
+   "2022": 41112,
+   "2021": 34614
+  },
+  "cerralvo": {
+   "titulo": "Lista Nominal  Cerralvo   Septiembre de 2026",
+   "2026": 8067,
+   "2025": 7874,
+   "2024": 7653,
+   "2023": 7389,
+   "2022": 7058,
+   "2021": 6739
+  },
+  "china": {
+   "titulo": "Lista Nominal  China   Septiembre de 2026",
+   "2026": 11069,
+   "2025": 10954,
+   "2024": 10712,
+   "2023": 10396,
+   "2022": 10091,
+   "2021": 9705
+  },
+  "cienega-de-flores": {
+   "titulo": "Lista Nominal  Cienega de Flores   Septiembre de 2026",
+   "2026": 60485,
+   "2025": 56621,
+   "2024": 52221,
+   "2023": 49102,
+   "2022": 44586,
+   "2021": 40301
+  },
+  "dr-arroyo": {
+   "titulo": "Lista Nominal  Dr. Arroyo   Septiembre de 2026",
+   "2026": 29872,
+   "2025": 29858,
+   "2024": 29896,
+   "2023": 29719,
+   "2022": 29492,
+   "2021": 29207
+  },
+  "dr-coss": {
+   "titulo": "Lista Nominal  Dr. Coss   Septiembre de 2026",
+   "2026": 2639,
+   "2025": 2683,
+   "2024": 2797,
+   "2023": 2833,
+   "2022": 2639,
+   "2021": 2606
+  },
+  "dr-gonzalez": {
+   "titulo": "Lista Nominal  Dr. Gonzalez   Septiembre de 2026",
+   "2026": 3407,
+   "2025": 3369,
+   "2024": 3313,
+   "2023": 3267,
+   "2022": 3149,
+   "2021": 3139
+  },
+  "galeana": {
+   "titulo": "Lista Nominal  Galeana   Septiembre de 2026",
+   "2026": 30593,
+   "2025": 30667,
+   "2024": 30462,
+   "2023": 30462,
+   "2022": 30144,
+   "2021": 29953
+  },
+  "garcia": {
+   "titulo": "Lista Nominal  Garcia   Septiembre de 2026",
+   "2026": 286761,
+   "2025": 272732,
+   "2024": 256926,
+   "2023": 243118,
+   "2022": 223698,
+   "2021": 205993
+  },
+  "gral-bravo": {
+   "titulo": "Lista Nominal  Gral. Bravo   Septiembre de 2026",
+   "2026": 6638,
+   "2025": 6626,
+   "2024": 6537,
+   "2023": 6374,
+   "2022": 6079,
+   "2021": 5717
+  },
+  "gral-escobedo": {
+   "titulo": "Lista Nominal  Gral. Escobedo   Septiembre de 2026",
+   "2026": 364569,
+   "2025": 356509,
+   "2024": 349009,
+   "2023": 341493,
+   "2022": 331622,
+   "2021": 319088
+  },
+  "gral-teran": {
+   "titulo": "Lista Nominal  Gral. Teran   Septiembre de 2026",
+   "2026": 14240,
+   "2025": 14021,
+   "2024": 13927,
+   "2023": 13741,
+   "2022": 13524,
+   "2021": 13028
+  },
+  "gral-trevi-o": {
+   "titulo": "Lista Nominal  Gral. Treviðo   Septiembre de 2026",
+   "2026": 2080,
+   "2025": 2079,
+   "2024": 2089,
+   "2023": 2051,
+   "2022": 2043,
+   "2021": 2052
+  },
+  "gral-zaragoza": {
+   "titulo": "Lista Nominal  Gral. Zaragoza   Septiembre de 2026",
+   "2026": 5267,
+   "2025": 5294,
+   "2024": 5377,
+   "2023": 5355,
+   "2022": 5287,
+   "2021": 5314
+  },
+  "gral-zuazua": {
+   "titulo": "Lista Nominal  Gral. Zuazua   Septiembre de 2026",
+   "2026": 69151,
+   "2025": 65033,
+   "2024": 60533,
+   "2023": 56579,
+   "2022": 51737,
+   "2021": 47072
+  },
+  "guadalupe": {
+   "titulo": "Lista Nominal  Guadalupe   Septiembre de 2026",
+   "2026": 552095,
+   "2025": 548656,
+   "2024": 550062,
+   "2023": 549573,
+   "2022": 545688,
+   "2021": 540130
+  },
+  "hidalgo": {
+   "titulo": "Lista Nominal  Hidalgo   Septiembre de 2026",
+   "2026": 13654,
+   "2025": 13420,
+   "2024": 13352,
+   "2023": 13241,
+   "2022": 13100,
+   "2021": 12709
+  },
+  "higueras": {
+   "titulo": "Lista Nominal  Higueras   Septiembre de 2026",
+   "2026": 1523,
+   "2025": 1527,
+   "2024": 1533,
+   "2023": 1487,
+   "2022": 1425,
+   "2021": 1432
+  },
+  "hualahuises": {
+   "titulo": "Lista Nominal  Hualahuises   Septiembre de 2026",
+   "2026": 6789,
+   "2025": 6674,
+   "2024": 6512,
+   "2023": 6477,
+   "2022": 6390,
+   "2021": 6244
+  },
+  "iturbide": {
+   "titulo": "Lista Nominal  Iturbide   Septiembre de 2026",
+   "2026": 3186,
+   "2025": 3236,
+   "2024": 3238,
+   "2023": 3205,
+   "2022": 3175,
+   "2021": 3205
+  },
+  "juarez": {
+   "titulo": "Lista Nominal  Juarez   Septiembre de 2026",
+   "2026": 343843,
+   "2025": 328155,
+   "2024": 311340,
+   "2023": 297696,
+   "2022": 278364,
+   "2021": 257327
+  },
+  "lampazos-de-naranjo": {
+   "titulo": "Lista Nominal  Lampazos de Naranjo   Septiembre de 2026",
+   "2026": 5339,
+   "2025": 5271,
+   "2024": 5206,
+   "2023": 5109,
+   "2022": 5072,
+   "2021": 4936
+  },
+  "linares": {
+   "titulo": "Lista Nominal  Linares   Septiembre de 2026",
+   "2026": 70860,
+   "2025": 69908,
+   "2024": 68911,
+   "2023": 68288,
+   "2022": 66682,
+   "2021": 65362
+  },
+  "los-aldamas": {
+   "titulo": "Lista Nominal  Los Aldamas   Septiembre de 2026",
+   "2026": 1942,
+   "2025": 2013,
+   "2024": 2102,
+   "2023": 2144,
+   "2022": 2034,
+   "2021": 1987
+  },
+  "los-herreras": {
+   "titulo": "Lista Nominal  Los Herreras   Septiembre de 2026",
+   "2026": 3043,
+   "2025": 3044,
+   "2024": 3082,
+   "2023": 2986,
+   "2022": 2862,
+   "2021": 2888
+  },
+  "los-ramones": {
+   "titulo": "Lista Nominal  Los Ramones   Septiembre de 2026",
+   "2026": 6144,
+   "2025": 6117,
+   "2024": 5927,
+   "2023": 5752,
+   "2022": 5494,
+   "2021": 5267
+  },
+  "marin": {
+   "titulo": "Lista Nominal  Marin   Septiembre de 2026",
+   "2026": 5603,
+   "2025": 5448,
+   "2024": 5335,
+   "2023": 5236,
+   "2022": 5107,
+   "2021": 4895
+  },
+  "melchor-ocampo": {
+   "titulo": "Lista Nominal  Melchor Ocampo   Septiembre de 2026",
+   "2026": 2121,
+   "2025": 2153,
+   "2024": 2085,
+   "2023": 1994,
+   "2022": 1918,
+   "2021": 1897
+  },
+  "mier-y-noriega": {
+   "titulo": "Lista Nominal  Mier y Noriega   Septiembre de 2026",
+   "2026": 6864,
+   "2025": 6817,
+   "2024": 6820,
+   "2023": 6624,
+   "2022": 6297,
+   "2021": 6295
+  },
+  "mina": {
+   "titulo": "Lista Nominal  Mina   Septiembre de 2026",
+   "2026": 5217,
+   "2025": 5175,
+   "2024": 5110,
+   "2023": 5053,
+   "2022": 4935,
+   "2021": 4819
+  },
+  "montemorelos": {
+   "titulo": "Lista Nominal  Montemorelos   Septiembre de 2026",
+   "2026": 59702,
+   "2025": 58680,
+   "2024": 57762,
+   "2023": 57057,
+   "2022": 56218,
+   "2021": 54739
+  },
+  "monterrey": {
+   "titulo": "Lista Nominal  Monterrey   Septiembre de 2026",
+   "2026": 973510,
+   "2025": 961808,
+   "2024": 960314,
+   "2023": 957389,
+   "2022": 948607,
+   "2021": 937707
+  },
+  "paras": {
+   "titulo": "Lista Nominal  Paras   Septiembre de 2026",
+   "2026": 2080,
+   "2025": 2100,
+   "2024": 2166,
+   "2023": 2055,
+   "2022": 1930,
+   "2021": 1951
+  },
+  "pesqueria": {
+   "titulo": "Lista Nominal  Pesqueria   Septiembre de 2026",
+   "2026": 109359,
+   "2025": 103103,
+   "2024": 96350,
+   "2023": 89661,
+   "2022": 82205,
+   "2021": 74652
+  },
+  "rayones": {
+   "titulo": "Lista Nominal  Rayones   Septiembre de 2026",
+   "2026": 2793,
+   "2025": 2865,
+   "2024": 2984,
+   "2023": 2953,
+   "2022": 2981,
+   "2021": 3015
+  },
+  "sabinas-hidalgo": {
+   "titulo": "Lista Nominal  Sabinas Hidalgo   Septiembre de 2026",
+   "2026": 31732,
+   "2025": 31374,
+   "2024": 30912,
+   "2023": 30320,
+   "2022": 29568,
+   "2021": 28860
+  },
+  "salinas-victoria": {
+   "titulo": "Lista Nominal  Salinas Victoria   Septiembre de 2026",
+   "2026": 74985,
+   "2025": 69816,
+   "2024": 63972,
+   "2023": 59427,
+   "2022": 54045,
+   "2021": 49650
+  },
+  "san-nicolas-de-los-garza": {
+   "titulo": "Lista Nominal  San Nicolas de los Garza   Septiembre de 2026",
+   "2026": 355532,
+   "2025": 354791,
+   "2024": 356943,
+   "2023": 358325,
+   "2022": 357723,
+   "2021": 355906
+  },
+  "san-pedro-garza-garcia": {
+   "titulo": "Lista Nominal  San Pedro Garza Garcia   Septiembre de 2026",
+   "2026": 115565,
+   "2025": 114074,
+   "2024": 113319,
+   "2023": 112306,
+   "2022": 109781,
+   "2021": 107441
+  },
+  "santa-catarina": {
+   "titulo": "Lista Nominal  Santa Catarina   Septiembre de 2026",
+   "2026": 241593,
+   "2025": 237848,
+   "2024": 235737,
+   "2023": 233919,
+   "2022": 228986,
+   "2021": 224547
+  },
+  "santiago": {
+   "titulo": "Lista Nominal  Santiago   Septiembre de 2026",
+   "2026": 47772,
+   "2025": 46155,
+   "2024": 44875,
+   "2023": 43666,
+   "2022": 42151,
+   "2021": 40650
+  },
+  "vallecillo": {
+   "titulo": "Lista Nominal  Vallecillo   Septiembre de 2026",
+   "2026": 2442,
+   "2025": 2427,
+   "2024": 2443,
+   "2023": 2388,
+   "2022": 2346,
+   "2021": 2273
+  },
+  "villaldama": {
+   "titulo": "Lista Nominal  Villaldama   Septiembre de 2026",
+   "2026": 3788,
+   "2025": 3795,
+   "2024": 3819,
+   "2023": 3762,
+   "2022": 3667,
+   "2021": 3748
+  }
+ },
+ "san-luis-potosi": {
+  "ahualulco": {
+   "titulo": "Lista Nominal  Ahualulco   Septiembre de 2026",
+   "2026": 15591,
+   "2025": 15300,
+   "2024": 15124,
+   "2023": 15003,
+   "2022": 14763,
+   "2021": 14617
+  },
+  "alaquines": {
+   "titulo": "Lista Nominal  Alaquines   Septiembre de 2026",
+   "2026": 6552,
+   "2025": 6532,
+   "2024": 6495,
+   "2023": 6473,
+   "2022": 6371,
+   "2021": 6365
+  },
+  "aquismon": {
+   "titulo": "Lista Nominal  Aquismon   Septiembre de 2026",
+   "2026": 37634,
+   "2025": 36978,
+   "2024": 36673,
+   "2023": 36228,
+   "2022": 35095,
+   "2021": 34286
+  },
+  "armadillo-de-los-infante": {
+   "titulo": "Lista Nominal  Armadillo de los Infante   Septiembre de 2026",
+   "2026": 4246,
+   "2025": 4192,
+   "2024": 4143,
+   "2023": 4137,
+   "2022": 4032,
+   "2021": 3981
+  },
+  "axtla-de-terrazas": {
+   "titulo": "Lista Nominal  Axtla de Terrazas   Septiembre de 2026",
+   "2026": 25733,
+   "2025": 25447,
+   "2024": 25335,
+   "2023": 25195,
+   "2022": 24554,
+   "2021": 24285
+  },
+  "cardenas": {
+   "titulo": "Lista Nominal  Cardenas   Septiembre de 2026",
+   "2026": 15207,
+   "2025": 15036,
+   "2024": 14858,
+   "2023": 14904,
+   "2022": 14751,
+   "2021": 14686
+  },
+  "catorce": {
+   "titulo": "Lista Nominal  Catorce   Septiembre de 2026",
+   "2026": 7556,
+   "2025": 7620,
+   "2024": 7473,
+   "2023": 7293,
+   "2022": 7139,
+   "2021": 7020
+  },
+  "cedral": {
+   "titulo": "Lista Nominal  Cedral   Septiembre de 2026",
+   "2026": 16081,
+   "2025": 15695,
+   "2024": 15383,
+   "2023": 15077,
+   "2022": 14574,
+   "2021": 14334
+  },
+  "cerritos": {
+   "titulo": "Lista Nominal  Cerritos   Septiembre de 2026",
+   "2026": 19441,
+   "2025": 19110,
+   "2024": 18773,
+   "2023": 18379,
+   "2022": 17925,
+   "2021": 17399
+  },
+  "cerro-de-san-pedro": {
+   "titulo": "Lista Nominal  Cerro de San Pedro   Septiembre de 2026",
+   "2026": 5800,
+   "2025": 5511,
+   "2024": 5256,
+   "2023": 4932,
+   "2022": 4581,
+   "2021": 4361
+  },
+  "charcas": {
+   "titulo": "Lista Nominal  Charcas   Septiembre de 2026",
+   "2026": 16701,
+   "2025": 16595,
+   "2024": 16546,
+   "2023": 16458,
+   "2022": 16244,
+   "2021": 16029
+  },
+  "ciudad-del-maiz": {
+   "titulo": "Lista Nominal  Ciudad del Maiz   Septiembre de 2026",
+   "2026": 24470,
+   "2025": 24297,
+   "2024": 24241,
+   "2023": 23985,
+   "2022": 23569,
+   "2021": 23196
+  },
+  "ciudad-fernandez": {
+   "titulo": "Lista Nominal  Ciudad Fernandez   Septiembre de 2026",
+   "2026": 40878,
+   "2025": 40113,
+   "2024": 39220,
+   "2023": 38693,
+   "2022": 37505,
+   "2021": 36791
+  },
+  "ciudad-valles": {
+   "titulo": "Lista Nominal  Ciudad Valles   Septiembre de 2026",
+   "2026": 140852,
+   "2025": 138648,
+   "2024": 136576,
+   "2023": 135818,
+   "2022": 132626,
+   "2021": 129011
+  },
+  "coxcatlan": {
+   "titulo": "Lista Nominal  Coxcatlan   Septiembre de 2026",
+   "2026": 12130,
+   "2025": 12212,
+   "2024": 12342,
+   "2023": 12448,
+   "2022": 12304,
+   "2021": 12064
+  },
+  "ebano": {
+   "titulo": "Lista Nominal  Ebano   Septiembre de 2026",
+   "2026": 31535,
+   "2025": 31182,
+   "2024": 30996,
+   "2023": 30926,
+   "2022": 30384,
+   "2021": 30066
+  },
+  "el-naranjo": {
+   "titulo": "Lista Nominal  El Naranjo   Septiembre de 2026",
+   "2026": 16327,
+   "2025": 16071,
+   "2024": 15863,
+   "2023": 15625,
+   "2022": 15194,
+   "2021": 14953
+  },
+  "guadalcazar": {
+   "titulo": "Lista Nominal  Guadalcazar   Septiembre de 2026",
+   "2026": 19281,
+   "2025": 19056,
+   "2024": 19052,
+   "2023": 19271,
+   "2022": 18840,
+   "2021": 18794
+  },
+  "huehuetlan": {
+   "titulo": "Lista Nominal  Huehuetlan   Septiembre de 2026",
+   "2026": 11852,
+   "2025": 11904,
+   "2024": 11774,
+   "2023": 11739,
+   "2022": 11364,
+   "2021": 11131
+  },
+  "lagunillas": {
+   "titulo": "Lista Nominal  Lagunillas   Septiembre de 2026",
+   "2026": 5003,
+   "2025": 4951,
+   "2024": 4862,
+   "2023": 4814,
+   "2022": 4737,
+   "2021": 4723
+  },
+  "matehuala": {
+   "titulo": "Lista Nominal  Matehuala   Septiembre de 2026",
+   "2026": 81592,
+   "2025": 79942,
+   "2024": 78403,
+   "2023": 76938,
+   "2022": 74701,
+   "2021": 72612
+  },
+  "matlapa": {
+   "titulo": "Lista Nominal  Matlapa   Septiembre de 2026",
+   "2026": 23450,
+   "2025": 23458,
+   "2024": 23202,
+   "2023": 23058,
+   "2022": 22621,
+   "2021": 22239
+  },
+  "mexquitic-de-carmona": {
+   "titulo": "Lista Nominal  Mexquitic de Carmona   Septiembre de 2026",
+   "2026": 48659,
+   "2025": 47544,
+   "2024": 46924,
+   "2023": 46220,
+   "2022": 44824,
+   "2021": 43540
+  },
+  "moctezuma": {
+   "titulo": "Lista Nominal  Moctezuma   Septiembre de 2026",
+   "2026": 15571,
+   "2025": 15356,
+   "2024": 15258,
+   "2023": 15119,
+   "2022": 14865,
+   "2021": 14723
+  },
+  "rayon": {
+   "titulo": "Lista Nominal  Rayon   Septiembre de 2026",
+   "2026": 13677,
+   "2025": 13458,
+   "2024": 13231,
+   "2023": 13135,
+   "2022": 12866,
+   "2021": 12660
+  },
+  "rioverde": {
+   "titulo": "Lista Nominal  Rioverde   Septiembre de 2026",
+   "2026": 85917,
+   "2025": 84352,
+   "2024": 83111,
+   "2023": 82039,
+   "2022": 79981,
+   "2021": 78108
+  },
+  "salinas": {
+   "titulo": "Lista Nominal  Salinas   Septiembre de 2026",
+   "2026": 24455,
+   "2025": 24175,
+   "2024": 23810,
+   "2023": 23354,
+   "2022": 22754,
+   "2021": 22406
+  },
+  "san-antonio": {
+   "titulo": "Lista Nominal  San Antonio   Septiembre de 2026",
+   "2026": 7397,
+   "2025": 7324,
+   "2024": 7322,
+   "2023": 7296,
+   "2022": 7183,
+   "2021": 7114
+  },
+  "san-ciro-de-acosta": {
+   "titulo": "Lista Nominal  San Ciro de Acosta   Septiembre de 2026",
+   "2026": 9716,
+   "2025": 9439,
+   "2024": 9282,
+   "2023": 9168,
+   "2022": 8906,
+   "2021": 8751
+  },
+  "san-luis-potosi": {
+   "titulo": "Lista Nominal  San Luis Potosi   Septiembre de 2026",
+   "2026": 717502,
+   "2025": 703498,
+   "2024": 692673,
+   "2023": 681613,
+   "2022": 658799,
+   "2021": 638295
+  },
+  "san-martin-chalchicuautla": {
+   "titulo": "Lista Nominal  San Martin Chalchicuautla   Septiembre de 2026",
+   "2026": 15279,
+   "2025": 15386,
+   "2024": 15504,
+   "2023": 15507,
+   "2022": 15654,
+   "2021": 15414
+  },
+  "san-nicolas-tolentino": {
+   "titulo": "Lista Nominal  San Nicolas Tolentino   Septiembre de 2026",
+   "2026": 4960,
+   "2025": 4891,
+   "2024": 4813,
+   "2023": 4753,
+   "2022": 4716,
+   "2021": 4720
+  },
+  "san-vicente-tancuayalab": {
+   "titulo": "Lista Nominal  San Vicente Tancuayalab   Septiembre de 2026",
+   "2026": 12115,
+   "2025": 12108,
+   "2024": 12055,
+   "2023": 12098,
+   "2022": 11928,
+   "2021": 11929
+  },
+  "santa-catarina": {
+   "titulo": "Lista Nominal  Santa Catarina   Septiembre de 2026",
+   "2026": 9812,
+   "2025": 9632,
+   "2024": 9620,
+   "2023": 9481,
+   "2022": 9200,
+   "2021": 9071
+  },
+  "santa-maria-del-rio": {
+   "titulo": "Lista Nominal  Santa Maria del Rio   Septiembre de 2026",
+   "2026": 34570,
+   "2025": 33859,
+   "2024": 33346,
+   "2023": 32912,
+   "2022": 31635,
+   "2021": 31080
+  },
+  "santo-domingo": {
+   "titulo": "Lista Nominal  Santo Domingo   Septiembre de 2026",
+   "2026": 9631,
+   "2025": 9686,
+   "2024": 9830,
+   "2023": 9849,
+   "2022": 9686,
+   "2021": 9686
+  },
+  "soledad-de-graciano-sanchez": {
+   "titulo": "Lista Nominal  Soledad de Graciano Sanchez   Septiembre de 2026",
+   "2026": 261116,
+   "2025": 254469,
+   "2024": 249423,
+   "2023": 243730,
+   "2022": 235007,
+   "2021": 225774
+  },
+  "tamasopo": {
+   "titulo": "Lista Nominal  Tamasopo   Septiembre de 2026",
+   "2026": 23029,
+   "2025": 22861,
+   "2024": 22753,
+   "2023": 22602,
+   "2022": 22088,
+   "2021": 21520
+  },
+  "tamazunchale": {
+   "titulo": "Lista Nominal  Tamazunchale   Septiembre de 2026",
+   "2026": 74714,
+   "2025": 74231,
+   "2024": 73629,
+   "2023": 73223,
+   "2022": 71797,
+   "2021": 70121
+  },
+  "tampacan": {
+   "titulo": "Lista Nominal  Tampacan   Septiembre de 2026",
+   "2026": 12015,
+   "2025": 12127,
+   "2024": 12300,
+   "2023": 12269,
+   "2022": 12088,
+   "2021": 12089
+  },
+  "tampamolon-corona": {
+   "titulo": "Lista Nominal  Tampamolon Corona   Septiembre de 2026",
+   "2026": 10696,
+   "2025": 10593,
+   "2024": 10644,
+   "2023": 10589,
+   "2022": 10491,
+   "2021": 10329
+  },
+  "tamuin": {
+   "titulo": "Lista Nominal  Tamuin   Septiembre de 2026",
+   "2026": 27445,
+   "2025": 27155,
+   "2024": 27096,
+   "2023": 27105,
+   "2022": 26821,
+   "2021": 26403
+  },
+  "tancanhuitz": {
+   "titulo": "Lista Nominal  Tancanhuitz   Septiembre de 2026",
+   "2026": 15499,
+   "2025": 15621,
+   "2024": 15681,
+   "2023": 15593,
+   "2022": 15293,
+   "2021": 14853
+  },
+  "tanlajas": {
+   "titulo": "Lista Nominal  Tanlajas   Septiembre de 2026",
+   "2026": 14115,
+   "2025": 14090,
+   "2024": 14083,
+   "2023": 14050,
+   "2022": 13778,
+   "2021": 13612
+  },
+  "tanquian-de-escobedo": {
+   "titulo": "Lista Nominal  Tanquian de Escobedo   Septiembre de 2026",
+   "2026": 10580,
+   "2025": 10517,
+   "2024": 10367,
+   "2023": 10353,
+   "2022": 10110,
+   "2021": 10072
+  },
+  "tierra-nueva": {
+   "titulo": "Lista Nominal  Tierra Nueva   Septiembre de 2026",
+   "2026": 8173,
+   "2025": 8043,
+   "2024": 8000,
+   "2023": 7960,
+   "2022": 7755,
+   "2021": 7410
+  },
+  "vanegas": {
+   "titulo": "Lista Nominal  Vanegas   Septiembre de 2026",
+   "2026": 5742,
+   "2025": 5763,
+   "2024": 5655,
+   "2023": 5588,
+   "2022": 5530,
+   "2021": 5489
+  },
+  "venado": {
+   "titulo": "Lista Nominal  Venado   Septiembre de 2026",
+   "2026": 11612,
+   "2025": 11563,
+   "2024": 11462,
+   "2023": 11372,
+   "2022": 11224,
+   "2021": 11145
+  },
+  "villa-de-arista": {
+   "titulo": "Lista Nominal  Villa de Arista   Septiembre de 2026",
+   "2026": 12955,
+   "2025": 12706,
+   "2024": 12574,
+   "2023": 12353,
+   "2022": 12032,
+   "2021": 11626
+  },
+  "villa-de-arriaga": {
+   "titulo": "Lista Nominal  Villa de Arriaga   Septiembre de 2026",
+   "2026": 15267,
+   "2025": 14939,
+   "2024": 14580,
+   "2023": 14114,
+   "2022": 13386,
+   "2021": 12836
+  },
+  "villa-de-guadalupe": {
+   "titulo": "Lista Nominal  Villa de Guadalupe   Septiembre de 2026",
+   "2026": 8008,
+   "2025": 7966,
+   "2024": 7899,
+   "2023": 7816,
+   "2022": 7636,
+   "2021": 7455
+  },
+  "villa-de-la-paz": {
+   "titulo": "Lista Nominal  Villa de la Paz   Septiembre de 2026",
+   "2026": 4226,
+   "2025": 4175,
+   "2024": 4131,
+   "2023": 4095,
+   "2022": 4021,
+   "2021": 3964
+  },
+  "villa-de-ramos": {
+   "titulo": "Lista Nominal  Villa de Ramos   Septiembre de 2026",
+   "2026": 29116,
+   "2025": 28767,
+   "2024": 28564,
+   "2023": 28351,
+   "2022": 28335,
+   "2021": 27711
+  },
+  "villa-de-reyes": {
+   "titulo": "Lista Nominal  Villa de Reyes   Septiembre de 2026",
+   "2026": 45167,
+   "2025": 43950,
+   "2024": 42569,
+   "2023": 41547,
+   "2022": 39661,
+   "2021": 38375
+  },
+  "villa-hidalgo": {
+   "titulo": "Lista Nominal  Villa Hidalgo   Septiembre de 2026",
+   "2026": 13399,
+   "2025": 13107,
+   "2024": 12898,
+   "2023": 12728,
+   "2022": 12380,
+   "2021": 12254
+  },
+  "villa-juarez": {
+   "titulo": "Lista Nominal  Villa Juarez   Septiembre de 2026",
+   "2026": 10182,
+   "2025": 9843,
+   "2024": 9558,
+   "2023": 9364,
+   "2022": 9075,
+   "2021": 8956
+  },
+  "xilitla": {
+   "titulo": "Lista Nominal  Xilitla   Septiembre de 2026",
+   "2026": 38340,
+   "2025": 37961,
+   "2024": 37886,
+   "2023": 37373,
+   "2022": 36693,
+   "2021": 35896
+  },
+  "zaragoza": {
+   "titulo": "Lista Nominal  Zaragoza   Septiembre de 2026",
+   "2026": 21821,
+   "2025": 21326,
+   "2024": 20895,
+   "2023": 20339,
+   "2022": 19719,
+   "2021": 18940
+  }
+ }
+}

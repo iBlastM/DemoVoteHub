@@ -12,6 +12,9 @@ import * as predicciones from './views/predicciones.js';
 import * as dominio from './views/dominio.js';
 import * as estado from './views/estado.js';
 import * as encuestas from './views/encuestas.js';
+import * as estatal from './views/estatal.js';
+import * as alcaldias from './views/alcaldias.js';
+import * as metodologia from './views/metodologia.js';
 
 import { cycleTheme, themePref, themeLabel, THEME_ICONS } from './theme.js';
 
@@ -96,6 +99,9 @@ async function boot() {
   route('/general', view(general.render));
   route('/predicciones', view(predicciones.render));
   route('/dominio', view(dominio.render));
+  route('/estatal', view(estatal.render));
+  route('/alcaldias', view(alcaldias.render));
+  route('/metodologia', view(metodologia.render));
   route('/encuestas', view(encuestas.render));
   route('/encuestas/:id', viewP(encuestas.renderDetail, 'id'));
   route('/estado/:slug', viewP(estado.render, 'slug'));

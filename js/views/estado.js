@@ -78,7 +78,7 @@ export function render(root, slug) {
 
       <section class="panel panel-wide">
         <div class="panel-head"><h3>Encuestas del ciclo</h3>
-          <span class="panel-sub">${e.encuestas.length} sondeos ${e.encuestasSonReales ? 'públicos reales (scraping de encuestadoras)' : 'ilustrativos alrededor del promedio real'}</span></div>
+          <span class="panel-sub">${e.encuestas.length} sondeos ${e.encuestasSonReales ? 'públicos publicados por las casas encuestadoras' : 'ilustrativos alrededor del promedio real'}</span></div>
         <div class="survey-wrap">${surveyTable(e)}</div>
       </section>
     </div>
