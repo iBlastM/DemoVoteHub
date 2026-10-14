@@ -13,7 +13,7 @@ luego sigue esta guía y al final vuelve al paso 8 del backend para la verificac
 ## Guía del flujo
 
 ```
-Navegador ── https://tu-dominio ──► nginx
+Navegador ── https://dominio ──► nginx
                                      ├── /            → /opt/mirador/DemoVotehub   (sitio estático)
                                      ├── /api/ ...    → mirador-api 127.0.0.1:8001 (datos que se actualizan solos)
                                      └── /health      → mirador-api

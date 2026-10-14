@@ -240,7 +240,10 @@ body.atlas-mode .foot { display: none; }
 
 .ax-tip {
   position: absolute; z-index: 20; left: 0; top: 0; pointer-events: none;
-  min-width: 264px; max-width: 320px; border-radius: 12px; overflow: hidden;
+  /* Ancho = el que pida el contenido (no se recorta ninguna columna); el
+     tope solo evita que crezca sin límite en pantallas pequeñas. */
+  width: max-content; min-width: 264px; max-width: min(380px, calc(100% - 16px));
+  border-radius: 12px; overflow: hidden;
   background: var(--ax-tip-bg); font-size: .82rem;
   box-shadow: 0 2px 6px rgba(10, 12, 16, .14), 0 14px 34px rgba(10, 12, 16, .24);
 }
@@ -253,12 +256,15 @@ body.atlas-mode .foot { display: none; }
 
 .ax-tip-t { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
 .ax-tip-t thead th {
-  padding: 0 0 5px; text-align: right; font-size: .68rem; font-weight: 500; color: var(--ink-2);
+  padding: 0 0 5px 10px; text-align: right; white-space: nowrap; font-size: .68rem; font-weight: 500; color: var(--ink-2);
   border-bottom: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
 }
-.ax-tip-t thead th:first-child { text-align: left; }
-.ax-tip-t tbody th { display: flex; align-items: center; gap: 8px; padding: 4px 10px 4px 0; text-align: left; font-weight: 500; color: var(--ink); white-space: nowrap; }
-.ax-tip-t td { padding: 4px 0 4px 10px; text-align: right; white-space: nowrap; font-family: var(--font-data); color: var(--ink); }
+.ax-tip-t thead th:first-child { padding-left: 0; text-align: left; }
+/* Celda del partido: el flex vive en un contenedor interno para que la tabla
+   conserve su layout (un <th> con display:flex deja de ser celda de tabla). */
+.ax-tip-t tbody th { padding: 4px 10px 4px 0; text-align: left; font-weight: 500; color: var(--ink); width: 100%; }
+.ax-tip-p { display: flex; align-items: center; gap: 8px; min-height: 24px; white-space: nowrap; }
+.ax-tip-t td { padding: 4px 0 4px 12px; text-align: right; white-space: nowrap; font-family: var(--font-data); color: var(--ink); }
 .ax-tip-t td:nth-child(2) { font-weight: 700; }
 .ax-tip-t td:last-child { color: var(--ink-2); min-width: 36px; }
 .ax-tip-t tbody tr:first-child > * { padding-top: 6px; }
@@ -274,7 +280,6 @@ body.atlas-mode .foot { display: none; }
 .ax-tip-logo img { width: 24px; height: 24px; transform: scale(1.22); object-fit: contain; }
 .ax-tip-logo.is-wordmark { width: 40px; }
 .ax-tip-logo.is-wordmark img { width: 40px; height: 24px; transform: none; object-fit: cover; object-position: 50% 54%; }
-.ax-tip-t tbody th { min-height: 24px; }
 
 .ax-tip-g { margin: 7px 0 0; font-size: .74rem; color: var(--ink-2); }
 .ax-tip-f { margin: 7px 0 0; padding-top: 6px; border-top: 1px solid color-mix(in srgb, var(--ink) 12%, transparent); font-size: .68rem; color: var(--ink-2); }

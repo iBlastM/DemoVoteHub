@@ -721,11 +721,16 @@ export function render(root) {
   // Precarga: el primer hover ya tiene los logotipos decodificados.
   for (const p of PARTY_ORDER) if (PARTIES[p].logo) { const im = new Image(); im.src = PARTIES[p].logo; }
 
+  // Nombres compactos para la tarjeta: el logotipo ya identifica al partido y
+  // un nombre largo ensancha la tabla. Los demás partidos usan su nombre.
+  const TIP_NAME = { MC: 'Mov. Ciudadano' };
+  const tipName = (p) => TIP_NAME[p] || partyName(p);
+
   /** Tabla del tooltip. rows: [[party, valor, valor2, clase, etiqueta?]]; cols: encabezados. */
   function tipTable(cols, rows, cls = '') {
     return `<table class="ax-tip-t ${cls}">
       <thead><tr>${cols.map((c) => `<th scope="col">${c}</th>`).join('')}</tr></thead>
-      <tbody>${rows.map(([p, a, b, k, label]) => `<tr><th scope="row">${tipLogo(p)}<span>${label || partyName(p)}</span></th>
+      <tbody>${rows.map(([p, a, b, k, label]) => `<tr><th scope="row"><span class="ax-tip-p">${tipLogo(p)}<span>${label || tipName(p)}</span></span></th>
         <td>${a}</td><td class="${k || ''}">${b}</td></tr>`).join('')}</tbody>
     </table>`;
   }
@@ -733,8 +738,12 @@ export function render(root) {
 
   // El HTML del tooltip solo se reconstruye si cambia el contenido (otro
   // municipio, capa o carga de datos 2021); mientras el cursor se mueve sobre
-  // el mismo municipio solo se reposiciona, sin volver a medir el DOM.
+  // el mismo municipio solo se reposiciona, sin volver a medir el DOM. Un
+  // ResizeObserver mantiene al día la medida si cambia después (p. ej. al
+  // terminar de cargar la tipografía).
   let tipKey = '', tipW = 0, tipH = 0;
+  const tipRO = new ResizeObserver(() => { if (!tipEl.hidden) { tipW = tipEl.offsetWidth; tipH = tipEl.offsetHeight; } });
+  tipRO.observe(tipEl);
   function showTip(it, p) {
     if (!it || !p) { hideTip(); return; }
     const key = `${it.id}|${mode}|${baseline}|${opParty}|${hist ? 1 : 0}|${themeName}`;
@@ -1056,6 +1065,7 @@ export function render(root) {
 
   return () => {
     alive = false;
+    tipRO.disconnect();
     atlas.destroy();
     window.removeEventListener('mirador:theme', onTheme);
     window.removeEventListener('keydown', onKey);
