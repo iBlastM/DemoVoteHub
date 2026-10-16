@@ -32,7 +32,6 @@ env/
 !.env.example
 
 # Editor e IDE
-.vscode/
 .idea/
 *.suo
 *.user
@@ -51,3 +50,7 @@ $RECYCLE.BIN/
 
 # Los archivos en geojsons/ y los datos fuente son parte del visualizador
 # y deben mantenerse versionados.
+branch_structure.json
+temp_auto_push.bat
+temp_interactive_push.bat
+.gitignore
