@@ -96,10 +96,7 @@ b { font-weight: 700; }
   transform: translateY(1px);
 }
 .brand-name { font-family: var(--font-display); font-weight: 800; letter-spacing: .04em; font-size: 1.05rem; }
-.brand-year {
-  color: var(--accent); margin-left: .28rem;
-  font-family: var(--font-data); font-weight: 700;
-}
+
 .nav { display: flex; gap: .35rem; margin-left: .5rem; }
 .nav a {
   padding: .45rem .8rem; border-radius: 999px;
