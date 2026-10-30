@@ -539,7 +539,7 @@ b { font-weight: 700; }
 .met-det > div { padding: .4rem .9rem .8rem; }
 
 
-/* Navegación con 7 secciones: si no cabe pasa a dos renglones (nunca oculta enlaces). */
+/* Navegación con 8 secciones: si no cabe pasa a dos renglones (nunca oculta enlaces). */
 .nav { min-width: 0; flex-wrap: wrap; row-gap: .2rem; }
 .nav a { white-space: nowrap; }
 @media (max-width: 1440px) {

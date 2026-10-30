@@ -28,6 +28,7 @@ Qué pide cada vista:
 | Mapa de dominio | `geojsons/muni/NN.geojson`, `data/SE_GUB_*.csv`, `data/gubernaturas_manifest.json` | `/api/v1/municipios/estimacion`, `/api/v1/metodologia` |
 | Preferencia estatal | `geojsons/estados-poligonos.geojson` | `/api/v1/estados`, `/api/v1/encuestas`, `/api/v1/meta` (*) |
 | Alcaldías 2027 | `geojsons/muni/NN.geojson`, `data/padron-ln.json` | `/api/v1/alcaldias` |
+| Dashboard electoral | `data/electoral/*.json`, `geojsons/electoral/*.geojson`, `images/candidatos/` (se generan con `py build_electoral.py`); Plotly y el mapa base se cargan de `cdn.plot.ly` y `tiles.openfreemap.org` | — |
 | Metodología | — | `/api/v1/metodologia` (sin ella, la página se ve sin las cifras) |
 | Encuestas (aprobación, rumbo) | — (series ilustrativas generadas en el navegador) | — |
 
