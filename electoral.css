@@ -1,0 +1,272 @@
+/* ============================================================
+   Dashboard electoral (#/electoral) — js/views/electoral.js
+   Usa los tokens de styles.css y atlas.css (superficies, tinta,
+   acento, fuentes, sombras), así que sigue el tema claro/oscuro.
+   ============================================================ */
+
+/* La vista usa más ancho que el resto del sitio (tres columnas). */
+body.el-wide .app { max-width: 1640px; }
+
+.el { display: grid; gap: 1.2rem; }
+.el [hidden] { display: none !important; }
+.el h4 { margin: 0; }
+.el .panel { min-width: 0; }
+.el .panel-head { flex-wrap: wrap; align-items: center; }
+.el.is-loading .el-kpis, .el.is-loading .el-grid { opacity: .6; transition: opacity .2s; }
+
+.el-hero { padding-top: .5rem; margin-bottom: .3rem; }
+.el-h { font-size: clamp(2rem, 4.4vw, 3rem); line-height: 1.04; }
+.el-sub { color: var(--ink-2); margin: .8rem 0 0; max-width: 70ch; }
+
+.el-tools { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; }
+.el-empty { margin: 0; padding: 1.2rem .2rem; color: var(--muted); font-size: .88rem; }
+.el-loading {
+  position: absolute; inset: 0; margin: 0; display: grid; place-items: center; padding: 1rem;
+  color: var(--muted); font-size: .86rem; text-align: center;
+}
+.el-error {
+  margin: 0; padding: .8rem 1rem; border-radius: var(--r-sm); font-size: .9rem; color: var(--ink);
+  background: color-mix(in srgb, var(--ax-down) 10%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--ax-down) 40%, transparent);
+}
+
+/* ---------- Filtros ---------- */
+.el-filtros {
+  display: flex; flex-wrap: wrap; align-items: flex-end; gap: .8rem 1rem;
+  background: var(--surface); border: 1px solid var(--hair); border-radius: var(--r);
+  padding: 1rem 1.2rem; box-shadow: var(--shadow-sm);
+  position: relative; z-index: 5;
+}
+.el-field { display: grid; gap: .32rem; flex: 0 1 150px; min-width: 120px; }
+.el-field-lg { flex-basis: 220px; }
+.el-label {
+  font-family: var(--font-data); font-size: .7rem; font-weight: 600;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
+}
+
+.el-select, .el-ms-btn {
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: 40px; padding: 0 2.2rem 0 .8rem;
+  border: 1px solid var(--hair); border-radius: 10px;
+  background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%238a909b' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5.5 8l4.5 4.5L14.5 8'/%3E%3C/svg%3E") no-repeat right .65rem center / 15px;
+  color: var(--ink); font: 500 .9rem var(--font-body); cursor: pointer;
+  transition: border-color .15s, box-shadow .15s;
+}
+.el-select:hover, .el-ms-btn:hover { border-color: var(--ink-2); }
+.el-select:focus-visible, .el-ms-btn:focus-visible, .el-ms.open .el-ms-btn {
+  outline: none; border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+.el-select option { background: var(--surface); color: var(--ink); }
+.el-select-sm { width: auto; height: 34px; font-size: .82rem; padding-left: .7rem; }
+
+/* Lista desplegable con buscador (municipio / distrito / sección). */
+.el-ms { position: relative; }
+.el-ms-btn { display: flex; align-items: center; text-align: left; background-image: none; position: relative; }
+.el-ms-btn svg {
+  position: absolute; right: .65rem; top: 50%; width: 15px; height: 15px; transform: translateY(-50%);
+  fill: none; stroke: var(--muted); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+  transition: transform .15s;
+}
+.el-ms.open .el-ms-btn svg { transform: translateY(-50%) rotate(180deg); }
+.el-ms-val { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.el-ms-panel {
+  position: absolute; z-index: 30; top: calc(100% + 6px); left: 0;
+  min-width: 100%; width: max-content; max-width: 320px; padding: 6px;
+  background: var(--surface); border: 1px solid var(--hair); border-radius: 12px;
+  box-shadow: var(--ax-shadow-lg);
+  transform-origin: top left; animation: axPop .18s cubic-bezier(.2, .8, .2, 1);
+}
+.el-ms-search {
+  width: 100%; height: 36px; padding: 0 10px;
+  border: 1px solid var(--hair); border-radius: 8px; background: var(--surface-2);
+  color: var(--ink); font: 400 .85rem var(--font-body); caret-color: var(--accent);
+}
+.el-ms-search:focus { outline: none; border-color: var(--accent); }
+.el-ms-search::placeholder { color: var(--muted); }
+.el-ms-list {
+  max-height: 260px; overflow-y: auto; margin-top: 6px; overscroll-behavior: contain;
+  scrollbar-width: thin; scrollbar-color: var(--hair) transparent;
+}
+.el-ms-opt {
+  position: relative; display: flex; align-items: center; gap: .5rem;
+  padding: 7px 10px; border-radius: 7px; cursor: pointer;
+  font-size: .86rem; color: var(--ink-2); white-space: nowrap;
+}
+.el-ms-opt:hover { background: var(--surface-2); color: var(--ink); }
+.el-ms-opt input { position: absolute; opacity: 0; pointer-events: none; }
+.el-ms-opt:focus-within { outline: 2px solid var(--accent); outline-offset: -2px; }
+.el-ms-opt:has(input:checked) {
+  background: color-mix(in srgb, var(--accent) 9%, var(--surface));
+  color: var(--accent-ink); font-weight: 600;
+}
+.el-ms-empty { margin: 0; padding: 10px; font-size: .82rem; color: var(--muted); }
+
+/* ---------- Botones ---------- */
+.el-btn {
+  height: 40px; padding: 0 1rem; border: 1px solid var(--hair); border-radius: 999px;
+  background: var(--surface); color: var(--ink-2); cursor: pointer; white-space: nowrap;
+  font: 600 .82rem var(--font-data); box-shadow: var(--shadow-sm);
+  transition: color .15s, border-color .15s, background-color .15s;
+}
+.el-btn:hover { color: var(--ink); border-color: var(--ink-2); }
+.el-btn:focus-visible, .el-icon-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.el-btn-sm { height: 32px; padding: 0 .85rem; box-shadow: none; }
+.el-btn-primary { background: var(--ink); border-color: var(--ink); color: var(--surface); }
+.el-btn-primary:hover { color: var(--surface); opacity: .9; }
+.el-icon-btn {
+  width: 34px; height: 34px; flex: none; display: grid; place-items: center; cursor: pointer;
+  border: 1px solid var(--hair); border-radius: 9px; background: var(--surface); color: var(--ink-2);
+  font-size: 1.2rem; line-height: 1;
+}
+.el-icon-btn:hover { color: var(--ink); border-color: var(--ink-2); }
+.el-icon-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---------- KPIs ---------- */
+.el-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: .9rem; }
+.el-kpi {
+  background: var(--surface); border: 1px solid var(--hair); border-radius: var(--r-sm);
+  padding: 1rem 1.1rem; box-shadow: var(--shadow-sm);
+}
+.el-kpi-v {
+  display: block; font-family: var(--font-data); font-weight: 700; line-height: 1;
+  font-size: clamp(1.5rem, 2.4vw, 2.1rem); letter-spacing: -.02em; font-variant-numeric: tabular-nums;
+}
+.el-kpi-l { display: flex; align-items: center; gap: .4rem; margin-top: .45rem; color: var(--muted); font-size: .84rem; }
+.el-help {
+  width: 16px; height: 16px; flex: none; display: inline-grid; place-items: center; cursor: help;
+  border: 1px solid var(--hair); border-radius: 50%;
+  font: 700 .6rem var(--font-data); color: var(--muted);
+}
+.el-help:hover, .el-help:focus-visible { color: var(--accent-ink); border-color: var(--accent); outline: none; }
+
+/* ---------- Candidatos · partidos · mapa ---------- */
+.el-grid { display: grid; grid-template-columns: 1.35fr .85fr 1.3fr; gap: 1.2rem; align-items: stretch; }
+.el-col { display: flex; flex-direction: column; }
+
+/* Tarjetas de la misma altura que llenan el panel: la foto absorbe el alto sobrante y,
+   con subgrid, el bloque de datos de las tres tarjetas queda alineado. */
+.el-cands {
+  flex: 1; display: grid; gap: .7rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: minmax(200px, 1fr) auto;
+}
+.el-cand {
+  position: relative; display: grid; grid-row: span 2; grid-template-rows: subgrid; overflow: hidden;
+  background: var(--surface); border: 1px solid var(--hair); border-radius: var(--r-sm);
+  transition: transform .12s, box-shadow .12s;
+}
+.el-cand:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.el-cand::before { content: ""; position: absolute; z-index: 1; inset: 0 0 auto; height: 4px; background: var(--c); }
+.el-cand-foto { position: relative; min-height: 200px; overflow: hidden; background: var(--surface-2); }
+.el-cand-foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+.el-cand-ph {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  font: 800 2.2rem var(--font-display); letter-spacing: -.02em;
+  color: color-mix(in srgb, var(--c) 60%, var(--muted));
+  background: color-mix(in srgb, var(--c) 10%, var(--surface-2));
+}
+.el-cand-pos {
+  position: absolute; z-index: 1; top: 12px; left: 8px; padding: .14rem .5rem; border-radius: 999px;
+  background: var(--surface); color: var(--ink); box-shadow: var(--shadow-sm);
+  font: 700 .74rem var(--font-data);
+}
+.el-cand-body { display: flex; flex-direction: column; gap: .3rem; padding: .7rem .7rem .8rem; text-align: center; }
+.el-cand-logos { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; min-height: 30px; align-items: center; }
+.el-cand-nombre { font: 600 .88rem/1.25 var(--font-body); letter-spacing: 0; color: var(--ink); }
+.el-cand-partido {
+  margin: 0; font: 600 .66rem var(--font-data); letter-spacing: .06em; text-transform: uppercase;
+  color: var(--muted); overflow-wrap: anywhere;
+}
+.el-cand-stats { margin: auto 0 0; padding-top: .25rem; display: grid; grid-template-columns: 1fr 1fr; gap: .35rem; }
+.el-cand-stats div { background: var(--surface-2); border-radius: 7px; padding: .35rem .3rem; }
+.el-cand-stats dt { font-size: .66rem; color: var(--muted); }
+.el-cand-stats dd { margin: 0; font: 700 .9rem var(--font-data); font-variant-numeric: tabular-nums; color: var(--ink); }
+
+.el-partidos { flex: 1; display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 1fr; gap: .55rem; }
+.el-part {
+  display: flex; flex-direction: column; justify-content: center; gap: .2rem; min-width: 0;
+  padding: .6rem .7rem; border: 1px solid var(--hair-2); border-radius: var(--r-sm); background: var(--surface-2);
+}
+.el-part-head { display: flex; align-items: center; gap: .4rem; min-width: 0; }
+.el-part-head b { font: 700 .72rem var(--font-data); letter-spacing: .04em; color: var(--ink-2); }
+.el-part-v { font: 700 1.15rem/1.15 var(--font-data); font-variant-numeric: tabular-nums; color: var(--ink); }
+.el-part-bar { height: 6px; border-radius: 999px; background: var(--hair); overflow: hidden; }
+.el-part-bar span { display: block; height: 100%; border-radius: inherit; background: var(--c); transition: width .4s ease; }
+.el-part-pct { font: 600 .72rem var(--font-data); color: var(--muted); }
+.el-pdot { display: inline-block; flex: none; width: 20px; height: 20px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .08); }
+.plogo-2xs { --plo-h: 16px; padding: 2px 5px; border-radius: 5px; }
+
+.el-mapa { position: relative; height: 520px; border-radius: var(--r-sm); overflow: hidden; background: var(--surface-2); }
+.el-col-mapa:fullscreen { background: var(--canvas); padding: 1rem 1.2rem; border-radius: 0; }
+.el-col-mapa:fullscreen .el-mapa { height: calc(100vh - 5rem); }
+
+/* ---------- Barras ---------- */
+.el-barras { position: relative; min-height: 72px; }
+.el-barras canvas { display: block; width: 100%; }
+.el-tip {
+  position: absolute; z-index: 3; pointer-events: none; white-space: nowrap; opacity: 0;
+  padding: .35rem .6rem; border-radius: 7px; background: var(--ink); color: var(--surface);
+  font: 600 .76rem var(--font-data); box-shadow: var(--shadow); transition: opacity .12s;
+}
+
+/* ---------- Histórico ---------- */
+.el-hist { position: relative; height: 380px; }
+
+/* ---------- Tabla ---------- */
+.el-table-wrap { max-height: 560px; overflow: auto; border: 1px solid var(--hair-2); border-radius: var(--r-sm); }
+.el-table { width: 100%; border-collapse: collapse; font-size: .86rem; font-variant-numeric: tabular-nums; }
+.el-table th {
+  position: sticky; top: 0; z-index: 1; padding: .55rem .7rem; text-align: right; white-space: nowrap;
+  background: var(--surface); border-bottom: 1px solid var(--hair);
+  font: 600 .7rem var(--font-data); letter-spacing: .05em; text-transform: uppercase; color: var(--muted);
+}
+.el-table td { padding: .5rem .7rem; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--hair-2); }
+.el-table th:nth-child(-n+2), .el-table td:nth-child(-n+2) { text-align: left; }
+.el-table td:first-child { font-family: var(--font-data); font-weight: 600; }
+.el-table tbody tr:last-child td { border-bottom: 0; }
+.el-table tbody tr:hover { background: var(--surface-2); }
+.el-badge {
+  display: inline-block; padding: .14rem .45rem; border-radius: 6px;
+  background: var(--c); color: var(--t); font: 700 .7rem var(--font-data); letter-spacing: .02em;
+}
+
+/* ---------- Modal de comparativa ---------- */
+.el-modal {
+  position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 1rem;
+  background: rgba(10, 12, 16, .45); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+}
+.el-modal-card {
+  width: min(440px, 100%); max-height: 80vh; display: flex; flex-direction: column;
+  background: var(--surface); border: 1px solid var(--hair); border-radius: var(--r);
+  box-shadow: var(--ax-shadow-lg); animation: axPop .18s cubic-bezier(.2, .8, .2, 1);
+}
+.el-modal-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 1.1rem .7rem; }
+.el-modal-head h3 { font-size: 1.05rem; }
+.el-modal-quick { display: flex; gap: .4rem; padding: 0 1.1rem .8rem; border-bottom: 1px solid var(--hair-2); }
+.el-modal-checks { overflow-y: auto; padding: .5rem .6rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+.el-check {
+  display: flex; align-items: center; gap: .5rem; padding: .45rem .5rem; border-radius: 7px;
+  cursor: pointer; font-size: .86rem; color: var(--ink-2);
+}
+.el-check:hover { background: var(--surface-2); color: var(--ink); }
+.el-check input { accent-color: var(--accent); margin: 0; }
+.el-check-sw { width: 10px; height: 10px; flex: none; border-radius: 50%; background: var(--c); }
+.el-modal-foot { display: flex; justify-content: flex-end; gap: .5rem; padding: .8rem 1.1rem 1rem; border-top: 1px solid var(--hair-2); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1280px) {
+  .el-grid { grid-template-columns: 1fr 1fr; }
+  .el-col-mapa { grid-column: 1 / -1; }
+}
+@media (max-width: 860px) {
+  .el-grid { grid-template-columns: 1fr; }
+  .el-kpis { grid-template-columns: 1fr 1fr; }
+  .el-mapa { height: 420px; }
+}
+@media (max-width: 520px) {
+  .el-cands { grid-template-columns: 1fr; grid-template-rows: none; }
+  .el-cand { grid-row: auto; grid-template-rows: 260px auto; }
+  .el-field, .el-field-lg { flex: 1 1 100%; }
+  .el-filtros .el-btn { width: 100%; }
+  .el-modal-checks { grid-template-columns: 1fr; }
+}

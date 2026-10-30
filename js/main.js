@@ -15,6 +15,7 @@ import * as encuestas from './views/encuestas.js';
 import * as estatal from './views/estatal.js';
 import * as alcaldias from './views/alcaldias.js';
 import * as metodologia from './views/metodologia.js';
+import * as electoral from './views/electoral.js';
 
 import { cycleTheme, themePref, themeLabel, THEME_ICONS } from './theme.js';
 
@@ -101,6 +102,7 @@ async function boot() {
   route('/dominio', view(dominio.render));
   route('/estatal', view(estatal.render));
   route('/alcaldias', view(alcaldias.render));
+  route('/electoral', view(electoral.render));
   route('/metodologia', view(metodologia.render));
   route('/encuestas', view(encuestas.render));
   route('/encuestas/:id', viewP(encuestas.renderDetail, 'id'));
