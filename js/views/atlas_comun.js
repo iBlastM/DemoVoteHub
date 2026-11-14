@@ -102,13 +102,34 @@ export function fuenteBox(html, { titulo = '¿De dónde vienen estos datos?', cl
     <summary>${escapeHTML(titulo)}</summary><div class="ax-fuente-b">${html}</div></details>`;
 }
 
-/** Tabla del tooltip: rows [[party, a, b]]. */
-export function tipTable(cols, rows) {
-  return `<table class="ax-tip-t">
+// Nombres compactos para la tarjeta: el logotipo ya identifica al partido y
+// un nombre largo ensancha la tabla.
+const TIP_NAME = { MC: 'Mov. Ciudadano' };
+const tipName = (p) => TIP_NAME[p] || partyName(p);
+
+/**
+ * Tabla del tooltip, compartida por las tres vistas de mapa.
+ *   cols  encabezados: 2 (partido + valor) o 3 (partido + dos valores).
+ *   rows  [[partido, a, b, claseDeB, etiqueta?, barra?]]
+ * `barra` es un número comparable entre filas (p. ej. el % del partido): se dibuja
+ * una barra fina bajo el nombre, con el valor más alto a todo lo ancho. Es una
+ * ayuda visual; el dato exacto sigue en las celdas de la tabla.
+ */
+export function tipTable(cols, rows, cls = '') {
+  const max = Math.max(0, ...rows.map((r) => Number(r[5]) || 0));
+  const bar = (p, v) => (v == null || !max ? ''
+    : `<span class="ax-tip-bar" aria-hidden="true"><i style="--w:${(Math.max(0, v) / max * 100).toFixed(1)}%;--c:${baseColor(p)}"></i></span>`);
+  const dos = cols.length > 2;
+  return `<table class="ax-tip-t ${cls}">
     <thead><tr>${cols.map((c) => `<th scope="col">${c}</th>`).join('')}</tr></thead>
-    <tbody>${rows.map(([p, a, b]) => `<tr><th scope="row">${tipLogo(p)}<span>${partyName(p)}</span></th><td>${a}</td><td>${b}</td></tr>`).join('')}</tbody>
+    <tbody>${rows.map(([p, a, b, k, label, v]) => `<tr><th scope="row"><span class="ax-tip-p">${tipLogo(p)}<span class="ax-tip-pn"><span>${label || tipName(p)}</span>${bar(p, v)}</span></span></th>
+      <td>${a}</td>${dos ? `<td class="${k || ''}">${b}</td>` : ''}</tr>`).join('')}</tbody>
   </table>`;
 }
+
+/** Línea de ventaja del líder para el tooltip (margen en puntos porcentuales). */
+export const tipMargen = (p, pp) => (pp == null || !Number.isFinite(pp) ? ''
+  : `<p class="ax-tip-g ax-tip-m">Ventaja ${dot(p)}<b>${shortParty(p)} +${pp.toFixed(1)} pp</b></p>`);
 
 /**
  * Monta la vista de mapa. cfg:
@@ -437,8 +458,9 @@ export function partyChips() {
 export function legendFor(mode, { leaders, cap, party, range, unit = 'pp' }) {
   const steps = (p, ts) => ts.map((t) => `<i style="background:${ramp(p, t)}"></i>`).join('');
   if (mode === 'margen') {
-    return `<div class="ax-lg-grid">${leaders.map((p) => `<span class="ax-lg-n">${shortParty(p)}</span><span class="ax-lg-ramp">${steps(p, [0.1, 0.32, 0.55, 0.78, 1])}</span>`).join('')}</div>
-      <div class="ax-lg-scale"><span>0</span><span>margen ${cap}+ ${unit}</span></div>`;
+    return `<p class="ax-lg-h">Margen del líder · más claro = más reñido</p>
+      <div class="ax-lg-grid">${leaders.map((p) => `<span class="ax-lg-n">${shortParty(p)}</span><span class="ax-lg-ramp">${steps(p, [0.1, 0.32, 0.55, 0.78, 1])}</span>`).join('')}</div>
+      <div class="ax-lg-scale"><span>0 · reñido</span><span>${cap}+ ${unit}</span></div>`;
   }
   if (mode === 'ganador') return `<div class="ax-lg-sw">${leaders.map((p) => `<span>${dot(p)}${shortParty(p)}</span>`).join('')}</div>`;
   return `<p class="ax-lg-h">${partyName(party)}</p><span class="ax-lg-ramp ax-lg-wide">${steps(party, [0.06, 0.3, 0.52, 0.74, 0.96])}</span>

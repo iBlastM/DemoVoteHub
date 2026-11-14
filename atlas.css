@@ -69,6 +69,35 @@ body.atlas-mode .foot { display: none; }
   background: var(--surface); box-shadow: var(--ax-shadow);
 }
 
+/* Vidrio esmerilado: los controles que flotan sobre el mapa dejan ver el color
+   de debajo. El panel de resultados es más opaco para que su texto se lea bien.
+   Si el navegador no soporta backdrop-filter, o el usuario pide menos
+   transparencia, se conserva el fondo sólido de arriba. */
+:root { --ax-blur: blur(18px) saturate(170%); --ax-edge: inset 0 1px 0 rgba(255, 255, 255, .7), inset 0 0 0 1px rgba(255, 255, 255, .32); }
+[data-theme="dark"] { --ax-edge: inset 0 1px 0 rgba(255, 255, 255, .08), inset 0 0 0 1px rgba(255, 255, 255, .04); }
+@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .ax-tools, .ax-bar .ax-btn, .ax-layers, .ax-legend, .ax-status, .ax-tools-open {
+    background: color-mix(in srgb, var(--surface) 72%, transparent);
+    -webkit-backdrop-filter: var(--ax-blur); backdrop-filter: var(--ax-blur);
+    box-shadow: var(--ax-shadow), var(--ax-edge);
+  }
+  .ax-layers { background: color-mix(in srgb, var(--surface) 86%, transparent); }
+  .ax-panel {
+    background: color-mix(in srgb, var(--surface) 87%, transparent);
+    -webkit-backdrop-filter: blur(16px) saturate(150%); backdrop-filter: blur(16px) saturate(150%);
+    box-shadow: var(--ax-shadow), var(--ax-edge);
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .ax-tools, .ax-bar .ax-btn, .ax-layers, .ax-panel, .ax-legend, .ax-status, .ax-tools-open {
+    background: var(--surface); -webkit-backdrop-filter: none; backdrop-filter: none;
+  }
+}
+
+/* Cifras tabulares: los dígitos ocupan el mismo ancho y las columnas quedan alineadas. */
+.ax-tip, .ax-panel, .ax-legend, .ax-status, .ax-layers { font-variant-numeric: tabular-nums; }
+.ax-title, .ax-scope { font-variant-numeric: normal; }
+
 /* Herramientas (arriba a la izquierda) */
 .ax-tools { position: absolute; z-index: 6; top: 16px; left: 16px; width: 132px; border-radius: 12px; padding: 4px 0 8px; }
 .ax-tools-head { display: flex; align-items: center; justify-content: space-between; padding: 6px 8px 6px 14px; border-bottom: 1px solid var(--hair-2); margin-bottom: 6px; }
@@ -248,6 +277,15 @@ body.atlas-mode .foot { display: none; }
   box-shadow: 0 2px 6px rgba(10, 12, 16, .14), 0 14px 34px rgba(10, 12, 16, .24);
 }
 .ax-tip:not([hidden]) { animation: axTipIn .14s cubic-bezier(.2, .8, .2, 1); }
+@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .ax-tip {
+    background: color-mix(in srgb, var(--ax-tip-bg) 90%, transparent);
+    -webkit-backdrop-filter: blur(14px) saturate(160%); backdrop-filter: blur(14px) saturate(160%);
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .ax-tip { background: var(--ax-tip-bg); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
 @keyframes axTipIn { from { opacity: 0; } }
 .ax-tip-h { display: grid; gap: 2px; padding: 9px 14px 8px; background: var(--ax-tip-head); color: #fff; }
 .ax-tip-h b { font-size: 1.04rem; font-weight: 600; line-height: 1.2; letter-spacing: -.005em; }
@@ -264,6 +302,12 @@ body.atlas-mode .foot { display: none; }
    conserve su layout (un <th> con display:flex deja de ser celda de tabla). */
 .ax-tip-t tbody th { padding: 4px 10px 4px 0; text-align: left; font-weight: 500; color: var(--ink); width: 100%; }
 .ax-tip-p { display: flex; align-items: center; gap: 8px; min-height: 24px; white-space: nowrap; }
+/* Nombre + barra de apoyo (el líder a todo lo ancho). */
+.ax-tip-pn { flex: 1 1 auto; min-width: 0; display: grid; gap: 3px; }
+.ax-tip-t tbody tr:first-child .ax-tip-pn > span:first-child { font-weight: 600; }
+.ax-tip-bar { display: block; height: 4px; border-radius: 999px; overflow: hidden; background: color-mix(in srgb, var(--ink) 10%, transparent); }
+.ax-tip-bar i { display: block; height: 100%; width: var(--w); border-radius: inherit; background: var(--c); transform-origin: left center; animation: axBarIn .34s cubic-bezier(.2, .8, .2, 1) both; }
+@keyframes axBarIn { from { transform: scaleX(0); } }
 .ax-tip-t td { padding: 4px 0 4px 12px; text-align: right; white-space: nowrap; font-family: var(--font-data); color: var(--ink); }
 .ax-tip-t td:nth-child(2) { font-weight: 700; }
 .ax-tip-t td:last-child { color: var(--ink-2); min-width: 36px; }
@@ -282,6 +326,9 @@ body.atlas-mode .foot { display: none; }
 .ax-tip-logo.is-wordmark img { width: 40px; height: 24px; transform: none; object-fit: cover; object-position: 50% 54%; }
 
 .ax-tip-g { margin: 7px 0 0; font-size: .74rem; color: var(--ink-2); }
+.ax-tip-m { display: flex; align-items: center; gap: 6px; }
+.ax-tip-m .ax-dot { width: 9px; height: 9px; }
+.ax-tip-m b { color: var(--ink); font-family: var(--font-data); }
 .ax-tip-f { margin: 7px 0 0; padding-top: 6px; border-top: 1px solid color-mix(in srgb, var(--ink) 12%, transparent); font-size: .68rem; color: var(--ink-2); }
 .ax-tip-b > .ax-tip-f:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
 
@@ -293,7 +340,7 @@ body.atlas-mode .foot { display: none; }
 .ax-lead-line { stroke: var(--ax-lead); stroke-width: 1.6; }
 
 @media (prefers-reduced-motion: reduce) {
-  .ax-tip:not([hidden]), .ax-tip-lead:not([hidden]) { animation: none; }
+  .ax-tip:not([hidden]), .ax-tip-lead:not([hidden]), .ax-tip-bar i { animation: none; }
 }
 
 /* ---------- Estado de carga ---------- */
@@ -310,7 +357,7 @@ body.atlas-mode .foot { display: none; }
 @keyframes axSpin { to { transform: rotate(360deg); } }
 
 /* ---------- Leyenda ---------- */
-.ax-legend { position: absolute; z-index: 4; right: 16px; bottom: 34px; padding: 10px 12px; border-radius: 10px; font-size: .68rem; color: var(--ink-2); }
+.ax-legend { position: absolute; z-index: 4; right: 16px; bottom: 34px; max-width: 250px; padding: 10px 12px; border-radius: 10px; font-size: .68rem; color: var(--ink-2); }
 .ax-lg-h { margin: 0 0 6px; font-weight: 600; color: var(--ink); }
 .ax-lg-grid { display: grid; grid-template-columns: auto auto; align-items: center; gap: 4px 10px; }
 .ax-lg-n { font-family: var(--font-data); font-weight: 700; letter-spacing: .03em; }
@@ -370,7 +417,7 @@ body.atlas-mode .foot { display: none; }
 
 /* Topbar compacto en teléfonos (todas las vistas). */
 @media (max-width: 560px) {
-  .live-since, .theme-text, .demo-badge { display: none; }
+  .cuenta-corte, .theme-text, .demo-badge { display: none; }
   .topbar { gap: .75rem; }
 }
 

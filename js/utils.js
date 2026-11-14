@@ -74,6 +74,26 @@ export function fechaCorta(d) {
   return `${dt.getDate()} ${MESES[dt.getMonth()]}`;
 }
 
+/** Formatea una fecha con año: "2 sep 2026". */
+export function fechaLarga(d) {
+  const dt = d instanceof Date ? d : new Date(d);
+  return `${dt.getDate()} ${MESES[dt.getMonth()]} ${dt.getFullYear()}`;
+}
+
+/** Texto de la cuenta regresiva a una fecha: "Faltan 205 días", "Hoy es la jornada"... */
+export function textoCuentaRegresiva(date, ahora = Date.now()) {
+  const ms = date.getTime() - ahora;
+  if (ms <= -86400000) return 'Jornada concluida';
+  if (ms <= 0) return 'Hoy es la jornada';
+  const d = Math.ceil(ms / 86400000);
+  return d === 1 ? 'Falta 1 día' : `Faltan ${d} días`;
+}
+
+/** Escapa texto para insertarlo en HTML (datos que vienen de CSV o de la API). */
+export function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
 /** Crea un elemento SVG con atributos. */
 export function svgEl(tag, attrs = {}) {
   const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
