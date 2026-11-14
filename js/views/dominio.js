@@ -16,12 +16,13 @@ import { PARTIES, PARTY_ORDER } from '../config.js';
 import { loadMunicipios } from '../map.js';
 import { loadManifest, loadHistGub, avisosGub, unidadesGub } from '../hist_gub.js';
 import { apiGet } from '../api.js';
-import { fuenteBox } from './atlas_comun.js';
+import { fuenteBox, tipTable, tipMargen } from './atlas_comun.js';
 import { statsMunicipio } from '../padron.js';
 import { navigate } from '../router.js';
 import { createAtlas, toWorldGeometry, unionBBox } from '../atlas.js';
 import { resolvedTheme, cycleTheme, themePref, themeLabel, THEME_ICONS } from '../theme.js';
 import { slugify, clamp, fmtNum } from '../utils.js';
+import { aplicarAMunicipios, cambioDe } from '../escenario.js';
 
 /* ---------- Catálogo de entidades ---------- */
 const ENTIDADES = {
@@ -122,17 +123,20 @@ function buildMunicipios(estado, geo, est) {
         else if (PARTIES[p]) shares[p] = v / 100;
       }
     } else {
-      shares = { ...estado.voto };
+      shares = { ...estado.base.voto }; // el pronóstico original, no el del escenario
     }
     const r = rankShares(shares);
-    list.push({
+    const mun = {
       id: 'm:' + cv, kind: 'mun', group: estado.cve, border: true, cvegeo: cv, name: f.properties.name || `Municipio ${cv}`,
       estado, cve: estado.cve, geom, ln: st ? Number(st[1]) || 0 : 0, padron: st ? Number(st[0]) || 0 : 0, lnKnown: !!st,
       shares, rec,
       leader: rec ? rec.ganador : r[0][0],
       margin: rec ? rec.margen : (r[0][1] - (r[1] ? r[1][1] : 0)) * 100,
       prob: rec && Number.isFinite(rec.prob_ganador) ? rec.prob_ganador : null,
-    });
+    };
+    // Estimación original: el simulador de escenarios siempre parte de ella.
+    mun.base = { shares: mun.shares, leader: mun.leader, margin: mun.margin, prob: mun.prob };
+    list.push(mun);
   }
   return list;
 }
@@ -396,6 +400,41 @@ export function render(root) {
   }
   function restyle() { refill(); atlas.restyle(); renderLegend(); renderPanel(); }
 
+  /* ---------- Escenarios hipotéticos ----------
+     El simulador (escenario.js) cambia el voto de un estado. Aquí cada municipio de ese
+     estado se desplaza desde su estimación original (m.base) para que su promedio
+     ponderado reproduzca el voto del escenario. La probabilidad por municipio la calcula
+     el servicio de datos y no se recalcula: con escenario queda sin dato y la capa de
+     probabilidad usa el margen. */
+  let escVersion = 0;
+  function aplicarEscenarioA(cve, munis) {
+    const e = estadosByCve.get(cve);
+    const nuevas = e ? aplicarAMunicipios(e, munis.map((m) => ({
+      shares: Object.fromEntries(Object.entries(m.base.shares).map(([k, v]) => [k, v * 100])), w: m.ln,
+    }))) : null;
+    munis.forEach((m, i) => {
+      if (!nuevas) {
+        m.shares = m.base.shares; m.leader = m.base.leader; m.margin = m.base.margin; m.prob = m.base.prob; m.esc = false;
+        return;
+      }
+      const sh = Object.fromEntries(Object.entries(nuevas[i]).map(([k, v]) => [k, v / 100]));
+      const r = rankShares(sh);
+      m.shares = sh; m.leader = r[0][0]; m.margin = (r[0][1] - (r[1] ? r[1][1] : 0)) * 100; m.prob = null; m.esc = true;
+    });
+  }
+  function aplicarEscenarioMapa() {
+    escVersion++;
+    for (const [cve, it] of stateItems) {
+      const e = estadosByCve.get(cve);
+      it.shares = e.voto; it.leader = e.favorito; it.margin = e.margen; it.prob = e.probFav;
+    }
+    for (const [cve, munis] of munisByCve) aplicarEscenarioA(cve, munis);
+    introEl.dataset.built = ''; // el resumen nacional de la portada del panel cambia
+    tipKey = '';
+    restyle();
+  }
+  store.alCambiarEscenario = aplicarEscenarioMapa;
+
   function spikeOf(it) {
     if (it.kind !== 'mun' || !it.ln) return null;
     const color = mode === 'oportunidad' ? PARTIES[opParty].color
@@ -432,6 +471,7 @@ export function render(root) {
         if (!est) { sinEstimacion = true; throw new Error('sin estimación'); }
         const munis = buildMunicipios(estado, geo, est);
         if (!munis.length) throw new Error('sin geometría');
+        aplicarEscenarioA(estado.cve, munis); // por si ya hay un escenario activo
         munisByCve.set(estado.cve, munis);
         const sid = 's:' + estado.cve;
         if (selection.has(sid)) { selection.delete(sid); munis.forEach((m) => selection.add(m.id)); atlas.setSelection(selection); }
@@ -715,25 +755,10 @@ export function render(root) {
      nombre de cada fuerza, y una flecha curva que la une con el punto
      señalado. La tarjeta se separa del cursor para no tapar el municipio. */
   const TIP_GAP_X = 84, TIP_GAP_Y = 40;          // separación tarjeta ↔ cursor (px)
-  const tipLogo = (p) => (PARTIES[p]?.logo
-    ? `<span class="ax-tip-logo${p === 'MORENA' ? ' is-wordmark' : ''}"><img src="${PARTIES[p].logo}" alt="" width="${p === 'MORENA' ? 40 : 24}" height="24" decoding="async"></span>`
-    : dot(p));
   // Precarga: el primer hover ya tiene los logotipos decodificados.
   for (const p of PARTY_ORDER) if (PARTIES[p].logo) { const im = new Image(); im.src = PARTIES[p].logo; }
 
-  // Nombres compactos para la tarjeta: el logotipo ya identifica al partido y
-  // un nombre largo ensancha la tabla. Los demás partidos usan su nombre.
-  const TIP_NAME = { MC: 'Mov. Ciudadano' };
-  const tipName = (p) => TIP_NAME[p] || partyName(p);
-
-  /** Tabla del tooltip. rows: [[party, valor, valor2, clase, etiqueta?]]; cols: encabezados. */
-  function tipTable(cols, rows, cls = '') {
-    return `<table class="ax-tip-t ${cls}">
-      <thead><tr>${cols.map((c) => `<th scope="col">${c}</th>`).join('')}</tr></thead>
-      <tbody>${rows.map(([p, a, b, k, label]) => `<tr><th scope="row"><span class="ax-tip-p">${tipLogo(p)}<span>${label || tipName(p)}</span></span></th>
-        <td>${a}</td><td class="${k || ''}">${b}</td></tr>`).join('')}</tbody>
-    </table>`;
-  }
+  // tipTable (atlas_comun.js): tabla con logotipo, nombre y barra por fuerza.
   const num1 = (x) => (x * 100).toFixed(1);
 
   // El HTML del tooltip solo se reconstruye si cambia el contenido (otro
@@ -746,7 +771,7 @@ export function render(root) {
   tipRO.observe(tipEl);
   function showTip(it, p) {
     if (!it || !p) { hideTip(); return; }
-    const key = `${it.id}|${mode}|${baseline}|${opParty}|${hist ? 1 : 0}|${themeName}`;
+    const key = `${it.id}|${mode}|${baseline}|${opParty}|${hist ? 1 : 0}|${themeName}|${escVersion}`;
     if (key !== tipKey || tipEl.hidden) {
       tipEl.innerHTML = tipHTML(it);
       tipEl.hidden = false;
@@ -797,26 +822,28 @@ export function render(root) {
       else if (mode === 'oportunidad') {
         const rows = unitList(it.cve).filter((u) => u.key in h.partidos).map((u) => [u, h.partidos[u.key]])
           .sort((a, b) => b[1] - a[1]).slice(0, 4)
-          .map(([u, v]) => [unitParty(u), fmtNum(v), num1(v / h.votos), '', u.coalicion ? u.key.replace(/_/g, '·') : null]);
+          .map(([u, v]) => [unitParty(u), fmtNum(v), num1(v / h.votos), '', u.coalicion ? u.key.replace(/_/g, '·') : null, v]);
         html += tipTable(['Partido', `Votos ${anio}`, '%'], rows) + `<p class="ax-tip-f">Votos emitidos ${anio}: ${fmtNum(h.votos)}</p>`;
       } else {
         const rows = unitList(it.cve).filter((u) => u.key in h.partidos && u.members.some((p) => p in it.shares))
           .map((u) => [u, share27(it, u) - h.partidos[u.key] / h.votos]).sort((a, b) => b[1] - a[1]).slice(0, 4)
-          .map(([u, d]) => [unitParty(u), num1(share27(it, u)), pp(d), d >= 0 ? 'is-up' : 'is-down', u.coalicion ? u.key.replace(/_/g, '·') : null]);
+          .map(([u, d]) => [unitParty(u), num1(share27(it, u)), pp(d), d >= 0 ? 'is-up' : 'is-down', u.coalicion ? u.key.replace(/_/g, '·') : null, share27(it, u)]);
         html += tipTable(['Partido', '2027 %', 'Cambio'], rows) + `<p class="ax-tip-f">2027 estimado vs. ${anio} real</p>`;
       }
       if (meta && meta.desglose_partidos !== 'COMPLETO') {
         html += `<p class="ax-tip-w">${meta.desglose_partidos === 'SOLO_COALICIONES' ? 'Solo hay voto por coalición' : 'Algunos partidos solo como coalición'}: el instituto no publicó el desglose por partido.</p>`;
       }
     } else {
-      const rows = rankShares(it.shares).slice(0, 4).map(([q, s]) => [q, it.ln ? fmtNum(Math.round(s * it.ln)) : '—', num1(s)]);
+      const rows = rankShares(it.shares).slice(0, 4).map(([q, s]) => [q, it.ln ? fmtNum(Math.round(s * it.ln)) : '—', num1(s), '', null, s]);
       html += tipTable(['Partido', 'Votos est.', '%'], rows);
+      if (mode !== 'cambio') html += tipMargen(it.leader, it.margin);
       if (mode === 'cambio') {
         const g = it.estado.gob;
         html += `<p class="ax-tip-g">Gobierna ${partyName(g)} · ${it.leader !== g ? `<b>lidera ${partyName(it.leader)}</b>` : 'retiene'}</p>`;
       }
       html += `<p class="ax-tip-f">Lista nominal ${it.ln ? fmtNum(it.ln) : 'sin dato INE'}${it.kind === 'mun' ? (Number.isFinite(it.prob) ? ` · confianza ${Math.round(it.prob * 100)}%` : '') : ' · encuestas estatales'}</p>`;
       if (it.kind === 'mun') html += `<p class="ax-tip-s">Estimación con ${fuenteMunicipio(it.rec)}</p>`;
+      if (it.esc || (it.kind === 'estado' && cambioDe(it.estado.slug))) html += '<p class="ax-tip-w">Escenario hipotético: voto ajustado con el simulador, no es el pronóstico.</p>';
     }
     return html + '</div>';
   }
@@ -835,8 +862,9 @@ export function render(root) {
     const steps = (p, ts) => ts.map((t) => `<i style="background:${ramp(p, t)}"></i>`).join('');
     let html = '';
     if (mode === 'margen') {
-      html = `<div class="ax-lg-grid">${lead.map((p) => `<span class="ax-lg-n">${p === 'MORENA' ? 'Morena' : p}</span><span class="ax-lg-ramp">${steps(p, [0.1, 0.32, 0.55, 0.78, 1])}</span>`).join('')}</div>
-        <div class="ax-lg-scale"><span>${metric === 'prob' ? '50%' : '0'}</span><span>${metric === 'prob' ? 'probabilidad 97%' : `margen ${MARGIN_CAP}+ pp`}</span></div>`;
+      html = `<p class="ax-lg-h">${metric === 'prob' ? 'Probabilidad del líder · más claro = menos seguro' : 'Margen del líder · más claro = más reñido'}</p>
+        <div class="ax-lg-grid">${lead.map((p) => `<span class="ax-lg-n">${p === 'MORENA' ? 'Morena' : p}</span><span class="ax-lg-ramp">${steps(p, [0.1, 0.32, 0.55, 0.78, 1])}</span>`).join('')}</div>
+        <div class="ax-lg-scale"><span>${metric === 'prob' ? '50%' : '0 · reñido'}</span><span>${metric === 'prob' ? '97%' : `${MARGIN_CAP}+ pp`}</span></div>`;
     } else if (mode === 'ganador') {
       html = `<div class="ax-lg-sw">${lead.map((p) => `<span>${dot(p)}${p === 'MORENA' ? 'Morena' : p}</span>`).join('')}</div>`;
     } else if (mode === 'cambio' && baseline === 'gob') {
@@ -1065,6 +1093,7 @@ export function render(root) {
 
   return () => {
     alive = false;
+    if (store.alCambiarEscenario === aplicarEscenarioMapa) store.alCambiarEscenario = null;
     tipRO.disconnect();
     atlas.destroy();
     window.removeEventListener('mirador:theme', onTheme);

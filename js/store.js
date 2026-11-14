@@ -13,6 +13,8 @@ export const store = {
   updatedLabel: '',    // fecha real del corte de encuestas (data/agregado.csv)
   mapMetric: 'prob',   // 'prob' (probabilidad) | 'margen'
   mapMode: 'estados',  // 'estados' | 'municipios' (CP)
+  escenario: { metodo: 'logit', cambios: {} }, // simulador: voto ajustado por estado (ver escenario.js)
+  alCambiarEscenario: null, // la vista activa lo define si se actualiza sola (p. ej. el mapa de dominio)
 };
 
 export function indexEstados() {

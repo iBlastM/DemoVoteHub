@@ -5,8 +5,8 @@
 import { store } from '../store.js';
 import { PARTIES } from '../config.js';
 import { navigate } from '../router.js';
-import { partyLogo, voteBars, statusTag, trendChart, surveyTable } from '../components.js';
-import { pct, signed, fmtNum, fechaCorta } from '../utils.js';
+import { partyLogo, voteBars, statusTag, pollsExplorer, surveyTable } from '../components.js';
+import { pct, signed, fmtNum, fechaLarga } from '../utils.js';
 
 export function render(root, slug) {
   const e = store.porSlug[slug];
@@ -22,10 +22,13 @@ export function render(root, slug) {
     .filter(([, v]) => v >= 0.005)
     .sort((a, b) => b[1] - a[1]);
 
-  const puntosTendencia = e.tendencia.puntos;
-  const rangoTendencia = puntosTendencia.length
-    ? `${fechaCorta(puntosTendencia[0].fecha)} – ${fechaCorta(puntosTendencia[puntosTendencia.length - 1].fecha)}`
-    : '';
+  // Resumen de los sondeos que alimentan la gráfica (solo si son reales).
+  let subSondeos = 'sin sondeos desagregados';
+  if (e.encuestasSonReales && e.encuestas.length) {
+    const fechas = e.encuestas.map((s) => s.fecha.getTime());
+    const casas = new Set(e.encuestas.map((s) => s.casa)).size;
+    subSondeos = `${e.encuestas.length} ${e.encuestas.length === 1 ? 'sondeo' : 'sondeos'} de ${casas} ${casas === 1 ? 'casa' : 'casas'} · ${fechaLarga(new Date(Math.min(...fechas)))} – ${fechaLarga(new Date(Math.max(...fechas)))}`;
+  }
 
   root.innerHTML = `
   <section class="detail">
@@ -53,10 +56,9 @@ export function render(root, slug) {
 
     <div class="detail-grid">
       <section class="panel panel-wide">
-        <div class="panel-head"><h3>Tendencia de intención de voto</h3>
-          <span class="panel-sub">estimación quincenal · ${rangoTendencia}</span></div>
-        <div class="trend-wrap" id="trend"></div>
-        <div class="trend-legend" id="trendLegend"></div>
+        <div class="panel-head"><h3>Encuestas publicadas</h3>
+          <span class="panel-sub">${subSondeos}</span></div>
+        <div id="polls"></div>
       </section>
 
       <section class="panel">
@@ -84,9 +86,6 @@ export function render(root, slug) {
     </div>
   </section>`;
 
-  // Gráfica de tendencia.
-  root.querySelector('#trend').appendChild(trendChart(e));
-  root.querySelector('#trendLegend').innerHTML = e.tendencia.forces.map((f) => {
-    return `<span class="tl-item">${PARTIES[f] ? partyLogo(f, 'xs') : f}</span>`;
-  }).join('');
+  // Nube de sondeos reales + promedio móvil.
+  root.querySelector('#polls').appendChild(pollsExplorer(e));
 }

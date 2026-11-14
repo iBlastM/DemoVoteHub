@@ -1,4 +1,4 @@
-// ============================================================
+﻿// ============================================================
 // data.js — Dataset de las 17 gubernaturas (2027) construido a
 // partir de encuestas reales agregadas en data/agregado.csv
 // (promedio ponderado por recencia/calidad + tendencia Kalman,
@@ -155,7 +155,14 @@ export async function cargarEncuestasDetalle() {
       const clave = `${fila.estado}|${fila.encuestadora}|${fila.fecha}`;
       let sondeo = sondeoPorClave.get(clave);
       if (!sondeo) {
-        sondeo = { casa: fila.encuestadora, fecha: new Date(fila.fecha + 'T00:00:00'), n: Number(fila.muestra) || null, shares: {} };
+        sondeo = {
+          casa: fila.encuestadora,
+          fecha: new Date(fila.fecha + 'T00:00:00'),
+          n: Number(fila.muestra) || null,
+          url: /^https?:\/\//i.test(fila.url_fuente || '') ? fila.url_fuente : null,
+          tipo: fila.tipo_resultado || null, // 'bruto' | 'efectivo' (tal como lo publicó la casa)
+          shares: {},
+        };
         sondeoPorClave.set(clave, sondeo);
         (porEstado[fila.estado] = porEstado[fila.estado] || []).push(sondeo);
       }
@@ -234,32 +241,12 @@ function simular(voto, sigmaPorFuerza, u, draws = 6000) {
   return prob;
 }
 
-/** Serie de tendencia: puntos quincenales que convergen al estimado. */
-function generarTendencia(voto, u, fechaCorte) {
-  // Se grafican como máximo las 4 fuerzas con mayor voto para no saturar la
-  // gráfica de tendencia; el resto sigue disponible en voto/prob.
-  const forces = Object.entries(voto).sort((a, b) => b[1] - a[1]).slice(0, 4).map(([f]) => f);
-  const n = 13;
-  const puntos = [];
-  // El punto de partida es el corte real del agregado (o hoy si no hay
-  // fecha disponible); el punto final es la jornada electoral. Así la
-  // gráfica sigue siendo válida sin importar cuándo se regenere el CSV.
-  const inicio = (fechaCorte ? new Date(fechaCorte + 'T00:00:00') : new Date()).getTime();
-  const fin = new Date('2027-06-06T00:00:00').getTime();
-  const paso = Math.max(1, fin - inicio) / (n - 1);
-  // Punto de partida algo distinto para dar movimiento.
-  const arranque = {};
-  for (const f of forces) arranque[f] = voto[f] + (u() - 0.5) * 14;
-  for (let i = 0; i < n; i++) {
-    const t = i / (n - 1);
-    const fila = { fecha: new Date(inicio + paso * i) };
-    for (const f of forces) {
-      const base = arranque[f] * (1 - t) + voto[f] * t;
-      fila[f] = clamp(base + (u() - 0.5) * 3.2, 2, 72);
-    }
-    puntos.push(fila);
-  }
-  return { forces, puntos };
+/**
+ * Las 4 fuerzas con mayor voto: son las que muestran la gráfica y la tabla de
+ * encuestas para no saturarlas; el resto sigue disponible en voto/prob.
+ */
+function fuerzasPrincipales(voto) {
+  return Object.entries(voto).sort((a, b) => b[1] - a[1]).slice(0, 4).map(([f]) => f);
 }
 
 /** Encuestas del ciclo: jitter alrededor del estimado puntual, con fechas
@@ -285,6 +272,41 @@ function generarEncuestas(voto, u, fechaCorte) {
   return filas;
 }
 
+/**
+ * Pronóstico de una contienda a partir del voto por fuerza (en puntos, 0-100):
+ * probabilidades de victoria (Monte Carlo), favorito, margen, estatus, "Otros" y
+ * apoyo estimado en personas. Es determinista: la semilla depende solo de la
+ * entidad, así que el mismo voto siempre da las mismas probabilidades. Lo usan el
+ * dataset base y el simulador de escenarios.
+ * @param {Object<string, number>} votoPct  voto por fuerza (sin "Otros"), en puntos
+ * @param {Object<string, number>} sigmaPorFuerza  incertidumbre de cada fuerza
+ */
+export function pronosticoDe(votoPct, sigmaPorFuerza, { geo, gob, listaNominal }) {
+  const prob = simular(votoPct, sigmaPorFuerza, rng(seedFrom(geo)));
+  // Favorito y margen puntual (entre las fuerzas con datos, sin "Otros").
+  const ranking = Object.entries(votoPct).sort((a, b) => b[1] - a[1]);
+  const favorito = ranking[0]?.[0] || null;
+  const margen = ranking[0] ? ranking[0][1] - (ranking[1] ? ranking[1][1] : 0) : 0;
+  // Proporciones (0-1) con "Otros" como el resto hasta 100, para gráficas y tablas.
+  const sumaFuerzas = Object.values(votoPct).reduce((a, b) => a + b, 0);
+  const voto = {};
+  for (const [k, v] of Object.entries(votoPct)) voto[k] = v / 100;
+  voto.Otros = Math.max(0, 100 - sumaFuerzas) / 100;
+  return {
+    votoPct: { ...votoPct },
+    voto,
+    prob,
+    probFav: favorito ? prob[favorito] : 0,
+    favorito,
+    margen,
+    estatus: estatusPorMargen(margen),
+    flip: favorito !== gob,
+    votantesEstimados: Object.fromEntries(
+      Object.entries(voto).map(([fuerza, proporcion]) => [fuerza, Math.round(proporcion * listaNominal)]),
+    ),
+  };
+}
+
 /** Construye el dataset completo derivando probabilidades, estatus y electorado. */
 export async function construirEstados(padronData) {
   const agregado = await cargarAgregado();
@@ -305,13 +327,6 @@ export async function construirEstados(padronData) {
       sigmaPorFuerza[id] = sigmaDesdeEncuestas(fila);
     }
 
-    // Normaliza a proporciones (con "Otros" al 100%) para gráficas/tablas.
-    const sumaFuerzas = Object.values(votoPct).reduce((a, b) => a + b, 0);
-    const otros = Math.max(0, 100 - sumaFuerzas);
-    const voto = {};
-    for (const [k, v] of Object.entries(votoPct)) voto[k] = v / 100;
-    voto.Otros = otros / 100;
-
     // El JSON del INE se indexa por la clave de entidad, no por el nombre.
     // La lista nominal territorial es la base de los apoyos potenciales; la
     // lista en el extranjero se conserva aparte porque su elegibilidad depende
@@ -321,20 +336,8 @@ export async function construirEstados(padronData) {
     const listaNominal = Number(registro[1]) || 0;
     const listaNominalExtranjero = Number(registro[2]) || 0;
     const electoradoPotencial = listaNominal + listaNominalExtranjero;
-    const votantesEstimados = Object.fromEntries(
-      Object.entries(voto).map(([fuerza, proporcion]) => [fuerza, Math.round(proporcion * listaNominal)]),
-    );
 
-    const prob = simular(votoPct, sigmaPorFuerza, u);
-    // Favorito y margen puntual (entre las fuerzas con datos, sin "Otros").
-    const ranking = Object.entries(votoPct).sort((a, b) => b[1] - a[1]);
-    const favorito = ranking[0]?.[0] || null;
-    const margen = ranking[0] ? ranking[0][1] - (ranking[1] ? ranking[1][1] : 0) : 0;
-    const estatus = estatusPorMargen(margen);
-    const flip = favorito !== base.gob;
-    const probFav = favorito ? prob[favorito] : 0;
-
-    const { forces, puntos } = generarTendencia(votoPct, u, fechaCalculo);
+    const pronostico = pronosticoDe(votoPct, sigmaPorFuerza, { geo: base.geo, gob: base.gob, listaNominal });
 
     return {
       slug: slugify(base.geo),
@@ -343,20 +346,18 @@ export async function construirEstados(padronData) {
       nombre: base.nombre,
       region: base.region,
       gob: base.gob,
-      favorito,
-      margen,
-      flip,
-      estatus,
-      prob,                    // probabilidad de victoria por fuerza
-      probFav,                 // probabilidad del favorito
-      voto,                    // proporciones: útil para gráficas y simulación
+      // Pronóstico: votoPct, voto (proporciones, con "Otros"), prob (probabilidad
+      // de victoria por fuerza), probFav, favorito, margen, estatus, flip y
+      // votantesEstimados (apoyo potencial sobre la lista nominal territorial).
+      ...pronostico,
+      sigma: sigmaPorFuerza,   // incertidumbre por fuerza (la reutiliza el simulador de escenarios)
+      base: { ...pronostico }, // copia del pronóstico original: un escenario nunca la modifica
       encuestasPorPartido: filasPartido, // fila cruda del agregado (promedio, n, min, max) por fuerza
       padron,
       listaNominal,
       listaNominalExtranjero,
       electoradoPotencial,
-      votantesEstimados,       // apoyo potencial sobre lista nominal territorial
-      tendencia: { forces, puntos },
+      tendencia: { forces: fuerzasPrincipales(votoPct) },
       // Sondeos reales (casa, fecha, muestra, porcentajes) cuando el scraper
       // los capturó en detalle; si un estado no tiene desagregado por sondeo
       // disponible, se recurre a una ilustración sintética alrededor del

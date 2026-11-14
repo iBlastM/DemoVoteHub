@@ -11,7 +11,7 @@ import { apiGet } from '../api.js';
 import { toWorldGeometry } from '../atlas.js';
 import {
   montarMapa, ENTIDADES, I, NEUTRAL, ramp, baseColor, partyName, shortParty, dot, pct1, fechaLarga, rankEntries,
-  tipTable, syncRadios, partyChips, legendFor, escapeHTML, fmtNum, PARTY_ORDER, PARTIES, isParty, fuenteBox,
+  tipTable, tipMargen, syncRadios, partyChips, legendFor, escapeHTML, fmtNum, PARTY_ORDER, PARTIES, isParty, fuenteBox,
 } from './atlas_comun.js';
 
 const MARGIN_CAP = 25;
@@ -107,9 +107,9 @@ export function render(root) {
       if (it.kind === 'none') return '<p class="ax-tip-f">Sin elección de gubernatura en 2027</p>';
       if (!it.m) return '<p class="ax-tip-f">Cargando encuestas…</p>';
       const rows = Object.entries(it.m.partidos).sort((a, b) => b[1].tendencia - a[1].tendencia).slice(0, 4)
-        .map(([p, v]) => [p, pct1(v.tendencia), v.n]);
+        .map(([p, v]) => [p, pct1(v.tendencia), v.n, '', null, v.tendencia]);
       const casas = new Set(it.m.sondeos.map((s) => s.casa));
-      return tipTable(['Partido', '%', 'Enc.'], rows)
+      return tipTable(['Partido', '%', 'Enc.'], rows) + tipMargen(it.r.leader, it.r.margin)
         + `<p class="ax-tip-f">Promedio de encuestas de gubernatura${casas.size ? ` · ${casas.size} casas` : ''} · corte ${fechaLarga(it.m.fecha)}</p>`;
     },
     panel,

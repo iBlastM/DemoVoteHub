@@ -30,11 +30,16 @@
       <a href="#/metodologia" data-top="/metodologia" title="Cómo se obtienen y procesan los datos">Metodología</a>
     </nav>
     <div class="topbar-right">
-      <span class="live" title="Actualización continua de la simulación">
-        <span class="live-dot" aria-hidden="true"></span>
-        <span class="live-label">EN&nbsp;VIVO</span>
-        <span class="live-since">actualizado hace <b>2&nbsp;min</b></span>
+      <span class="cuenta" id="cuenta" title="Días que faltan para la jornada electoral del 6 de junio de 2027 y fecha de corte de las encuestas del pronóstico">
+        <span class="cuenta-dot" aria-hidden="true"></span>
+        <span class="cuenta-dias" id="cuentaDias">Jornada: 6 jun 2027</span>
+        <span class="cuenta-corte" id="cuentaCorte"></span>
       </span>
+      <button class="esc-btn" id="escBtn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="escPanel"
+              title="Mueve el voto de un partido y mira qué pasaría con la contienda y con cada municipio" hidden>
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6h7M14 6h3M3 14h3M10 14h7"/><circle cx="12" cy="6" r="2"/><circle cx="8" cy="14" r="2"/></svg>
+        <span>Escenarios</span>
+      </button>
       <button class="theme-toggle" id="themeToggle" type="button"
               aria-label="Cambiar tema" title="Tema: sistema → claro → oscuro">
         <span class="theme-icon" id="themeIcon" aria-hidden="true"></span>
@@ -44,10 +49,12 @@
     </div>
   </header>
 
+  <div class="esc-strip" id="escStrip" role="status" hidden></div>
+
   <main id="app" class="app"><!-- las vistas se montan aquí --></main>
 
   <footer class="foot">
-    <span>Visor27 — visualización demostrativa inspirada en VoteHub.</span>
+    <span>Visor27 — visualización demostrativa. <a class="foot-link" href="#/creditos">Créditos y fuentes</a>.</span>
     <span class="foot-warn">Proyección basada en encuestas públicas y resultados electorales oficiales; el detalle por municipio es una estimación. Las series de aprobación y rumbo del país son <b>ilustrativas</b>. Sin valor informativo oficial. <a href="#/metodologia">Metodología</a>.</span>
   </footer>
 

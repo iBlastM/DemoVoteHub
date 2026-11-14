@@ -40,6 +40,9 @@ export function startRouter() {
   resolve();
 }
 
+/** Vuelve a montar la vista actual (p. ej. cuando cambian los datos del pronóstico). */
+export function refresh() { resolve(); }
+
 export function currentTop() {
   const path = location.hash.replace(/^#/, '') || '/general';
   return '/' + (path.split('/')[1] || 'general');

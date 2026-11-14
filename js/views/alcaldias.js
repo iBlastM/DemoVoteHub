@@ -14,7 +14,7 @@ import { toWorldGeometry } from '../atlas.js';
 import { statsMunicipio } from '../padron.js';
 import {
   montarMapa, ENTIDADES, NEUTRAL, ramp, baseColor, partyName, shortParty, dot, pct1, fechaLarga, rankEntries,
-  tipTable, syncRadios, partyChips, legendFor, escapeHTML, fmtNum, PARTY_ORDER, PARTIES, isParty, fuenteBox,
+  tipTable, tipMargen, syncRadios, partyChips, legendFor, escapeHTML, fmtNum, PARTY_ORDER, PARTIES, isParty, fuenteBox,
 } from './atlas_comun.js';
 
 const MARGIN_CAP = 30;
@@ -76,8 +76,8 @@ export function render(root) {
       if (!data) return `<p class="ax-tip-f">${error ? 'Datos no disponibles' : 'Cargando encuestas…'}</p>`;
       const e = it.enc;
       if (!e) return '<p class="ax-tip-f">Sin encuesta municipal publicada</p>';
-      const rows = rankEntries(e.partidos).slice(0, 5).map(([p, v]) => [p, pct1(v), '']);
-      return tipTable(['Partido', '%', ''], rows)
+      const rows = rankEntries(e.partidos).slice(0, 5).map(([p, v]) => [p, pct1(v), '', '', null, v]);
+      return tipTable(['Partido', '%'], rows) + tipMargen(e.lider, e.margen)
         + `<p class="ax-tip-f">Rubrum · ${e.n_sondeos} ${e.n_sondeos === 1 ? 'sondeo' : 'sondeos'} · último ${fechaLarga(e.fecha_ultima)}</p>`;
     },
     panel,

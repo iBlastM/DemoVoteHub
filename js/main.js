@@ -6,7 +6,7 @@ import { store, indexEstados } from './store.js';
 import { construirEstados, resumenNacional, fechaAgregado } from './data.js';
 import { loadGeoJSON } from './map.js';
 import { loadPadron } from './padron.js';
-import { route, setNotFound, startRouter, currentTop } from './router.js';
+import { route, setNotFound, startRouter, currentTop, refresh } from './router.js';
 import * as general from './views/general.js';
 import * as predicciones from './views/predicciones.js';
 import * as dominio from './views/dominio.js';
@@ -16,10 +16,22 @@ import * as estatal from './views/estatal.js';
 import * as alcaldias from './views/alcaldias.js';
 import * as metodologia from './views/metodologia.js';
 import * as electoral from './views/electoral.js';
+import * as creditos from './views/creditos.js';
 
 import { cycleTheme, themePref, themeLabel, THEME_ICONS } from './theme.js';
+import { ELECTION_DATE } from './config.js';
+import { textoCuentaRegresiva } from './utils.js';
+import { iniciarEscenarios } from './escenario_ui.js';
 
 const app = document.getElementById('app');
+
+/* ---------- Cuenta regresiva y fecha de corte (barra superior) ---------- */
+function pintarCuenta() {
+  const dias = document.getElementById('cuentaDias');
+  const corte = document.getElementById('cuentaCorte');
+  if (dias) dias.textContent = textoCuentaRegresiva(ELECTION_DATE);
+  if (corte) corte.textContent = fechaAgregado() ? `· encuestas al ${store.updatedLabel}` : '';
+}
 
 /* ---------- Tema sistema / claro / oscuro (ver theme.js) ---------- */
 function syncThemeButton() {
@@ -96,6 +108,25 @@ async function boot() {
   indexEstados();
   store.resumen = resumenNacional(store.estados);
   store.updatedLabel = formatearFechaAgregado(fechaAgregado()) || 'sin fecha de corte';
+  pintarCuenta();
+  setInterval(pintarCuenta, 3600000); // por si la pestaña queda abierta varios días
+
+  // Escenarios hipotéticos: la vista activa se actualiza sola si lo declara
+  // (store.alCambiarEscenario, p. ej. el mapa de dominio); las demás que muestran
+  // el pronóstico se vuelven a montar sin perder la posición de la página.
+  iniciarEscenarios();
+  const VISTAS_CON_PRONOSTICO = ['/general', '/predicciones', '/encuestas', '/estado'];
+  let refrescoPendiente = 0;
+  window.addEventListener('mirador:escenario', () => {
+    if (store.alCambiarEscenario) { store.alCambiarEscenario(); return; }
+    if (!VISTAS_CON_PRONOSTICO.includes(currentTop())) return;
+    clearTimeout(refrescoPendiente);
+    refrescoPendiente = setTimeout(() => {
+      const y = window.scrollY;
+      refresh();
+      window.scrollTo(0, y);
+    }, 90); // mientras se arrastra un deslizador no se vuelve a montar la vista en cada píxel
+  });
 
   route('/general', view(general.render));
   route('/predicciones', view(predicciones.render));
@@ -104,6 +135,7 @@ async function boot() {
   route('/alcaldias', view(alcaldias.render));
   route('/electoral', view(electoral.render));
   route('/metodologia', view(metodologia.render));
+  route('/creditos', view(creditos.render));
   route('/encuestas', view(encuestas.render));
   route('/encuestas/:id', viewP(encuestas.renderDetail, 'id'));
   route('/estado/:slug', viewP(estado.render, 'slug'));
