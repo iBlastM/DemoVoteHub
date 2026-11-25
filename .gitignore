@@ -49,3 +49,7 @@ $RECYCLE.BIN/
 # Los archivos en geojsons/ y los datos fuente son parte del visualizador
 # y deben mantenerse versionados.
 config.bat
+# Proteccion de credenciales locales (Metrix Clean 4.0)
+.env
+.env.*
+!.env.example
